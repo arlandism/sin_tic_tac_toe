@@ -1,0 +1,22 @@
+!!! 5
+%html
+  %head
+    %title
+      Tic Tac Toe
+    :css
+      #buttons {
+        display: table;
+        margin: 0 auto;
+        }
+  %body
+    %h1
+      Welcome to the Tic Tac Toe duet Sinatra and Python
+    %p
+      You're X!
+      When you're ready to play, click a game
+    #buttons
+      %form
+        - (1..9).each do |num|
+          %input{:type => "submit", :value => "#{num}", :action => "/game/#{num}", :method => "get"} 
+          - if num % 3 == 0 
+            %div

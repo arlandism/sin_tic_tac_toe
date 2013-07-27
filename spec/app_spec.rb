@@ -1,4 +1,4 @@
-require 'main'
+require './main'
 require 'rack/test'
 
 describe 'main' do
@@ -12,13 +12,23 @@ describe 'main' do
     it 'renders index' do
      get '/'
        last_response.status.should be 200
+       last_response.body.should_not == ""
      end
     end
 
-  describe "POST '/game'" do
-    it 'renders game page' do
-      post '/game'
-        last_response.status.should be 200
+  describe "GET '/game/move'" do
+
+    it 'renders game page with valid move' do
+      get '/game/3'
+      last_response.status.should be 200
+    end
+
+    it "renders separate page for invalid move" do
+      get '/game/7'
+        valid_body = last_response.body
+
+      get '/game/36'
+        last_response.body.should_not == valid_body
     end
   end
 end
