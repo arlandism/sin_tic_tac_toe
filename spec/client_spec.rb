@@ -1,6 +1,6 @@
 require 'client'
 
-describe 'ClientSocket initialization' do
+describe 'ClientSocket' do
 
   describe "initialization" do
     it "sets a default port" do
@@ -20,9 +20,9 @@ describe 'ClientSocket initialization' do
       socket.port.should be 3000
     end
   end
-end
 
-describe "ClientSocket" do
+  describe "data flow" do
+
   before(:each) do
     @socket = ClientSocket.new(Random.rand(2000..65000))
     @server = TCPServer.open(@socket.port)
@@ -47,19 +47,15 @@ describe "ClientSocket" do
     initiate_handshake! @server
     client = @server.accept
   end
-    
-  describe "connect!" do
+
     it "connects to given host on port" do
       @connection_socket.puts("Hi socket!")
       data_was_sent? "Hi socket!"
     end
-  end
 
-  describe "send" do
     it "sends data over its connection" do
       @socket.send "Hi server!"
       @connection_socket.gets.should == "Hi server!\n"
     end
   end
 end
-
