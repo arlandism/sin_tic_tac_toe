@@ -6,4 +6,12 @@ class DataManager
     @socket = socket
   end
 
+  def send(data)
+    @socket.puts(JSON.dump(data))
+  end
+
+  def receive
+    JSON.load(@socket.gets)
+  end
+
 end
