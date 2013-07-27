@@ -23,30 +23,30 @@ describe 'ClientSocket' do
 
   describe "data flow" do
 
-  before(:each) do
-    @socket = ClientSocket.new(Random.rand(2000..65000))
-    @server = TCPServer.open(@socket.port)
-    @connection_socket = connect_and_return_connection_socket
-  end
+    before(:each) do
+      @socket = ClientSocket.new(Random.rand(2000..65000))
+      @server = TCPServer.open(@socket.port)
+      @connection_socket = connect_and_return_connection_socket
+    end
 
-  after(:each) do
-    @socket.close!
-    @connection_socket.close
-  end
+    after(:each) do
+      @socket.close!
+      @connection_socket.close
+    end
 
-  def initiate_handshake!(server)
-    server.listen(1)
-    @socket.connect!
-  end
+    def initiate_handshake!(server)
+      server.listen(1)
+      @socket.connect!
+    end
 
-  def data_was_sent?(data)
-    @socket.data.should == data += "\n" 
-  end
+    def data_was_sent?(data)
+      @socket.data.should == data += "\n" 
+    end
 
-  def connect_and_return_connection_socket
-    initiate_handshake! @server
-    client = @server.accept
-  end
+    def connect_and_return_connection_socket
+      initiate_handshake! @server
+      client = @server.accept
+    end
 
     it "connects to given host on port" do
       @connection_socket.puts("Hi socket!")
