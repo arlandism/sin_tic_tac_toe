@@ -17,15 +17,6 @@ describe 'main' do
   end
 
   describe "POST '/move'" do
-    #it "opens a socket and sends the move in JSON" do
-    #  socket = TCPServer.open(6000)
-    #  post_request_with_valid_move
-    #  conn = socket.accept()
-    #  data = conn.gets
-    #  data.gsub("\n","").should == JSON.dump({"6" => "x"})
-    #  conn.close
-    #end
-
     it "redirects to index" do
       post_request_with_valid_move
       follow_redirect!

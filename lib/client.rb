@@ -1,3 +1,4 @@
+require 'socket'
 
 class ClientSocket
   attr_reader :connected, :port, :hostname
