@@ -3,6 +3,7 @@ require 'client'
 describe 'ClientSocket' do
 
   describe "initialization" do
+
     it "sets a default port" do
       ClientSocket.new.port.should be 5000
     end 
@@ -23,6 +24,16 @@ describe 'ClientSocket' do
 
   describe "data flow" do
 
+    it "gets data over its connection" do
+      @connection_socket.puts("Hi socket!")
+      data_received? "Hi socket!"
+    end
+
+    it "puts data over its connection" do
+      @socket.puts "Hi server!"
+      @connection_socket.gets.should == "Hi server!\n"
+    end
+
     before(:each) do
       @socket = ClientSocket.new(Random.rand(2000..65000))
       @server = TCPServer.open(@socket.port)
@@ -39,8 +50,8 @@ describe 'ClientSocket' do
       @socket.connect!
     end
 
-    def data_was_sent?(data)
-      @socket.data.should == data += "\n" 
+    def data_received?(data)
+      @socket.gets.should == data += "\n" 
     end
 
     def connect_and_return_connection_socket
@@ -48,14 +59,5 @@ describe 'ClientSocket' do
       client = @server.accept
     end
 
-    it "connects to given host on port" do
-      @connection_socket.puts("Hi socket!")
-      data_was_sent? "Hi socket!"
-    end
-
-    it "sends data over its connection" do
-      @socket.send "Hi server!"
-      @connection_socket.gets.should == "Hi server!\n"
-    end
   end
 end
