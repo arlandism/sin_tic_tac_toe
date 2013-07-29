@@ -1,3 +1,5 @@
+require 'json'
+
 class DataManager
 
   attr_reader :socket
