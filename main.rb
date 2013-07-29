@@ -10,17 +10,9 @@ end
 
 post '/move' do
   move = params[:player_move].to_i
-  if valid_move? move 
-    send_the_move!(move)
-    response.set_cookie(move, "x")
-    redirect '/'
-  else
-    haml :invalid_move
-  end
-end
-
-def valid_move?(move)
-  (1..9).include? move
+  send_the_move!(move)
+  response.set_cookie(move, "x")
+  redirect '/'
 end
 
 def send_the_move!(move)

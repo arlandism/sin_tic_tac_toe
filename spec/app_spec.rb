@@ -16,7 +16,7 @@ describe 'main' do
      end
   end
 
-  describe "POST '/move/'" do
+  describe "POST '/move'" do
 
     it "opens a socket and sends the move in JSON" do
       socket = TCPServer.open(6000)
@@ -26,11 +26,9 @@ describe 'main' do
       data.gsub("\n","").should == JSON.dump({"6" => "x"})
     end
 
-    it "redirects once its done" do
+    it "redirects to index" do
       post '/move', {:player_move => "5"}
-      last_response.status.should be 302
       follow_redirect!
-      last_response.status.should be 200
       expected_path = "/"
       last_request.url.should == "http://example.org" + expected_path
     end
@@ -40,7 +38,7 @@ describe 'main' do
       rack_mock_session.cookie_jar["9"].should == "x"
     end
 
-    it "has cookies persistent across requests" do
+    it "has cookies that are persistent across requests" do
       post '/move', {:player_move => "6"}
       get '/'
       rack_mock_session.cookie_jar["6"].should == "x"
