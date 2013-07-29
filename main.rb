@@ -13,10 +13,3 @@ require_relative 'lib/data_manager'
     response.set_cookie(move, "x")
     redirect '/'
   end
-
-  def send_the_move!(move)
-    socket = ClientSocket.new(6000)
-    socket.connect!
-    manager = DataManager.new(socket)
-    manager.send({move => "x"})
-  end
