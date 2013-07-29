@@ -21,3 +21,6 @@ def send_the_move!(move)
   manager = DataManager.new(socket)
   manager.send({move => "x"})
 end
+
+def receive_move!
+end
