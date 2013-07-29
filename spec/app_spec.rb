@@ -12,7 +12,6 @@ describe 'main' do
     it 'renders index' do
      get '/'
      last_response.status.should be 200
-     last_response.body.should_not == ""
      end
   end
 
