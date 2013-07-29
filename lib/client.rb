@@ -9,7 +9,7 @@ class ClientSocket
   end
 
   def connect!
-    @socket = TCPSocket.open @hostname, @port
+    @socket = TCPSocket.open(@hostname, @port)
     @connected = true
   end
 
@@ -18,11 +18,11 @@ class ClientSocket
     @connected = false
   end
 
-  def data
+  def gets
     received_data = @socket.gets
   end
 
-  def send(data)
+  def puts(data)
     @socket.puts data 
   end
 
