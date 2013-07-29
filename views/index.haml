@@ -13,10 +13,13 @@
       Welcome to the Tic Tac Toe duet Sinatra and Python
     %p
       You're X!
-      When you're ready to play, click a game
+      When you're ready to play, click a move
     #buttons
-      %form
+      %form{:method => "post", :action => "/move"}
         - (1..9).each do |num|
-          %input{:type => "submit", :value => "#{num}", :action => "/game/#{num}", :method => "get"} 
+          -if @board and @board[num.to_s]
+            %input{:type => "submit", :value => "#{@board[num]}", :disabled => true}
+          -else
+            %input{:type => "submit", :value => "#{num}", :name => "player_move"}
           - if num % 3 == 0 
             %div
