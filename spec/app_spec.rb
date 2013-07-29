@@ -14,21 +14,36 @@ describe 'main' do
        last_response.status.should be 200
        last_response.body.should_not == ""
      end
+  end
+
+  describe "POST '/move/'" do
+
+    it "opens a socket and sends the move in JSON" do
+      socket = TCPServer.open(6000)
+      post '/move', {:player_move => "6"}
+      conn = socket.accept()
+      data = conn.gets
+      data.gsub("\n","").should == JSON.dump({"6" => "x"})
     end
 
-  describe "GET '/game/move'" do
-
-    it 'renders game page with valid move' do
-      get '/game/3'
+    it "redirects once its done" do
+      post '/move', {:player_move => "5"}
+      last_response.status.should be 302
+      follow_redirect!
       last_response.status.should be 200
+      expected_path = "/"
+      last_request.url.should == "http://example.org" + expected_path
     end
 
-    it "renders separate page for invalid move" do
-      get '/game/7'
-        valid_body = last_response.body
+    it "stores a move cookie " do
+      post '/move', {:player_move => "9"}
+      rack_mock_session.cookie_jar["9"].should == "x"
+    end
 
-      get '/game/36'
-        last_response.body.should_not == valid_body
+    it "has cookies persistent across requests" do
+      post '/move', {:player_move => "6"}
+      get '/'
+      rack_mock_session.cookie_jar["6"].should == "x"
     end
   end
 end
