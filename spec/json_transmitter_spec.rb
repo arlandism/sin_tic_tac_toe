@@ -27,7 +27,7 @@ describe 'main' do
         @transmitter.send("")
       end
 
-      it "accesses its socket's receiving method" do
+      it "accesses its socket's gets method" do
         @socket.should_receive(:gets)
         @transmitter.receive
       end

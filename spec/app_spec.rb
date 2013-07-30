@@ -16,6 +16,12 @@ describe 'main' do
   end
 
   describe "POST '/move'" do
+
+    before(:each) do
+      ClientSocket.any_instance.stub(:connect!)
+      AI.any_instance.stub(:next_move)
+    end
+
     it "redirects to index" do
       execute_post_request_with_move 5
       follow_redirect!
@@ -24,9 +30,22 @@ describe 'main' do
       last_request.url.should == default_url + expected_path
     end
 
-    it "stores a move cookie " do
+
+    it "stores player move cookie " do
       execute_post_request_with_move 6
       verify_cookie_value(6,"x")
+    end
+
+    it "stores AI move cookie" do
+      AI.any_instance.stub(:next_move).and_return(12)
+      execute_post_request_with_move 6
+      verify_cookie_value(12,"o")
+    end
+
+    it "stores AI move again" do
+      AI.any_instance.stub(:next_move).and_return(82)
+      execute_post_request_with_move 6
+      verify_cookie_value(82,"o")
     end
 
     it "has cookies that are persistent across requests" do
