@@ -35,6 +35,13 @@ describe AI do
       @ai.next_move(message)
     end
 
+    it "sends another message" do
+      message = "hahahaha"
+      @transmitter.should_receive(:send).with(message)
+      @transmitter.stub(:receive)
+      @ai.next_move(message)
+    end
+
     it "receives a message through its transmitter" do
       @transmitter.stub(:send)
       @transmitter.should_receive(:receive)

@@ -7,7 +7,7 @@ class AI
   end
 
   def next_move(board_state)
-     @transmitter.send("message for you")
+     @transmitter.send(board_state)
      @transmitter.receive
   end
 
