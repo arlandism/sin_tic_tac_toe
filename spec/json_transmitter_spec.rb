@@ -1,5 +1,4 @@
 require 'rack/test'
-require 'socket'
 require 'json'
 require 'json_transmitter'
 
@@ -10,49 +9,47 @@ describe 'main' do
     Sinatra::Application
   end
 
-  def run_server!
-    @port = Random.rand((2000..60000))
-    @server = TCPServer.open(@port)
-  end
-
-  def close_socket!(socket)
-    socket.close
-  end
-
   describe 'JsonTransmitter' do
 
     describe "initialization" do
 
       it "takes a socket" do
         my_socket = "socket"
-        dm = JsonTransmitter.new(my_socket)
-        dm.socket.should be my_socket
+        transmitter = JsonTransmitter.new(my_socket)
+        transmitter.socket.should be my_socket
       end
     end
 
-    describe "data transmission" do
+    describe "send and receive" do
 
-      it "sends JSON over the socket" do
-        conn = @server.accept
-        message = "json_string"
-        @manager.send(message)
-        received = conn.gets
-        JSON.load(received).should == message
+      it "calls its socket for sending" do
+        @socket.should_receive(:puts)
+        @transmitter.send("")
       end
 
-      it "parses the JSON it receives" do
-        conn = @server.accept
-        message = "Did you get this?"
-        conn.puts(JSON.dump(message))
-        @manager.receive.should == message 
+      it "accesses its socket's receiving method" do
+        @socket.should_receive(:gets)
+        @transmitter.receive
+      end
+
+      it "transforms info to json before sending" do
+        greeting = "Hello"
+        jsonified_greeting = JSON.dump(greeting)
+        @socket.should_receive(:puts).with(jsonified_greeting)
+        @transmitter.send(greeting)
+      end
+
+      it "decodes info from json upon receipt" do
+        message = "Decode me!"
+        jsonified_message = JSON.dump(message)
+        @socket.stub(:gets) {jsonified_message}
+        @transmitter.receive.should == message
       end
 
       before(:each) do
-        run_server!
-        @socket = TCPSocket.new("localhost",@port)
-        @manager = JsonTransmitter.new(@socket)
+        @socket = double()
+        @transmitter = JsonTransmitter.new @socket
       end
     end
-
   end
 end
