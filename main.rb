@@ -1,7 +1,5 @@
 require 'sinatra'
 require 'haml'
-require_relative 'lib/client'
-require_relative 'lib/data_manager'
 
   get '/' do
     @board = request.cookies

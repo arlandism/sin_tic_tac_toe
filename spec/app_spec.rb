@@ -17,7 +17,7 @@ describe 'main' do
 
   describe "POST '/move'" do
     it "redirects to index" do
-      post_request_with_valid_move
+      execute_post_request_with_move 5
       follow_redirect!
       default_url = "http://example.org"
       expected_path = "/"
@@ -25,22 +25,23 @@ describe 'main' do
     end
 
     it "stores a move cookie " do
-      post_request_with_valid_move
-      check_cookie_state(6,"x")
+      execute_post_request_with_move 6
+      verify_cookie_value(6,"x")
     end
 
     it "has cookies that are persistent across requests" do
-      post_request_with_valid_move
+      execute_post_request_with_move 6
       get '/'
-      check_cookie_state(6,"x")
+      verify_cookie_value(6,"x")
     end
 
-    def post_request_with_valid_move(move=6)
+    def execute_post_request_with_move(move)
       post '/move', {:player_move => move.to_s}
     end
 
-    def check_cookie_state(key,val)
-      rack_mock_session.cookie_jar[key.to_s].should == val
+    def verify_cookie_value(key,val)
+      cookie_key = key.to_s
+      rack_mock_session.cookie_jar[cookie_key].should == val
     end
 
     after(:each) do
