@@ -1,3 +1,6 @@
+require_relative 'client'
+require_relative 'json_transmitter'
+
 class AI
   
   def initialize
