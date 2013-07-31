@@ -46,6 +46,22 @@ describe 'main' do
         @transmitter.receive.should == message
       end
 
+      context "newlines"
+      it "knows how to deal with junk" do
+        junk = JSON.dump("blah") + "\n"
+        non_junk = "blah"
+        @socket.stub(:gets).and_return(junk)
+        @transmitter.receive.should == non_junk
+      end
+
+      context "spaces"
+      it "knows how to deal with junk" do
+        junk = JSON.dump("ha") + " "
+        non_junk = "ha"
+        @socket.stub(:gets).and_return(junk)
+        @transmitter.receive.should == non_junk
+      end
+
       before(:each) do
         @socket = double()
         @transmitter = JsonTransmitter.new @socket

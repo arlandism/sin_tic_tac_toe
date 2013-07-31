@@ -9,11 +9,23 @@ class JsonTransmitter
   end
 
   def send(data)
-    @socket.puts(JSON.dump(data))
+    data = JSON.dump(data)
+    @socket.puts(data)
   end
 
   def receive
-    JSON.load(@socket.gets)
+    data = @socket.gets
+    data = try_substitution(data)
+    JSON.load(data)
+  end
+
+  def try_substitution(data)
+    begin 
+      data = data.tr("\n","")
+    rescue
+      data = ""
+    end
+    data
   end
 
 end

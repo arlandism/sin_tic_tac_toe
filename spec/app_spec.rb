@@ -16,12 +16,7 @@ describe 'main' do
   end
 
   describe "POST '/move'" do
-
-    before(:each) do
-      ClientSocket.any_instance.stub(:connect!)
-      AI.any_instance.stub(:next_move)
-    end
-
+    
     it "redirects to index" do
       execute_post_request_with_move 5
       follow_redirect!
@@ -93,6 +88,11 @@ describe 'main' do
     def verify_cookie_value(key,val)
       cookie_key = key.to_s
       rack_mock_session.cookie_jar[cookie_key].should == val
+    end
+
+    before(:each) do
+      ClientSocket.any_instance.stub(:connect!)
+      AI.any_instance.stub(:next_move)
     end
 
     after(:each) do
