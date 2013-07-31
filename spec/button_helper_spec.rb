@@ -53,12 +53,3 @@ describe ButtonHelper do
     end
   end
 end      
-
-#%form{:method => "post", :action => "/move"}
-#        - (1..9).each do |num|
-#          -if @board and @board[num.to_s]
-#            %input{:type => "submit", :value => "#{@board[num.to_s] || num}", :disabled => true}
-#          -else
-#            %input{:type => "submit", :value => "#{num}", :name => "player_move"}
-#          - if num % 3 == 0 
-#            %div
