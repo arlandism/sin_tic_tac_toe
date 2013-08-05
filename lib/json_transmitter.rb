@@ -10,7 +10,7 @@ class JsonTransmitter
 
   def send(data)
     data = JSON.dump(data)
-    @socket.puts(data)
+    @socket.puts(data) 
   end
 
   def receive
@@ -20,6 +20,9 @@ class JsonTransmitter
   end
 
   def try_substitution(data)
+    if data.class.eql?(nil)
+      data = ""
+    end
     begin 
       data = data.tr("\n","")
     rescue
