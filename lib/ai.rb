@@ -4,7 +4,7 @@ require_relative 'json_transmitter'
 class AI
   
   def initialize
-    socket = ClientSocket.new 6000
+    socket = ClientSocket.new 
     socket.connect!
     @transmitter = JsonTransmitter.new socket
   end
