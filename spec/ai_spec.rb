@@ -7,7 +7,7 @@ describe AI do
   end
 
   it "should instantiate and connect a socket" do
-    ClientSocket.should_receive(:new).with(6000).and_return(@socket)
+    ClientSocket.should_receive(:new).and_return(@socket)
     @socket.should_receive(:connect!)
     AI.new
   end
