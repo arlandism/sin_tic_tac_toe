@@ -4,7 +4,11 @@ describe AI do
 
   before(:each) do
     @socket = mock(:socket)
-  end
+    @transmitter = mock(:transmitter)
+    JsonTransmitter.stub(:new).and_return(@transmitter)
+    ClientSocket.any_instance.stub(:connect!)
+    @ai = AI.new
+    end
 
   it "should instantiate and connect a socket" do
     ClientSocket.should_receive(:new).and_return(@socket)
@@ -20,14 +24,7 @@ describe AI do
   end
 
   describe "#next_move" do
-
-    before(:each) do
-      @transmitter = mock(:transmitter)
-      JsonTransmitter.stub(:new).and_return(@transmitter)
-      ClientSocket.any_instance.stub(:connect!)
-      @ai = AI.new
-    end
-
+    
     it "sends a message through its transmitter" do
       message = "message for you"
       @transmitter.should_receive(:send).with(message)
@@ -44,15 +41,32 @@ describe AI do
 
     it "receives a message through its transmitter" do
       @transmitter.stub(:send)
-      @transmitter.should_receive(:receive)
+      @transmitter.should_receive(:receive).at_least(:once)
       @ai.next_move("haha")
     end
 
     it "returns what came through the transmitter" do
       message = "stuff that should come through"
       @transmitter.stub(:send)
-      @transmitter.stub(:receive).and_return(message)
-      @ai.next_move("whatever").should == message 
+      @transmitter.stub(:receive).and_return(message) 
+      @ai.next_move("whatever")["move"].should == message 
     end
+
+    context "with o as winner"
+    it "stores the winner from the transmitter" do
+      @transmitter.stub(:receive).and_return(1,"o")
+      @transmitter.stub(:send)
+      game_info = @ai.next_move({})
+      game_info["move"].should == 1
+      game_info["winner"].should == "o"
+    end
+  end
+
+    context "with x as winner"
+    it "stores other winner from transmitter" do
+      @transmitter.stub(:receive).and_return(2,"x")
+      @transmitter.stub(:send)
+      info = @ai.next_move({})
+      info["move"].should == 2
   end
 end
