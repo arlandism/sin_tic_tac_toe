@@ -23,3 +23,5 @@
             %input{:type => "submit", :value => "#{num}", :name => "player_move"}
           - if num % 3 == 0 
             %div
+      -if @board["winner"]
+        %p=@board["winner"] + " wins"
