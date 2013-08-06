@@ -10,11 +10,19 @@ require_relative 'lib/ai.rb'
   post '/move' do
     move = params[:player_move]
     response.set_cookie(move, "x")
-    human_move = {move.to_i => "x"}
-    board_state = hash_with_keys_as_ints(request.cookies.merge(human_move))
-    computer_move = AI.new.next_move(board_state)
-    response.set_cookie(computer_move, "o")
+    human_move = {move => "x"}
+    board_state = add_hashes(request.cookies,human_move)
+    computer = AI.new
+    game_info = call_ai(computer,board_state) 
+    response.set_cookie(ai_move(game_info),"o")
+    set_winner_if_exists(response,game_info)
     redirect '/'
+  end
+
+  def set_winner_if_exists(response,game_info)
+    if game_info.include?("winner")
+      response.set_cookie("winner","x")
+    end
   end
 
   def hash_with_keys_as_ints(hash)
@@ -25,3 +33,18 @@ require_relative 'lib/ai.rb'
     new_hash
   end
 
+  def add_hashes(hash_one,hash_two)
+    hash_with_keys_as_ints(hash_one.merge(hash_two))
+  end
+
+  def winner(hash)
+    hash["winner"]
+  end
+
+  def call_ai(ai,hash)
+    ai.next_move(hash) 
+  end
+
+  def ai_move(hash)
+    hash["move"]
+  end
