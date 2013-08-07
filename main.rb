@@ -21,7 +21,7 @@ require_relative 'lib/ai.rb'
 
   def set_winner_if_exists(response,game_info)
     if game_info.include?("winner")
-      response.set_cookie("winner","x")
+      response.set_cookie("winner",game_info["winner"])
     end
   end
 
