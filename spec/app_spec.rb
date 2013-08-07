@@ -14,20 +14,22 @@ describe 'main' do
      last_response.status.should be 200
      end
 
-    context "x is the winner"
+    context "x is the winner" do
     it "shows a win message if there's winner" do
       set_cookie("winner=x")
       get '/'
       last_response.status.should be 200
       last_response.body.should include "x wins"
     end
+    end
 
-    context "o is the winner"
+    context "o is the winner" do
     it "shows a win message if there's winner" do
       set_cookie("winner=o")
       get '/'
       last_response.status.should be 200
       last_response.body.should include "o wins"
+    end
     end
 
     it "shouldn't show a win message if there's no winner" do
