@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'haml'
-require_relative 'lib/ai.rb'
+require_relative 'lib/winner_presenter'
+require_relative 'lib/button_presenter'
+require_relative 'lib/ai'
 
   get '/' do
     @board = request.cookies
