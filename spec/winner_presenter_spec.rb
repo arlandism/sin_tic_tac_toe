@@ -18,5 +18,10 @@ describe "#Winner" do
     it "shows nothing if winner is empty space" do
       Winner.render_if_winner({"winner" => ""}).should == nil
     end
+    
+    it "shows it's a tie, if winner is nil" do
+      Winner.render_if_winner({"winner" => nil}).should == nil 
+    end
+
   end
 end
