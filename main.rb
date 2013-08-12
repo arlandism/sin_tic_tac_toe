@@ -9,6 +9,13 @@ require_relative 'lib/ai'
     haml :index 
   end
 
+  get '/clear' do
+    request.cookies.keys.each do |key|
+      response.delete_cookie(key)
+    end
+    redirect '/'
+  end
+
   post '/move' do
     move = params[:player_move]
     response.set_cookie(move, "x")

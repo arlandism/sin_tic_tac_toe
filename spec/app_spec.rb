@@ -15,21 +15,21 @@ describe 'main' do
      end
 
     context "x is the winner" do
-    it "shows a win message if there's winner" do
-      set_cookie("winner=x")
-      get '/'
-      last_response.status.should be 200
-      last_response.body.should include "x wins"
-    end
+      it "shows a win message if there's winner" do
+        set_cookie("winner=x")
+        get '/'
+        last_response.status.should be 200
+        last_response.body.should include "x wins"
+      end
     end
 
     context "o is the winner" do
-    it "shows a win message if there's winner" do
-      set_cookie("winner=o")
-      get '/'
-      last_response.status.should be 200
-      last_response.body.should include "o wins"
-    end
+      it "shows a win message if there's winner" do
+        set_cookie("winner=o")
+        get '/'
+        last_response.status.should be 200
+        last_response.body.should include "o wins"
+      end
     end
 
     it "shouldn't show a win message if there's no winner" do
@@ -153,6 +153,53 @@ describe 'main' do
     it "pulls winner out of hash" do
       winner({"winner" => nil}).should == nil
     end
+  end
+
+  describe "GET '/clear' " do
+    it "redirects to index" do
+      get '/clear'
+      follow_redirect!
+      last_response.status.should == 200
+      default_url = "http://example.org"
+      expected_path = "/"
+      last_request.url.should == default_url + expected_path
+    end
+
+    it "works with 1 cookie set" do
+      rack_mock_session.cookie_jar["3"] = "x"
+      get '/clear'
+      follow_redirect!
+      rack_mock_session.cookie_jar["3"].should == ""
+    end
+    
+    context "all board keys" do
+      it "works with multiple cookies set" do
+        cookie_list = ["1","2","3","4"]
+        cookie_list.each do |n|
+          rack_mock_session.cookie_jar[n] = "x"
+        end
+        get '/clear'
+        follow_redirect!
+        cookie_list.each do |n|
+          rack_mock_session.cookie_jar[n].should == ""
+        end
+      end
+    end
+    
+    context "mix of board information" do
+      it "works with multiple cookies set" do
+        cookie_list = ["1","2","3","winner"]
+        cookie_list.each do |n|
+          rack_mock_session.cookie_jar[n] = "x"
+        end
+        get '/clear'
+        follow_redirect!
+        cookie_list.each do |n|
+          rack_mock_session.cookie_jar[n].should == ""
+        end
+      end
+    end
+
   end
 
   #describe "integration" 
