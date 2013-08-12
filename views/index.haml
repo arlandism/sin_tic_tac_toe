@@ -13,4 +13,8 @@
     #buttons
       %form{:method => "post", :action => "/move"}
         %div=ButtonPresenter.render(@board,9)
+      %br
+      %form{:method => "get", :action => "/clear"}
+        %input{:value => "Reset", :type => "submit"}
+
     %p=Winner.render_if_winner(@board)
