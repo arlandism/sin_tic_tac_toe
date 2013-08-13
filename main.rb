@@ -23,7 +23,8 @@ require_relative 'lib/ai'
     board_state = add_hashes(request.cookies,human_move)
     computer = AI.new
     game_info = call_ai(computer,board_state) 
-    response.set_cookie(ai_move(game_info),"o")
+    comp_move = ai_move(game_info)
+    response.set_cookie(comp_move,"o")
     set_winner_if_exists(response,game_info)
     redirect '/'
   end
