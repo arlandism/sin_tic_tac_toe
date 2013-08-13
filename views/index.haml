@@ -6,7 +6,7 @@
       Tic Tac Toe
   %body
     %h1
-      Welcome to the Tic Tac Toe duet Sinatra and Python
+      Welcome to the Tic Tac Toe duet between Sinatra and Python
     %p
       You're X!
       When you're ready to play, click a move
@@ -16,5 +16,4 @@
       %br
       %form{:method => "get", :action => "/clear"}
         %input{:value => "Reset", :type => "submit"}
-
     %p=Winner.render_if_winner(@board)
