@@ -85,29 +85,29 @@ describe 'main' do
       execute_post_request_with_move 9
     end
 
-    context "cookies containing both tokens"
-    it "has cookies that are persistent across multiple post requests" do
-      ai = mock(:AI)
-      AI.stub(:new).and_return(ai)
-      ai.stub(:next_move).and_return({"move" => 6})
-      execute_post_request_with_move 8
-      execute_post_request_with_move 5
-      verify_cookie_value(8,"x")
-      verify_cookie_value(5,"x")
-      verify_cookie_value(6,"o")
+    context "cookies containing both tokens" do
+      it "has cookies that are persistent across multiple post requests" do
+        ai = mock(:AI)
+        AI.stub(:new).and_return(ai)
+        ai.stub(:next_move).and_return({"move" => 6})
+        execute_post_request_with_move 8
+        execute_post_request_with_move 5
+        verify_cookie_value(8,"x")
+        verify_cookie_value(5,"x")
+        verify_cookie_value(6,"o")
+      end
     end
 
-    context "after multiple requests"
-    it "gives AI.next current cookies" do
-      ai = mock(:AI)
-      AI.stub(:new).and_return(ai)
-      ai.stub(:next_move).and_return({"move" => 5})
-      execute_post_request_with_move 6
-      verify_cookie_value(6,"x")
-      verify_cookie_value(5,"o")
-      current_board_state = {5 => "o", 6 => "x", 7 => "x"}
-      ai.should_receive(:next_move).with(current_board_state)
-      execute_post_request_with_move 7
+    context "after multiple requests" do
+      it "gives AI.next current cookies" do
+        ai = mock(:AI)
+        AI.stub(:new).and_return(ai)
+        ai.stub(:next_move).and_return({"move" => 5})
+        execute_post_request_with_move 9
+        current_board_state = {5 => "o", 9 => "x", 8 => "x"}
+        ai.should_receive(:next_move).with(current_board_state)
+        execute_post_request_with_move 8
+      end
     end
 
     it "gets the winner from AI" do
