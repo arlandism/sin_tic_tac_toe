@@ -1,4 +1,3 @@
-# Taken from the cucumber-rails project.
 
 module NavigationHelpers
   # Maps a name to a path. Used by the
