@@ -1,11 +1,11 @@
 require 'rack/test'
-require './main'
+require_relative '../main'
 
-describe 'main' do
+describe 'MyApp' do
   include Rack::Test::Methods
 
   def app
-    Sinatra::Application
+    TTTDuet
   end
 
   describe "GET '/'" do
