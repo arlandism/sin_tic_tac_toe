@@ -138,23 +138,7 @@ describe 'MyApp' do
     end
   end
 
-  describe "#winner" do
-    context "o is the winner"
-    it "pulls winner out of a hash" do
-      winner({"winner" => "o"}).should == "o"
-    end
-
-    context "x is the winner"
-    it "pulls winner out of a hash" do
-      winner({"winner" => "x"}).should == "x"
-    end
-
-    context "winner is nil"
-    it "pulls winner out of hash" do
-      winner({"winner" => nil}).should == nil
-    end
-  end
-
+  
   describe "GET '/clear' " do
     it "redirects to index" do
       get '/clear'
@@ -199,12 +183,31 @@ describe 'MyApp' do
         end
       end
     end
-
   end
+end
+
+describe "Helpers" do
+  
+  describe "#winner" do
+    context "o is the winner"
+    it "pulls winner out of a hash" do
+      Helpers.winner({"winner" => "o"}).should == "o"
+    end
+
+    context "x is the winner"
+    it "pulls winner out of a hash" do
+      Helpers.winner({"winner" => "x"}).should == "x"
+    end
+
+    context "winner is nil"
+    it "pulls winner out of hash" do
+      Helpers.winner({"winner" => nil}).should == nil
+    end
+  end
+end
 
   #describe "integration" 
   #  it "gets a move from AI and stores it as a cookie" do
   #    post '/move', {:player_move => 3}   
   #    rack_mock_session.cookie_jar["3"].should == "x"
   #  end
-end
