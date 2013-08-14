@@ -8,7 +8,7 @@ require 'capybara'
 require 'capybara/cucumber'
 require 'rspec'
 
-Capybara.app = MyApp
+Capybara.app = TTTDuet
 
 class MyAppWorld
   include Capybara::DSL
