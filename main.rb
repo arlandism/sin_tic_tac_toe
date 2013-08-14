@@ -4,6 +4,8 @@ require_relative 'lib/winner_presenter'
 require_relative 'lib/button_presenter'
 require_relative 'lib/ai'
 
+class TTTDuet < Sinatra::Base
+
   get '/' do
     @board = request.cookies
     haml :index 
@@ -34,6 +36,7 @@ require_relative 'lib/ai'
       response.set_cookie("winner",game_info["winner"])
     end
   end
+end
 
   def hash_with_keys_as_ints(hash)
     new_hash = Hash.new
