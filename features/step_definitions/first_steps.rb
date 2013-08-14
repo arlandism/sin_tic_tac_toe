@@ -1,5 +1,5 @@
 Given(/^I visit the home page$/) do
-  visit("localhost:6000/index")
+  pending
 end
 
 When(/^I play a game against an Impossible AI$/) do
