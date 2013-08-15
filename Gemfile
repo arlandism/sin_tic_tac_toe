@@ -9,7 +9,7 @@ group :test do
   gem 'rspec-expectations'
   gem 'rack-test', "~> 0.6.2"
   gem 'sinatra-contrib'
-  gem 'cucumber-sinatra' 
+  gem 'cucumber' 
   gem 'capybara', "~> 2.1.0" 
   gem 'launchy'
   gem 'rest-client'
