@@ -9,6 +9,7 @@ require 'capybara/cucumber'
 require 'rspec'
 
 Capybara.app = TTTDuet
+`./run_server.sh`
 
 class MyAppWorld
   include Capybara::DSL
