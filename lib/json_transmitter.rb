@@ -19,6 +19,7 @@ class JsonTransmitter
     JSON.load(data)
   end
 
+  private
   def try_substitution(data)
     if data.class.eql?(nil)
       data = ""
