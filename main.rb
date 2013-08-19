@@ -24,7 +24,7 @@ class TTTDuet < Sinatra::Base
     human_move = {move => "x"}
     board_state = Helpers.add_hashes(request.cookies,human_move)
     computer = AI.new
-    game_info = Helpers.call_ai(computer,board_state) 
+    game_info = Helpers.call_ai(computer,{"board"=> board_state}) 
     comp_move = Helpers.ai_move(game_info)
     response.set_cookie(comp_move,"o")
     set_winner_if_exists(response,game_info)
@@ -63,4 +63,8 @@ class Helpers
   def self.ai_move(hash)
     hash["move"]
   end
+end
+
+if __FILE__ == $0
+  TTTDuet.run!
 end
