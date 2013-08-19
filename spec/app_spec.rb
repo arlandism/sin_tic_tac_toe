@@ -1,7 +1,7 @@
 require 'rack/test'
 require_relative '../main'
 
-describe 'MyApp' do
+describe 'TTTDuet' do
   include Rack::Test::Methods
 
   def app
@@ -81,7 +81,7 @@ describe 'MyApp' do
     it "gives AI.next_move current cookies" do
       ai = mock(:AI)
       AI.stub(:new).and_return(ai)
-      ai.should_receive(:next_move).with({9 => "x"})
+      ai.should_receive(:next_move).with({"board" => {9 => "x"}})
       execute_post_request_with_move 9
     end
 
@@ -104,7 +104,7 @@ describe 'MyApp' do
         AI.stub(:new).and_return(ai)
         ai.stub(:next_move).and_return({"move" => 5})
         execute_post_request_with_move 9
-        current_board_state = {5 => "o", 9 => "x", 8 => "x"}
+        current_board_state = {"board" => {5 => "o", 9 => "x", 8 => "x"}}
         ai.should_receive(:next_move).with(current_board_state)
         execute_post_request_with_move 8
       end
