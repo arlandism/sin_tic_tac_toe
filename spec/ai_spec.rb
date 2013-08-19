@@ -49,12 +49,12 @@ describe AI do
       message = "stuff that should come through"
       @transmitter.stub(:send)
       @transmitter.stub(:receive).and_return(message) 
-      @ai.next_move("whatever")["move"].should == message 
+      @ai.next_move("whatever").should == message 
     end
 
     context "with o as winner"
     it "stores the winner from the transmitter" do
-      @transmitter.stub(:receive).and_return(1,"o")
+      @transmitter.stub(:receive).and_return({"move" => 1, "winner" => "o"})
       @transmitter.stub(:send)
       game_info = @ai.next_move({})
       game_info["move"].should == 1
@@ -64,7 +64,7 @@ describe AI do
 
     context "with x as winner"
     it "stores other winner from transmitter" do
-      @transmitter.stub(:receive).and_return(2,"x")
+      @transmitter.stub(:receive).and_return({"move" => 2, "winner" => "x"})
       @transmitter.stub(:send)
       info = @ai.next_move({})
       info["move"].should == 2
