@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python service/network_io/start_server.py &>log.txt &
+python /Users/arlandislawrence/development/python/tic_tac_toe/network_io/start_server.py &>log.txt &
 ruby main.rb
