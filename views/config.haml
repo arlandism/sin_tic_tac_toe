@@ -7,9 +7,10 @@
     %form{:method => "post", :action => "/config"}
       %p Please select an AI difficulty
       %label
-        %input{:type => "radio", :name => "difficulty", :value => 20}
+        %input{:type => "radio", :name => "difficulty", :value => 20, :id => "hard"}
         Hard
       %label
-        %input{:type => "radio", :name => "difficulty", :value => 1}
+        %input{:type => "radio", :name => "difficulty", :value => 1, :id => "easy"}
         Easy
+      %input{:value => "submit", :type => "submit"}
 
