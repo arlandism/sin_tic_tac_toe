@@ -19,6 +19,15 @@ class TTTDuet < Sinatra::Base
     redirect '/'
   end
 
+  get '/config' do
+    haml :config
+  end
+
+  post '/config' do
+    response.set_cookie("difficulty",params[:difficulty])
+    redirect '/'
+  end
+
   post '/move' do
     move = params[:player_move]
     response.set_cookie(move, "x")

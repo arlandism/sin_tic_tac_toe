@@ -184,30 +184,28 @@ describe 'TTTDuet' do
       end
     end
   end
-end
 
-describe "Helpers" do
-  
-  describe "#winner" do
-    context "o is the winner"
-    it "pulls winner out of a hash" do
-      Helpers.winner({"winner" => "o"}).should == "o"
+  describe "GET '/config'" do
+
+    it "renders" do
+      get '/config'
+      last_response.status.should == 200
+      last_response.body.should_not == ""
+    end
+  end
+
+  describe "POST '/config'" do
+    it "sets the configuration cookie(s)" do
+      post '/config', {:difficulty => 20}
+      rack_mock_session.cookie_jar["difficulty"].should == "20"
     end
 
-    context "x is the winner"
-    it "pulls winner out of a hash" do
-      Helpers.winner({"winner" => "x"}).should == "x"
-    end
-
-    context "winner is nil"
-    it "pulls winner out of hash" do
-      Helpers.winner({"winner" => nil}).should == nil
+    it "redirects to the index once its done" do
+      post '/config', {:difficulty => 20}
+      follow_redirect!
+      default_url = "http://example.org"
+      expected_path = "/"
+      last_request.url.should == default_url + expected_path
     end
   end
 end
-
-  #describe "integration" 
-  #  it "gets a move from AI and stores it as a cookie" do
-  #    post '/move', {:player_move => 3}   
-  #    rack_mock_session.cookie_jar["3"].should == "x"
-  #  end
