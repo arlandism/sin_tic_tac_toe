@@ -4,6 +4,7 @@ end
 
 When(/^I choose a Hard AI and play good moves$/) do
   choose 'hard'
+  click_button 'submit'
   click_button '1'
   click_button '9'
   click_button '2'
@@ -24,6 +25,7 @@ end
 
 When(/^I choose an Easy AI and play good moves$/) do
   choose 'hard'
+  click_button 'submit'
   click_button '1'
   click_button '9'
   click_button '2'
