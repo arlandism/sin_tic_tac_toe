@@ -1,0 +1,15 @@
+!!! 5
+%html
+  %head
+    %title
+      Configuration
+  %body
+    %form{:method => "post", :action => "/config"}
+      %p Please select an AI difficulty
+      %label
+        %input{:type => "radio", :name => "difficulty", :value => 20}
+        Hard
+      %label
+        %input{:type => "radio", :name => "difficulty", :value => 1}
+        Easy
+
