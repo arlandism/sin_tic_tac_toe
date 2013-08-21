@@ -1,38 +1,19 @@
-require_relative 'helpers'
 require_relative 'ai'
-
-class CookieManager
-
-  def initialize(request,response)
-    @request = request
-    @response = response
-  end
-
-  def set_cookie(key,val)
-    @response.set_cookie(key,val)
-  end
-
-  def clear_cookies
-    @request.cookies.keys.each do |key|
-      @response.delete_cookie(key)
-    end
-  end
-
-end
+require_relative 'cookie_manager'
 
 class StateManager
 
-  def initialize(request, response, move=nil)
+  def initialize(request, response)
       @request = request
       @response = response
       @cookie_manager = CookieManager.new(@request,@response)
-      @move = move
   end
 
-  def set_cookies
-    @cookie_manager.set_cookie(@move,"x")
-    comp_move = extract_data_and_call_ai
-    @cookie_manager.set_cookie(comp_move, "o")
+  def handle_cookies(params)
+    move = params[:player_move]
+    @cookie_manager.set_cookie(move,"x")
+    ai_move = extract_data_and_call_ai(move)
+    @cookie_manager.set_cookie(ai_move, "o")
     set_winner_if_exists  
   end
 
@@ -46,24 +27,31 @@ class StateManager
 
   private
 
-  def extract_data_and_call_ai
-    keys = @request.cookies.select{ |key,_| key=~/^[0-9]+$/ } 
-    state =  Helpers.add_hashes(keys, {@move => "x"})
-    state = insert_depth_if_present({"board" => state})
-    @game_info = Helpers.call_ai(AI.new, state) 
-    comp_move = Helpers.ai_move(@game_info)
-    comp_move
+  def extract_data_and_call_ai(move)
+    state = add_move(moves,move)
+    new_state = add_depth_if_present({"board" => state})
+    @received = AI.new.next_move(new_state) 
+    ai_move = @received["move"]    
+    ai_move
   end
 
-  def insert_depth_if_present(to_merge)
-    if @request.cookies["depth"]
-      to_merge.merge!({"depth" => @request.cookies["depth"].to_i})
-    end
+  def add_move(old_state,move)
+    old_state.merge({move => "x"})
+  end
+
+  def moves
+    keys = @request.cookies.select{ |key,_| key=~/^[0-9]+$/ } 
+  end
+
+  def add_depth_if_present(to_merge)
+    depth = @request.cookies["depth"]
+    depth ? to_merge.merge!({"depth" => depth.to_i}): nil
     to_merge
   end
 
   def set_winner_if_exists
-    @game_info.include?("winner") ? @cookie_manager.set_cookie("winner", @game_info["winner"]):nil
-    end
-
+    winner = @received["winner"]
+    winner ? @cookie_manager.set_cookie("winner", winner):nil
   end
+
+end
