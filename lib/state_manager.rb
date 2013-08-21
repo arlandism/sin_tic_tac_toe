@@ -20,9 +20,8 @@ class StateManager
 
   private
   def set_winner_if_exists
-    if @game_info.include?("winner")
-      @response.set_cookie("winner", @game_info["winner"])
+    @game_info.include?("winner") ? @response.set_cookie("winner", @game_info["winner"]):nil
     end
+
   end
 
-end
