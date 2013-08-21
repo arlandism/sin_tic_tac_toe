@@ -41,41 +41,26 @@ describe 'TTTDuet' do
   describe "POST '/move'" do
 
     default_move = {"move" => 3}
-    
-    it "redirects to index" do
+    default_url = "http://example.org"
+
+    it "stores player cookies and redirects" do
       AI.any_instance.stub(:new)
       AI.any_instance.stub(:next_move).and_return(default_move)
       execute_post_request_with_move 5
+      verify_cookie_value(5,"x")
+      verify_cookie_value(3,"o")
       follow_redirect!
-      default_url = "http://example.org"
       expected_path = "/"
       last_request.url.should == default_url + expected_path
     end
-
-    it "stores player move cookie " do
-      AI.any_instance.stub(:new)
-      AI.any_instance.stub(:next_move).and_return(default_move)
-      execute_post_request_with_move 6
-      verify_cookie_value(6,"x")
-    end
-
-    it "stores AI move cookie" do
-      AI.any_instance.stub(:next_move).and_return(default_move)
-      execute_post_request_with_move 6
-      verify_cookie_value(3,"o")
-    end
-
-    it "stores AI move again" do
-      AI.any_instance.stub(:next_move).and_return({"move" => 82})
-      execute_post_request_with_move 6
-      verify_cookie_value(82,"o")
-    end
-
-    it "has cookies that are persistent across requests" do
-      AI.any_instance.stub(:next_move).and_return(default_move)
-      execute_post_request_with_move 6
-      get '/'
-      verify_cookie_value(6,"x")
+    
+    it "gets the winner from AI" do
+      game_stuff = {"move" => 3, "winner" => "x"}
+      ai = mock(:AI)
+      AI.stub(:new).and_return(ai)
+      ai.stub(:next_move).and_return(game_stuff)
+      execute_post_request_with_move 2
+      rack_mock_session.cookie_jar["winner"].should == "x"
     end
 
     it "gives AI.next_move current cookies" do
@@ -83,6 +68,13 @@ describe 'TTTDuet' do
       AI.stub(:new).and_return(ai)
       ai.should_receive(:next_move).with({"board" => {9 => "x"}})
       execute_post_request_with_move 9
+    end
+
+    it "sets cookies that are persistent across requests" do
+      AI.any_instance.stub(:next_move).and_return(default_move)
+      execute_post_request_with_move 6
+      get '/'
+      verify_cookie_value(6,"x")
     end
 
     context "cookies containing both tokens" do
@@ -110,23 +102,6 @@ describe 'TTTDuet' do
       end
     end
 
-    it "gets the winner from AI" do
-      game_stuff = {"move" => 3, "winner" => "x"}
-      ai = mock(:AI)
-      AI.stub(:new).and_return(ai)
-      ai.stub(:next_move).and_return(game_stuff)
-      execute_post_request_with_move 2
-      rack_mock_session.cookie_jar["winner"].should == "x"
-    end
-
-    def execute_post_request_with_move(move)
-      post '/move', {:player_move => move.to_s}
-    end
-
-    def verify_cookie_value(key,val)
-      cookie_key = key.to_s
-      rack_mock_session.cookie_jar[cookie_key].should == val
-    end
 
     before(:each) do
       ClientSocket.any_instance.stub(:connect!)
@@ -136,8 +111,16 @@ describe 'TTTDuet' do
     after(:each) do
       rack_mock_session.clear_cookies
     end
-  end
 
+   def execute_post_request_with_move(move)
+      post '/move', {:player_move => move.to_s}
+    end
+
+    def verify_cookie_value(key,val)
+      cookie_key = key.to_s
+      rack_mock_session.cookie_jar[cookie_key].should == val
+    end
+  end
   
   describe "GET '/clear' " do
     it "redirects to index" do
