@@ -2,6 +2,7 @@ require 'rack/test'
 require_relative '../main'
 
 describe 'TTTDuet' do
+
   include Rack::Test::Methods
 
   def app
@@ -9,6 +10,7 @@ describe 'TTTDuet' do
   end
 
   describe "GET '/'" do
+
     it 'renders index' do
      get '/'
      last_response.status.should be 200
@@ -102,7 +104,6 @@ describe 'TTTDuet' do
       end
     end
 
-
     before(:each) do
       ClientSocket.any_instance.stub(:connect!)
       AI.any_instance.stub(:next_move)
@@ -123,6 +124,7 @@ describe 'TTTDuet' do
   end
   
   describe "GET '/clear' " do
+
     it "redirects to index" do
       get '/clear'
       follow_redirect!
@@ -178,6 +180,7 @@ describe 'TTTDuet' do
   end
 
   describe "POST '/config'" do
+
     it "sets the configuration cookie(s)" do
       post '/config', {:difficulty => 20}
       rack_mock_session.cookie_jar["depth"].should == "20"
