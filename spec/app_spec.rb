@@ -197,7 +197,7 @@ describe 'TTTDuet' do
   describe "POST '/config'" do
     it "sets the configuration cookie(s)" do
       post '/config', {:difficulty => 20}
-      rack_mock_session.cookie_jar["difficulty"].should == "20"
+      rack_mock_session.cookie_jar["depth"].should == "20"
     end
 
     it "redirects to the index once its done" do
