@@ -68,7 +68,7 @@ describe 'TTTDuet' do
     it "gives AI.next_move current cookies" do
       ai = mock(:AI)
       AI.stub(:new).and_return(ai)
-      ai.should_receive(:next_move).with({"board" => {9 => "x"}})
+      ai.should_receive(:next_move).with({"board" => {"9" => "x"}})
       execute_post_request_with_move 9
     end
 
@@ -98,7 +98,7 @@ describe 'TTTDuet' do
         AI.stub(:new).and_return(ai)
         ai.stub(:next_move).and_return({"move" => 5})
         execute_post_request_with_move 9
-        current_board_state = {"board" => {5 => "o", 9 => "x", 8 => "x"}}
+        current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"}}
         ai.should_receive(:next_move).with(current_board_state)
         execute_post_request_with_move 8
       end
@@ -106,7 +106,7 @@ describe 'TTTDuet' do
 
     it "sends the difficulty information if it's been set" do
       post '/config', {:difficulty => 10}
-      current_board_state = {"board" => {6 => "x"},
+      current_board_state = {"board" => {"6" => "x"},
                              "depth" => 10}
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
