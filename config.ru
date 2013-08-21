@@ -1,3 +1,3 @@
 require './main'
 
-TTTDuet.run!
+run TTTDuet.run!

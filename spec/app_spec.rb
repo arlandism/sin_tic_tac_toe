@@ -104,6 +104,14 @@ describe 'TTTDuet' do
       end
     end
 
+    it "sends the difficulty information if it's been set" do
+      post '/config', {:difficulty => 10}
+      current_board_state = {"board" => {6 => "x"},
+                             "depth" => 10}
+      AI.any_instance.should_receive(:next_move).with(current_board_state)
+      post '/move', {:player_move => 6}
+    end
+
     before(:each) do
       ClientSocket.any_instance.stub(:connect!)
       AI.any_instance.stub(:next_move)

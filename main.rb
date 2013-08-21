@@ -22,7 +22,7 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/config' do
-    StateManager.new(request,response).set_difficulty(params[:difficulty])
+    StateManager.new(request,response).set_configs(params)
     redirect '/'
   end
 
