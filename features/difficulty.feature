@@ -10,5 +10,5 @@ Feature: Select difficulty
     Then The AI should tie
 
     Given I visit the configuration page again
-    When I choose an Easy AI and play good moves
+    When I choose an Easy AI and play dumb moves
     Then I should win

@@ -23,14 +23,12 @@ Given(/^I visit the configuration page again$/) do
   visit '/config'
 end
 
-When(/^I choose an Easy AI and play good moves$/) do
-  choose 'hard'
+When(/^I choose an Easy AI and play dumb moves$/) do
+  choose 'Easy'
   click_button 'submit'
   click_button '1'
-  click_button '9'
   click_button '2'
-  click_button '7'
-  click_button '6'
+  click_button '3'
 end
 
 Then(/^I should win$/) do
