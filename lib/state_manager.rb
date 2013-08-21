@@ -1,3 +1,6 @@
+require 'helpers'
+require 'ai'
+
 class StateManager
 
   def initialize(request, response, move)
