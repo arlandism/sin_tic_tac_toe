@@ -13,9 +13,7 @@ class TTTDuet < Sinatra::Base
   end
 
   get '/clear' do
-    request.cookies.keys.each do |key|
-      response.delete_cookie(key)
-    end
+    StateManager.new(request,response).clear_cookies
     redirect '/'
   end
 
@@ -24,7 +22,7 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/config' do
-    response.set_cookie("depth",params[:difficulty])
+    StateManager.new(request,response).set_difficulty(params[:difficulty])
     redirect '/'
   end
 

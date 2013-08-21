@@ -3,7 +3,7 @@ require 'ai'
 
 class StateManager
 
-  def initialize(request, response, move)
+  def initialize(request, response, move=nil)
       @request = request
       @response = response
       @move = move
@@ -16,6 +16,16 @@ class StateManager
     comp_move = Helpers.ai_move(@game_info)
     @response.set_cookie(comp_move, "o")
     set_winner_if_exists  
+  end
+
+  def set_difficulty(difficulty)
+    @response.set_cookie("depth",difficulty)
+  end
+
+  def clear_cookies
+    @request.cookies.keys.each do |key|
+      @response.delete_cookie(key)
+    end
   end
 
   private
