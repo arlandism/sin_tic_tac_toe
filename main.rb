@@ -28,7 +28,7 @@ class TTTDuet < Sinatra::Base
 
   post '/move' do
     move = params[:player_move]
-    StateManager.new(request, response, move).set_cookies
+    StateManager.new(request, response).handle_cookies(params)
     redirect '/'
   end
 
