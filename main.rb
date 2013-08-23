@@ -1,8 +1,8 @@
 require 'sinatra'
 require 'haml'
 
-require_relative 'lib/winner_presenter'
-require_relative 'lib/button_presenter'
+require_relative 'lib/presenters/winner_presenter'
+require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/state_manager'
 
 class TTTDuet < Sinatra::Base
