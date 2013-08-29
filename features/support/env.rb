@@ -8,7 +8,10 @@ require 'capybara'
 require 'capybara/cucumber'
 require 'rspec'
 
+
 Capybara.app = TTTDuet
+
+`python /Users/arlandislawrence/development/python/tic_tac_toe/network_io/start_server.py &>log.txt &`
 
 class MyAppWorld
   include Capybara::DSL
