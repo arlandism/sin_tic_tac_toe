@@ -34,6 +34,6 @@ class TTTDuet < Sinatra::Base
 
 end
 
-if __FILE__ == $0
+if __FILE__ == $0 
   TTTDuet.run!
 end
