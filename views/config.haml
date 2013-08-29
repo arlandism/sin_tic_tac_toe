@@ -5,7 +5,7 @@
       Configuration
   %body
     %form{:method => "post", :action => "/config"}
-      %p Please select an AI difficulty
+      %p Please select an AI difficulty:
       %label
         %input{:type => "radio", :name => "difficulty", :value => 20, :id => "hard"}
         Hard
@@ -13,4 +13,14 @@
         %input{:type => "radio", :name => "difficulty", :value => 1, :id => "easy"}
         Easy
       %input{:value => "submit", :type => "submit"}
+
+      %p First Player:
+      %label
+        %input{:type => "radio", :name => "first_player", :value => "human"}
+        Human
+      %label
+        %input{:type => "radio", :name => "first_player", :value => "ai"}
+        Computer
+      %input{:value => "submit", :type => "submit"}
+
 
