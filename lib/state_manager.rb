@@ -4,9 +4,9 @@ require_relative 'cookie_manager'
 class StateManager
 
   def initialize(request, response)
-      @request = request
-      @response = response
-      @cookie_manager = CookieManager.new(@request,@response)
+    @request = request
+    @response = response
+    @cookie_manager = CookieManager.new(@request,@response)
   end
 
   def handle_cookies(params)
