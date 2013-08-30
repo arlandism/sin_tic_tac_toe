@@ -7,14 +7,15 @@ class StateManager
     @request = request
     @response = response
     @cookie_manager = CookieManager.new(@request,@response)
+    @extraction = DataExtraction.new(@request,@response)
   end
 
   def handle_cookies(params)
     move = params[:player_move]
     @cookie_manager.set_cookie(move,"x")
-    ai_move = extract_data_and_call_ai(move)
+    ai_move = @extraction.extract_data_and_call_ai(move)
     @cookie_manager.set_cookie(ai_move, "o")
-    set_winner_if_exists  
+    @extraction.set_winner_if_exists  
   end
 
   def set_configs(params)
@@ -25,10 +26,18 @@ class StateManager
     @cookie_manager.clear_cookies    
   end
 
-  private
+end
+
+class DataExtraction
+
+  def initialize(request, response)
+    @request = request
+    @response = response
+    @cookie_manager = CookieManager.new(@request,@response)
+  end
 
   def extract_data_and_call_ai(move)
-    state = add_move(moves,move)
+    state = add_move(extract_moves_from_cookies,move)
     new_state = add_depth_if_present({"board" => state})
     @received = AI.new.next_move(new_state) 
     ai_move = @received["move"]    
@@ -39,7 +48,7 @@ class StateManager
     old_state.merge({move => "x"})
   end
 
-  def moves
+  def extract_moves_from_cookies
     keys = @request.cookies.select{ |key,_| key=~/^[0-9]+$/ } 
   end
 
@@ -55,3 +64,5 @@ class StateManager
   end
 
 end
+
+
