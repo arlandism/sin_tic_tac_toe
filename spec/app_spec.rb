@@ -120,41 +120,21 @@ describe 'TTTDuet' do
       last_request.url.should == default_url + expected_path
     end
 
-    it "works with 1 cookie set" do
-      rack_mock_session.cookie_jar["3"] = "x"
-      get '/clear'
-      follow_redirect!
-      rack_mock_session.cookie_jar["3"].should == ""
-    end
-    
-    context "all board keys" do
-      it "works with multiple cookies set" do
+      it "clears all the move cookies" do
         cookie_list = ["1","2","3","4"]
-        cookie_list.each do |n|
-          rack_mock_session.cookie_jar[n] = "x"
-        end
+        cookie_list.each {|val| rack_mock_session.cookie_jar[val] = "x"}
         get '/clear'
-        follow_redirect!
-        cookie_list.each do |n|
-          rack_mock_session.cookie_jar[n].should == ""
-        end
+        cookie_list.each {|val| rack_mock_session.cookie_jar[val].should == ""}
       end
-    end
     
-    context "mix of board information" do
-      it "works with multiple cookies set" do
+      it "clears move cookies and descriptive cookies" do
         cookie_list = ["1","2","3","winner"]
-        cookie_list.each do |n|
-          rack_mock_session.cookie_jar[n] = "x"
-        end
+        cookie_list.each {|val| rack_mock_session.cookie_jar[val] = "x"}
         get '/clear'
-        follow_redirect!
-        cookie_list.each do |n|
-          rack_mock_session.cookie_jar[n].should == ""
-        end
+        cookie_list.each {|val| rack_mock_session.cookie_jar[val].should == ""}
       end
+
     end
-  end
 
   describe "GET '/config'" do
 
@@ -163,11 +143,12 @@ describe 'TTTDuet' do
       last_response.status.should == 200
       last_response.body.should_not == ""
     end
+
   end
 
   describe "POST '/config'" do
 
-    it "sets the configuration cookie(s)" do
+    it "sets the difficulty cookie" do
       post '/config', {:difficulty => 20}
       rack_mock_session.cookie_jar["depth"].should == "20"
     end
@@ -179,5 +160,6 @@ describe 'TTTDuet' do
       expected_path = "/"
       last_request.url.should == default_url + expected_path
     end
+    
   end
 end
