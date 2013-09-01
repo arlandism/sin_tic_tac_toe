@@ -12,9 +12,9 @@ describe 'TTTDuet' do
   describe "GET '/'" do
 
     it 'renders index' do
-     get '/'
-     last_response.status.should be 200
-     end
+      get '/'
+      last_response.status.should be 200
+    end
 
   end
 
@@ -28,7 +28,6 @@ describe 'TTTDuet' do
       AI.any_instance.stub(:next_move).and_return(default_move)
       execute_post_request_with_move 5
       verify_cookie_value(5,"x")
-      verify_cookie_value(3,"o")
       follow_redirect!
       expected_path = "/"
       last_request.url.should == default_url + expected_path
@@ -43,21 +42,6 @@ describe 'TTTDuet' do
       rack_mock_session.cookie_jar["winner"].should == "x"
     end
 
-    it "gives AI.next_move current cookies" do
-      ai = mock(:AI)
-      AI.stub(:new).and_return(ai)
-      ai.should_receive(:next_move).with({"board" => {"9" => "x"}})
-      execute_post_request_with_move 9
-    end
-
-    it "sets cookies that are persistent across requests" do
-      AI.any_instance.stub(:next_move).and_return(default_move)
-      execute_post_request_with_move 6
-      get '/'
-      verify_cookie_value(6,"x")
-    end
-
-    context "cookies containing both tokens" do
       it "has cookies that are persistent across multiple post requests" do
         ai = mock(:AI)
         AI.stub(:new).and_return(ai)
@@ -68,27 +52,25 @@ describe 'TTTDuet' do
         verify_cookie_value(5,"x")
         verify_cookie_value(6,"o")
       end
+
+    it "hands the game state and configurations to AI" do
+      post '/config', {:difficulty => 10}
+      current_board_state = {"board" => {"6" => "x"},
+                             "depth" => "10"}
+      AI.any_instance.should_receive(:next_move).with(current_board_state)
+      execute_post_request_with_move 6
     end
 
-    context "after multiple requests" do
-      it "gives AI.next current cookies" do
+      it "hands off state to AI with AI moves already made" do
         ai = mock(:AI)
         AI.stub(:new).and_return(ai)
         ai.stub(:next_move).and_return({"move" => 5})
         execute_post_request_with_move 9
-        current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"}}
+        current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"},
+                               "depth" => nil}
         ai.should_receive(:next_move).with(current_board_state)
         execute_post_request_with_move 8
       end
-    end
-
-#    it "sends the difficulty information if it's been set" do
-#      post '/config', {:difficulty => 10}
-#      current_board_state = {"board" => {"6" => "x"},
-#                             "depth" => 10}
-#      AI.any_instance.should_receive(:next_move).with(current_board_state)
-#      post '/move', {:player_move => 6}
-#    end
 
     before(:each) do
       ClientSocket.any_instance.stub(:connect!)
@@ -153,9 +135,12 @@ describe 'TTTDuet' do
       rack_mock_session.cookie_jar["depth"].should == "20"
     end
 
-    it "sets the first_player cookie" do
-      post '/config', {:first_player => "human"}
-      rack_mock_session.cookie_jar["first_player"].should == "human"
+    it "calls the service if first_player is set to computer and sets its move in the cookie" do
+      ai = double(:ai)
+      AI.stub(:new).and_return(ai)
+      ai.should_receive(:next_move).and_return({"move" => "fake cookie"})
+      post '/config', {:first_player => "computer"}
+      rack_mock_session.cookie_jar["fake cookie"].should ==  "o"
     end
 
     it "redirects to the index once its done" do
@@ -166,5 +151,5 @@ describe 'TTTDuet' do
       last_request.url.should == default_url + expected_path
     end
 
-    end 
-  end
+  end 
+end
