@@ -33,4 +33,12 @@ end
 
 Then(/^I should win$/) do
   page.should have_content("x wins")
+  teardown
+  end
+
+def teardown
+  visit '/config'
+  choose 'Hard'
+  choose 'Human'
+  click_button 'submit'
 end
