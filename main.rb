@@ -21,26 +21,31 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/config' do
-    first_player = params[:first_player]
     difficulty = params[:difficulty]
+    first_player = params[:first_player]
     response.set_cookie("depth", difficulty)
-    response.set_cookie("first_player",first_player)
+    if first_player == "computer"
+      ai_move = AI.new.next_move("board" => {})
+      response.set_cookie(ai_move["move"],"o")
+    end
     redirect '/'
   end
 
   post '/move' do
-    move = params[:player_move]
-    @request.cookies[move] = "x"
-    latest_state = {"board" => @request.cookies}
-    depth = @request.cookies["depth"]
-    if depth
-      latest_state["depth"] = depth.to_i
-    end
-    service_response = AI.new.next_move(latest_state)
-    response.set_cookie(move,"x")
+    latest_move = params[:player_move]
+    game_state = prepare_game_state_for_service(latest_move) 
+    service_response = AI.new.next_move(game_state)
+    response.set_cookie(latest_move,"x")
     response.set_cookie(service_response["move"], "o")
     service_response["winner"] ? response.set_cookie("winner", service_response["winner"]): nil
     redirect '/'
+  end
+
+  def prepare_game_state_for_service(latest_move)
+    game_state = {"board" => @request.cookies.select{ |key,_| key=~/^[0-9]+$/ }}
+    game_state["board"][latest_move] = "x"
+    game_state["depth"] = @request.cookies.fetch("depth", nil)
+    return game_state
   end
 
 end
