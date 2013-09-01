@@ -9,7 +9,6 @@ class TTTDuet < Sinatra::Base
 
   set :difficulty, 20
   set :first_player, "human"
-  set :game_state, {}
 
   get '/' do
     haml :index 
