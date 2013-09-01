@@ -9,6 +9,19 @@ describe 'TTTDuet' do
     TTTDuet.new
   end
 
+  after(:each) do
+    TTTDuet.settings.difficulty = 20
+  end
+
+  describe "settings" do
+
+    it "has game defaults" do
+      TTTDuet.difficulty.should == 20
+      TTTDuet.first_player.should == "human"
+    end
+
+  end
+
   describe "GET '/'" do
 
     it 'renders index' do
@@ -56,7 +69,7 @@ describe 'TTTDuet' do
     it "hands the game state and configurations to AI" do
       post '/config', {:difficulty => 10}
       current_board_state = {"board" => {"6" => "x"},
-                             "depth" => "10"}
+                             "depth" => 10}
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       execute_post_request_with_move 6
     end
@@ -67,7 +80,7 @@ describe 'TTTDuet' do
         ai.stub(:next_move).and_return({"move" => 5})
         execute_post_request_with_move 9
         current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"},
-                               "depth" => nil}
+                               "depth" => 20}
         ai.should_receive(:next_move).with(current_board_state)
         execute_post_request_with_move 8
       end
@@ -129,10 +142,10 @@ describe 'TTTDuet' do
   end
 
   describe "POST '/config'" do
-
-    it "sets the difficulty cookie" do
-      post '/config', {:difficulty => 20}
-      rack_mock_session.cookie_jar["depth"].should == "20"
+    
+    it "changes the difficulty variable in settings" do
+      post '/config', {:difficulty => 10}
+      TTTDuet.settings.difficulty.should == 10
     end
 
     it "calls the service if first_player is set to computer and sets its move in the cookie" do

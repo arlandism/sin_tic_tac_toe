@@ -7,6 +7,10 @@ require_relative 'lib/ai'
 
 class TTTDuet < Sinatra::Base
 
+  set :difficulty, 20
+  set :first_player, "human"
+  set :game_state, {}
+
   get '/' do
     haml :index 
   end
@@ -23,7 +27,7 @@ class TTTDuet < Sinatra::Base
   post '/config' do
     difficulty = params[:difficulty]
     first_player = params[:first_player]
-    response.set_cookie("depth", difficulty)
+    self.settings.difficulty = difficulty.to_i
     if first_player == "computer"
       ai_move = AI.new.next_move("board" => {})
       response.set_cookie(ai_move["move"],"o")
@@ -33,19 +37,18 @@ class TTTDuet < Sinatra::Base
 
   post '/move' do
     latest_move = params[:player_move]
-    game_state = prepare_game_state_for_service(latest_move) 
-    service_response = AI.new.next_move(game_state)
+    service_response = return_service_response(latest_move)
     response.set_cookie(latest_move,"x")
     response.set_cookie(service_response["move"], "o")
     service_response["winner"] ? response.set_cookie("winner", service_response["winner"]): nil
     redirect '/'
   end
 
-  def prepare_game_state_for_service(latest_move)
-    game_state = {"board" => request.cookies.select{ |key,_| key=~/^[0-9]+$/ }}
+  def return_service_response(latest_move)
+    game_state = {"board" => request.cookies}
     game_state["board"][latest_move] = "x"
-    game_state["depth"] = request.cookies.fetch("depth", nil)
-    return game_state
+    game_state["depth"] = self.settings.difficulty
+    return AI.new.next_move(game_state)
   end
 
 end
