@@ -12,4 +12,11 @@
       %label
         %input{:type => "radio", :name => "difficulty", :value => 1, :id => "easy"}
         Easy
+      %p Please select the first player:
+      %label
+        %input{:type => "radio", :name => "first_player", :value => "human", :id => "human"}
+        Human
+      %label
+        %input{:type => "radio", :name => "first_player", :value => "computer", :id => "computer"}
+        Computer
       %input{:value => "submit", :type => "submit"}
