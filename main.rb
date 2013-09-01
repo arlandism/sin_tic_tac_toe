@@ -12,7 +12,7 @@ class TTTDuet < Sinatra::Base
   end
 
   get '/clear' do
-    request.cookies.each_key { |key| response.delete_cookie(key)}
+    request.cookies.each_key { |key| response.delete_cookie(key) }
     redirect '/'
   end
 
@@ -42,13 +42,14 @@ class TTTDuet < Sinatra::Base
   end
 
   def prepare_game_state_for_service(latest_move)
-    game_state = {"board" => @request.cookies.select{ |key,_| key=~/^[0-9]+$/ }}
+    game_state = {"board" => request.cookies.select{ |key,_| key=~/^[0-9]+$/ }}
     game_state["board"][latest_move] = "x"
-    game_state["depth"] = @request.cookies.fetch("depth", nil)
+    game_state["depth"] = request.cookies.fetch("depth", nil)
     return game_state
   end
 
 end
+
 
 if __FILE__ == $0 
   TTTDuet.run!
