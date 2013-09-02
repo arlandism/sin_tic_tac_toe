@@ -9,24 +9,20 @@ describe 'TTTDuet' do
     TTTDuet.new
   end
 
-  after(:each) do
-    TTTDuet.settings.difficulty = 20
-  end
-
-  describe "settings" do
-
-    it "has game defaults" do
-      TTTDuet.difficulty.should == 20
-      TTTDuet.first_player.should == "human"
-    end
-
-  end
-
   describe "GET '/'" do
 
     it 'renders index' do
       get '/'
       last_response.status.should be 200
+    end
+
+    it "calls service and stores move cookie if first_player is computer" do
+      rack_mock_session.cookie_jar["first_player"] = "computer"
+      ai = double(:ai)
+      AI.stub(:new).and_return(ai)
+      ai.should_receive(:next_move).and_return({"move" => "fake_cookie"})
+      get '/'
+      rack_mock_session.cookie_jar["fake_cookie"].should == "o"
     end
 
   end
@@ -69,7 +65,7 @@ describe 'TTTDuet' do
     it "hands the game state and configurations to AI" do
       post '/config', {:difficulty => 10}
       current_board_state = {"board" => {"6" => "x"},
-                             "depth" => 10}
+                             "depth" => "10"}
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       execute_post_request_with_move 6
     end
@@ -80,7 +76,7 @@ describe 'TTTDuet' do
         ai.stub(:next_move).and_return({"move" => 5})
         execute_post_request_with_move 9
         current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"},
-                               "depth" => 20}
+                               "depth" => nil}
         ai.should_receive(:next_move).with(current_board_state)
         execute_post_request_with_move 8
       end
@@ -115,18 +111,14 @@ describe 'TTTDuet' do
       last_request.url.should == default_url + expected_path
     end
 
-      it "clears all the move cookies" do
-        cookie_list = ["1","2","3","4"]
-        cookie_list.each {|val| rack_mock_session.cookie_jar[val] = "x"}
+      it "clears move cookies and descriptive cookies but not config" do
+        cookies_to_be_deleted = ["1","2","3","winner"]
+        persistent_cookies = ["first_player", "depth"]
+        all_cookies =  cookies_to_be_deleted + persistent_cookies
+        all_cookies.each {|val| rack_mock_session.cookie_jar[val] = "x"}
         get '/clear'
-        cookie_list.each {|val| rack_mock_session.cookie_jar[val].should == ""}
-      end
-    
-      it "clears move cookies and descriptive cookies" do
-        cookie_list = ["1","2","3","winner"]
-        cookie_list.each {|val| rack_mock_session.cookie_jar[val] = "x"}
-        get '/clear'
-        cookie_list.each {|val| rack_mock_session.cookie_jar[val].should == ""}
+        cookies_to_be_deleted.each {|val| rack_mock_session.cookie_jar[val].should == ""}
+        persistent_cookies.each {|val| rack_mock_session.cookie_jar[val].should_not == ""}
       end
 
     end
@@ -143,17 +135,14 @@ describe 'TTTDuet' do
 
   describe "POST '/config'" do
     
-    it "changes the difficulty variable in settings" do
+    it "sets the difficulty cookie" do
       post '/config', {:difficulty => 10}
-      TTTDuet.settings.difficulty.should == 10
+      rack_mock_session.cookie_jar["depth"].should == "10"
     end
 
-    it "calls the service if first_player is set to computer and sets its move in the cookie" do
-      ai = double(:ai)
-      AI.stub(:new).and_return(ai)
-      ai.should_receive(:next_move).and_return({"move" => "fake cookie"})
+    it "sets first player cookie" do
       post '/config', {:first_player => "computer"}
-      rack_mock_session.cookie_jar["fake cookie"].should ==  "o"
+      rack_mock_session.cookie_jar["first_player"].should == "computer"
     end
 
     it "redirects to the index once its done" do

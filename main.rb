@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cookies'
 require 'haml'
 
 require_relative 'lib/presenters/winner_presenter'
@@ -6,16 +7,20 @@ require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/ai'
 
 class TTTDuet < Sinatra::Base
-
-  set :difficulty, 20
-  set :first_player, "human"
+  helpers Sinatra::Cookies
 
   get '/' do
+    if cookies[:first_player] == "computer"
+      ai_move = AI.new.next_move("board" => {})
+      response.set_cookie(ai_move["move"], "o")
+    end
     haml :index 
   end
 
   get '/clear' do
-    request.cookies.each_key { |key| response.delete_cookie(key) }
+    cookies.each_key do |cookie| 
+      response.delete_cookie(cookie) unless configuration_setting?(cookie)
+    end
     redirect '/'
   end
 
@@ -26,11 +31,8 @@ class TTTDuet < Sinatra::Base
   post '/config' do
     difficulty = params[:difficulty]
     first_player = params[:first_player]
-    self.settings.difficulty = difficulty.to_i
-    if first_player == "computer"
-      ai_move = AI.new.next_move("board" => {})
-      response.set_cookie(ai_move["move"],"o")
-    end
+    response.set_cookie("depth",difficulty)
+    response.set_cookie("first_player",first_player)
     redirect '/'
   end
 
@@ -38,20 +40,23 @@ class TTTDuet < Sinatra::Base
     latest_move = params[:player_move]
     service_response = return_service_response(latest_move)
     response.set_cookie(latest_move,"x")
-    response.set_cookie(service_response["move"], "o")
-    service_response["winner"] ? response.set_cookie("winner", service_response["winner"]): nil
+    response.set_cookie(service_response["move"],"o")
+    response.set_cookie("winner",service_response["winner"]) if service_response["winner"]
     redirect '/'
   end
 
   def return_service_response(latest_move)
-    game_state = {"board" => request.cookies}
+    game_state = {"board" => cookies.select{ |key,_| key=~/^[0-9]+$/ }}
     game_state["board"][latest_move] = "x"
-    game_state["depth"] = self.settings.difficulty
+    game_state["depth"] = cookies[:depth]
     return AI.new.next_move(game_state)
   end
 
-end
+  def configuration_setting?(setting_name)
+    setting_name == "first_player" or setting_name == "depth"
+  end
 
+end
 
 if __FILE__ == $0 
   TTTDuet.run!
