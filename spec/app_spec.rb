@@ -2,11 +2,15 @@ require 'rack/test'
 require_relative '../main'
 
 describe 'TTTDuet' do
-
   include Rack::Test::Methods
 
   def app
     TTTDuet.new
+  end
+
+  def verify_cookie_value(key,val)
+    cookie_key = key.to_s
+    rack_mock_session.cookie_jar[cookie_key].should == val
   end
 
   describe "GET '/'" do
@@ -22,84 +26,43 @@ describe 'TTTDuet' do
       AI.stub(:new).and_return(ai)
       ai.should_receive(:next_move).and_return({"move" => "fake_cookie"})
       get '/'
+      verify_cookie_value("fake_cookie","o")
       rack_mock_session.cookie_jar["fake_cookie"].should == "o"
     end
-
   end
 
   describe "POST '/move'" do
 
-    default_move = {"move" => 3}
-    default_url = "http://example.org"
+    before(:each) { ClientSocket.any_instance.stub(:connect!) }
+    let(:default_move) { {"move" => 3} }
+    let(:default_url) {"http://example.org"}
 
     it "stores player cookies and redirects" do
-      AI.any_instance.stub(:new)
       AI.any_instance.stub(:next_move).and_return(default_move)
-      execute_post_request_with_move 5
+      post '/move', {:player_move => 5}
       verify_cookie_value(5,"x")
       follow_redirect!
       expected_path = "/"
       last_request.url.should == default_url + expected_path
     end
     
-    it "gets the winner from AI" do
-      game_stuff = {"move" => 3, "winner" => "x"}
-      ai = mock(:AI)
-      AI.stub(:new).and_return(ai)
-      ai.stub(:next_move).and_return(game_stuff)
-      execute_post_request_with_move 2
-      rack_mock_session.cookie_jar["winner"].should == "x"
+    it "it stores the game information from AI" do
+      game_information = {"move" => 3, "winner" => "x"}
+      AI.any_instance.stub(:next_move).and_return(game_information)
+      post '/move', {:player_move => 2}
+      verify_cookie_value("winner","x")
+      verify_cookie_value("3","o")
     end
 
-      it "has cookies that are persistent across multiple post requests" do
-        ai = mock(:AI)
-        AI.stub(:new).and_return(ai)
-        ai.stub(:next_move).and_return({"move" => 6})
-        execute_post_request_with_move 8
-        execute_post_request_with_move 5
-        verify_cookie_value(8,"x")
-        verify_cookie_value(5,"x")
-        verify_cookie_value(6,"o")
-      end
-
     it "hands the game state and configurations to AI" do
-      post '/config', {:difficulty => 10}
+      post '/config', {:depth => 10}
       current_board_state = {"board" => {"6" => "x"},
                              "depth" => "10"}
       AI.any_instance.should_receive(:next_move).with(current_board_state)
-      execute_post_request_with_move 6
-    end
-
-      it "hands off state to AI with AI moves already made" do
-        ai = mock(:AI)
-        AI.stub(:new).and_return(ai)
-        ai.stub(:next_move).and_return({"move" => 5})
-        execute_post_request_with_move 9
-        current_board_state = {"board" => {"5" => "o", "9" => "x", "8" => "x"},
-                               "depth" => nil}
-        ai.should_receive(:next_move).with(current_board_state)
-        execute_post_request_with_move 8
-      end
-
-    before(:each) do
-      ClientSocket.any_instance.stub(:connect!)
-      AI.any_instance.stub(:next_move)
-    end
-
-    after(:each) do
-      rack_mock_session.clear_cookies
-    end
-
-   def execute_post_request_with_move(move)
-      post '/move', {:player_move => move.to_s}
-    end
-
-    def verify_cookie_value(key,val)
-      cookie_key = key.to_s
-      rack_mock_session.cookie_jar[cookie_key].should == val
+      post '/move', {:player_move => 6}
     end
   end
-  
+
   describe "GET '/clear' " do
 
     it "redirects to index" do
@@ -111,7 +74,7 @@ describe 'TTTDuet' do
       last_request.url.should == default_url + expected_path
     end
 
-      it "clears move cookies and descriptive cookies but not config" do
+      it "clears state cookies but not config" do
         cookies_to_be_deleted = ["1","2","3","winner"]
         persistent_cookies = ["first_player", "depth"]
         all_cookies =  cookies_to_be_deleted + persistent_cookies
@@ -120,7 +83,6 @@ describe 'TTTDuet' do
         cookies_to_be_deleted.each {|val| rack_mock_session.cookie_jar[val].should == ""}
         persistent_cookies.each {|val| rack_mock_session.cookie_jar[val].should_not == ""}
       end
-
     end
 
   describe "GET '/config'" do
@@ -130,28 +92,22 @@ describe 'TTTDuet' do
       last_response.status.should == 200
       last_response.body.should_not == ""
     end
-
   end
 
   describe "POST '/config'" do
-    
-    it "sets the difficulty cookie" do
-      post '/config', {:difficulty => 10}
-      rack_mock_session.cookie_jar["depth"].should == "10"
-    end
 
-    it "sets first player cookie" do
-      post '/config', {:first_player => "computer"}
+    it "sets the configurations" do
+      post '/config', {:depth => 10, :first_player => "computer"}
       rack_mock_session.cookie_jar["first_player"].should == "computer"
+      rack_mock_session.cookie_jar["depth"].should == "10" 
     end
 
     it "redirects to the index once its done" do
-      post '/config', {:difficulty => 20}
+      post '/config', {:depth => 20}
       follow_redirect!
       default_url = "http://example.org"
       expected_path = "/"
       last_request.url.should == default_url + expected_path
     end
-
   end 
 end
