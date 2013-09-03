@@ -14,8 +14,8 @@
       When you're ready to play, click a move
     #buttons
       %form{:method => "post", :action => "/move"}
-        %div=ButtonPresenter.render(request.cookies,9)
+        %div=ButtonPresenter.render(cookies,9)
       %br
       %form{:method => "get", :action => "/clear"}
         %input{:value => "Reset", :type => "submit"}
-    %p=Winner.render_if_winner(request.cookies)
+    %p=Winner.render_if_winner(cookies)
