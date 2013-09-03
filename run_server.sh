@@ -1,4 +1,6 @@
 #!/bin/bash
 
-python /Users/arlandislawrence/development/python/tic_tac_toe/network_io/start_server.py &>log.txt &
+echo "Please input the absolute path of the start_server script including the .py extension"
+read script_location
+python $script_location &>log.txt &
 ruby main.rb
