@@ -9,18 +9,18 @@ git clone https://github.com/arlandism/tic_tac_toe
 git clone https://github.com/arlandism/ttt_duet
 ```
 
-Enter root of project directory and make bash script executable.
+Enter root of project directory and make the bash script executable.
 ```bash
 cd ttt_duet
 chmod a+x run_server.sh
 ```
 
-Then run it:
+Then run the script:
 
 ```bash
 ./run_server.sh
 ```
 
-It will ask for the absolute path to the Python start_server script (include the .py extension on the filename)
+You should be prompted for the absolute path to the Python start_server script (include the .py extension on the filename)
 
 It should open a port at localhost://4567
