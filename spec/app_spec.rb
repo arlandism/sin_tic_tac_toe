@@ -29,6 +29,15 @@ describe 'TTTDuet' do
       verify_cookie_value("fake_cookie","o")
       rack_mock_session.cookie_jar["fake_cookie"].should == "o"
     end
+
+    it "doesn't call the service if moves have been made" do
+      post '/config', {:first_player => "computer"}
+      rack_mock_session.cookie_jar["4"] = "x"
+      ai = double(:ai)
+      AI.stub(:new).and_return(ai)
+      ai.should_not_receive(:next_move)      
+      get '/'
+    end
   end
 
   describe "POST '/move'" do
