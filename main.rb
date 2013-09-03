@@ -5,14 +5,19 @@ require 'haml'
 require_relative 'lib/presenters/winner_presenter'
 require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/ai'
+require_relative 'lib/cpu_move'
 
 class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
 
+  def add_cpu_move
+    ai_move = return_service_response({})
+    response.set_cookie(ai_move["move"], "o")
+  end
+
   get '/' do
-    if cookies[:first_player] == "computer" and no_moves_made
-      ai_move = return_service_response({})
-      response.set_cookie(ai_move["move"], "o")
+    if CpuMove.should_place(cookies.to_hash) 
+      add_cpu_move
     end
     haml :index 
   end

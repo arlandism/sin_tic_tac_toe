@@ -31,12 +31,42 @@ describe 'TTTDuet' do
     end
 
     it "doesn't call the service if moves have been made" do
-      post '/config', {:first_player => "computer"}
-      rack_mock_session.cookie_jar["4"] = "x"
       ai = double(:ai)
       AI.stub(:new).and_return(ai)
-      ai.should_not_receive(:next_move)      
+      ai.stub(:next_move).and_return("move" => 2)
+      ai.should_receive(:next_move).once
+
+      post '/config', {:first_player => "computer"}
+      post '/move', {:player_move => 4}
       get '/'
+    end
+
+    describe "root" do
+      it "does not place a move if cpumove says not to" do
+        CpuMove.should_receive(:should_place).and_return(false)
+
+        AI.any_instance.should_not_receive(:next_move)
+
+        get '/'
+      end
+
+      it "places a move cpu says to" do
+        CpuMove.should_receive(:should_place).and_return(true)
+
+        AI.any_instance.should_not_receive(:next_move)
+
+        get '/'
+      end
+
+      it "asks right question of cpumove" do
+        game_description = {"the" => "stuff"}
+
+        rack_mock_session.cookie_jar["the"] = "stuff"
+
+        CpuMove.should_receive(:should_place).with(game_description)
+
+        get '/'
+      end
     end
   end
 
