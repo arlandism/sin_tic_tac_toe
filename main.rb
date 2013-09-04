@@ -14,6 +14,7 @@ class TTTDuet < Sinatra::Base
     if CpuMove.should_place(cookies.to_hash) 
       add_cpu_move
     end
+    @winner_of_game = {"winner" => cookies["human_vs_ai_winner"]}
     haml :index 
   end
 
@@ -60,10 +61,6 @@ class TTTDuet < Sinatra::Base
     cookies.each_key do |cookie| 
       response.delete_cookie(cookie) unless configuration_setting?(cookie) 
     end
-  end
-
-  def no_moves_made
-    cookies.values.select { |val| val.eql?("o") or val.eql?("x") }.length == 0
   end
 
   def add_cpu_move
