@@ -38,10 +38,10 @@ class TTTDuet < Sinatra::Base
     human_move = params[:player_move]
     state_of_game = return_service_response(human_move)
     ai_move = state_of_game["ai_move"]
-    winner = state_of_game["winner"]
+    winner = state_of_game["winner_after_ai_move"]
     response.set_cookie(human_move,"x")
     response.set_cookie(ai_move,"o")
-    response.set_cookie("winner",winner)    
+    response.set_cookie("winner_after_ai_move",winner)    
     redirect '/'
   end
 
