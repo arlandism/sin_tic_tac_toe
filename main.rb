@@ -29,8 +29,10 @@ class TTTDuet < Sinatra::Base
   post '/config' do
     difficulty = params[:depth]
     first_player = params[:first_player]
+    second_player = params[:second_player]
     response.set_cookie("depth",difficulty)
     response.set_cookie("first_player",first_player)
+    response.set_cookie("second_player",second_player)
     redirect '/'
   end
 
@@ -40,7 +42,11 @@ class TTTDuet < Sinatra::Base
     ai_move = state_of_human_vs_ai_game["ai_move"]
     winner_of_human_vs_ai_game = state_of_human_vs_ai_game["winner_after_ai_move"]
     response.set_cookie(human_move,"x")
-    response.set_cookie(ai_move,"o")
+    if humans_only(cookies)
+      response.set_cookie(4,"o")
+    else
+      response.set_cookie(ai_move,"o")
+    end
     response.set_cookie("human_vs_ai_winner",winner_of_human_vs_ai_game)    
     redirect '/'
   end
@@ -65,6 +71,10 @@ class TTTDuet < Sinatra::Base
   def add_cpu_move
     ai_move = return_service_response({})
     response.set_cookie(ai_move["ai_move"], "o")
+  end
+
+  def humans_only(player_information)
+    player_information["first_player"] == "human" and player_information["second_player"] == "human"
   end
 
   def game_winner(cookies)

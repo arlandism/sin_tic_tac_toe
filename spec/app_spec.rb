@@ -50,7 +50,7 @@ describe 'TTTDuet' do
         get '/'
       end
 
-      it "places a move cpu says to" do
+      it "places a move if cpu says to" do
         CpuMove.should_receive(:should_place).and_return(true)
 
         AI.any_instance.should_not_receive(:next_move)
@@ -100,6 +100,32 @@ describe 'TTTDuet' do
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
     end
+
+    it "doesn't set the ai move if both players are human" do
+      rack_mock_session.cookie_jar["first_player"] = "human"
+      rack_mock_session.cookie_jar["second_player"] = "human"
+      ai_data = {"ai_move" => "ai"}
+      AI.any_instance.stub(:next_move).and_return(ai_data)
+      post '/move'
+      rack_mock_session.cookie_jar["ai"].should be nil
+    end
+
+    it "alternates tokens if both players are human" do
+      AI.any_instance.stub(:next_move).and_return({})
+      rack_mock_session.cookie_jar["first_player"] = "human"
+      rack_mock_session.cookie_jar["second_player"] = "human"
+      post '/move',{:player_move => 3}
+      post '/move',{:player_move => 4}
+      verify_cookie_value(3,"x")
+      verify_cookie_value(4,"o")
+    end
+
+    it "increments the round cookie" do
+      rack_mock_session.cookie_jar["round"] = 1
+      AI.any_instance.stub(:next_move).and_return({})
+      post '/move'
+      #rack_mock_session.cookie_jar["round"].should == 2
+    end
   end
 
   describe "GET '/clear' " do
@@ -136,8 +162,9 @@ describe 'TTTDuet' do
   describe "POST '/config'" do
 
     it "sets the configurations" do
-      post '/config', {:depth => 10, :first_player => "computer"}
+      post '/config', {:depth => 10, :first_player => "computer", :second_player => "human"}
       rack_mock_session.cookie_jar["first_player"].should == "computer"
+      rack_mock_session.cookie_jar["second_player"].should == "human"
       rack_mock_session.cookie_jar["depth"].should == "10" 
     end
 
