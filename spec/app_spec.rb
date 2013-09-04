@@ -119,8 +119,8 @@ describe 'TTTDuet' do
         all_cookies =  cookies_to_be_deleted + persistent_cookies
         all_cookies.each {|val| rack_mock_session.cookie_jar[val] = "x"}
         get '/clear'
-        cookies_to_be_deleted.each {|val| rack_mock_session.cookie_jar[val].should == ""}
-        persistent_cookies.each {|val| rack_mock_session.cookie_jar[val].should_not == ""}
+        cookies_to_be_deleted.each {|val| rack_mock_session.cookie_jar[val].should == "" }
+        persistent_cookies.each {|val| rack_mock_session.cookie_jar[val].should_not == "" }
       end
     end
 
