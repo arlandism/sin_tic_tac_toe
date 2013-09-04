@@ -41,7 +41,7 @@ class TTTDuet < Sinatra::Base
     winner = state_of_game["winner_after_ai_move"]
     response.set_cookie(human_move,"x")
     response.set_cookie(ai_move,"o")
-    response.set_cookie("winner_after_ai_move",winner)    
+    response.set_cookie("human_vs_ai_winner",winner)    
     redirect '/'
   end
 

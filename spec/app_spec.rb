@@ -89,7 +89,7 @@ describe 'TTTDuet' do
       game_information = {"ai_move" => 3, "winner_after_ai_move" => "x"}
       AI.any_instance.stub(:next_move).and_return(game_information)
       post '/move', {:player_move => 2}
-      verify_cookie_value("winner_after_ai_move","x")
+      verify_cookie_value("human_vs_ai_winner","x")
       verify_cookie_value("3","o")
     end
 
