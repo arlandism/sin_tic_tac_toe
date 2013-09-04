@@ -24,7 +24,7 @@ describe 'TTTDuet' do
       rack_mock_session.cookie_jar["first_player"] = "computer"
       ai = double(:ai)
       AI.stub(:new).and_return(ai)
-      ai.should_receive(:next_move).and_return({"move" => "fake_cookie"})
+      ai.should_receive(:next_move).and_return({"ai_move" => "fake_cookie"})
       get '/'
       verify_cookie_value("fake_cookie","o")
       rack_mock_session.cookie_jar["fake_cookie"].should == "o"
@@ -33,7 +33,7 @@ describe 'TTTDuet' do
     it "doesn't call the service if moves have been made" do
       ai = double(:ai)
       AI.stub(:new).and_return(ai)
-      ai.stub(:next_move).and_return("move" => 2)
+      ai.stub(:next_move).and_return("ai_move" => 2)
       ai.should_receive(:next_move).once
 
       post '/config', {:first_player => "computer"}
@@ -73,7 +73,7 @@ describe 'TTTDuet' do
   describe "POST '/move'" do
 
     before(:each) { ClientSocket.any_instance.stub(:connect!) }
-    let(:default_move) { {"move" => 3} }
+    let(:default_move) { {"ai_move" => 3} }
     let(:default_url) {"http://example.org"}
 
     it "stores player cookies and redirects" do
@@ -86,7 +86,7 @@ describe 'TTTDuet' do
     end
     
     it "it stores the game information from AI" do
-      game_information = {"move" => 3, "winner" => "x"}
+      game_information = {"ai_move" => 3, "winner" => "x"}
       AI.any_instance.stub(:next_move).and_return(game_information)
       post '/move', {:player_move => 2}
       verify_cookie_value("winner","x")

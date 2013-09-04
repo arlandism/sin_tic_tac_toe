@@ -37,7 +37,7 @@ class TTTDuet < Sinatra::Base
   post '/move' do
     human_move = params[:player_move]
     state_of_game = return_service_response(human_move)
-    ai_move = state_of_game["move"]
+    ai_move = state_of_game["ai_move"]
     winner = state_of_game["winner"]
     response.set_cookie(human_move,"x")
     response.set_cookie(ai_move,"o")
@@ -68,7 +68,7 @@ class TTTDuet < Sinatra::Base
 
   def add_cpu_move
     ai_move = return_service_response({})
-    response.set_cookie(ai_move["move"], "o")
+    response.set_cookie(ai_move["ai_move"], "o")
   end
 
 end

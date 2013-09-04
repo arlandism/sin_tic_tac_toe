@@ -8,6 +8,7 @@ group :test do
   gem 'rspec', "~> 2.11.0" 
   gem 'rspec-expectations'
   gem 'rack-test', "~> 0.6.2"
+  gem 'guard-rspec'  
   gem 'sinatra-contrib'
   gem 'cucumber' 
   gem 'capybara', "~> 2.1.0" 
