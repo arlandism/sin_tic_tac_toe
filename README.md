@@ -21,6 +21,10 @@ Then run the script:
 ./run_server.sh
 ```
 
-You should be prompted for the absolute path to the Python start_server script (include the .py extension on the filename)
+You should be prompted for the absolute or direct path to the Python start_server script
+located in tic_tac_toe/network_io/start_server.py (include the .py extension on the filename)
+Assuming you installed both projects in the same directory, you would input:
 
-It should open a port at localhost://4567
+```../tic_tac_toe/network_io/start_server.py```
+
+The server should open a port at localhost://4567
