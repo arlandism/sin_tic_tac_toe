@@ -10,11 +10,6 @@ require_relative 'lib/cpu_move'
 class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
 
-  def add_cpu_move
-    ai_move = return_service_response({})
-    response.set_cookie(ai_move["move"], "o")
-  end
-
   get '/' do
     if CpuMove.should_place(cookies.to_hash) 
       add_cpu_move
@@ -69,6 +64,11 @@ class TTTDuet < Sinatra::Base
 
   def no_moves_made
     cookies.values.select { |val| val.eql?("o") or val.eql?("x") }.length == 0
+  end
+
+  def add_cpu_move
+    ai_move = return_service_response({})
+    response.set_cookie(ai_move["move"], "o")
   end
 
 end
