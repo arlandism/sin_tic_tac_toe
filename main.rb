@@ -14,7 +14,6 @@ class TTTDuet < Sinatra::Base
     if CpuMove.should_place(cookies.to_hash) 
       add_cpu_move
     end
-    @winner_of_game = {"winner" => cookies["human_vs_ai_winner"]}
     haml :index 
   end
 
@@ -37,12 +36,12 @@ class TTTDuet < Sinatra::Base
 
   post '/move' do
     human_move = params[:player_move]
-    state_of_game = return_service_response(human_move)
-    ai_move = state_of_game["ai_move"]
-    winner = state_of_game["winner_after_ai_move"]
+    state_of_human_vs_ai_game = return_service_response(human_move)
+    ai_move = state_of_human_vs_ai_game["ai_move"]
+    winner_of_human_vs_ai_game = state_of_human_vs_ai_game["winner_after_ai_move"]
     response.set_cookie(human_move,"x")
     response.set_cookie(ai_move,"o")
-    response.set_cookie("human_vs_ai_winner",winner)    
+    response.set_cookie("human_vs_ai_winner",winner_of_human_vs_ai_game)    
     redirect '/'
   end
 
@@ -66,6 +65,10 @@ class TTTDuet < Sinatra::Base
   def add_cpu_move
     ai_move = return_service_response({})
     response.set_cookie(ai_move["ai_move"], "o")
+  end
+
+  def game_winner(cookies)
+    {"winner" => cookies["human_vs_ai_winner"]}
   end
 
 end
