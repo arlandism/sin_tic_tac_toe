@@ -51,9 +51,13 @@ describe 'TTTDuet' do
       end
 
       it "places a move if cpu says to" do
+        ai = double(:ai)
+
+        AI.stub(:new).and_return(ai)
+
         CpuMove.should_receive(:should_place).and_return(true)
 
-        AI.any_instance.should_not_receive(:next_move)
+        ai.should_receive(:next_move)
 
         get '/'
       end
