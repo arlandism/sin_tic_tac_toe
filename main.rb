@@ -7,6 +7,7 @@ require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/ai'
 require_relative 'lib/cpu_move'
 require_relative 'lib/next_player'
+require_relative 'lib/game_information'
 
 class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
@@ -40,23 +41,11 @@ class TTTDuet < Sinatra::Base
   post '/move' do
     first_player_move = params[:player_move]
     second_player_move = NextPlayer.move(cookies,first_player_move)
-    winner = winner_on_board(first_player_move,second_player_move,cookies)
+    winner = GameInformation.new(first_player_move,second_player_move,cookies).winner_on_board
     response.set_cookie(first_player_move,"x")
     response.set_cookie(second_player_move, "o")
     response.set_cookie("winner", winner)    
     redirect '/'
-  end
-
-  def winner_on_board(move_one,move_two,current_board)
-    service_response = return_service_response(move_one,move_two,current_board)
-    winner = service_response["winner_on_board"]
-  end
-
-  def return_service_response(latest_move,other_move,game_info)
-    game_state = {"board" => game_info.select{ |key,_| key=~/^[0-9]+$/ }}
-    game_state["board"][latest_move] = "x"
-    game_state["depth"] = game_info[:depth]
-    AI.new.next_move(game_state)
   end
 
   def configuration_setting?(setting_name)
@@ -70,7 +59,7 @@ class TTTDuet < Sinatra::Base
   end
 
   def add_cpu_move
-    ai_move = return_service_response({},"used to stay green",{})
+    ai_move = NextPlayer.move(cookies,nil) 
     response.set_cookie(ai_move["ai_move"], "o")
   end
 
