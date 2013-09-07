@@ -6,6 +6,7 @@ require_relative 'lib/presenters/winner_presenter'
 require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/ai'
 require_relative 'lib/cpu_move'
+require_relative 'lib/next_player'
 
 class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
@@ -37,25 +38,25 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/move' do
-    human_move = params[:player_move]
-    state_of_human_vs_ai_game = return_service_response(human_move)
-    ai_move = state_of_human_vs_ai_game["ai_move"]
-    winner_of_human_vs_ai_game = state_of_human_vs_ai_game["winner_after_ai_move"]
-    response.set_cookie(human_move,"x")
-    if humans_only(cookies)
-      response.set_cookie(4,"o")
-    else
-      response.set_cookie(ai_move,"o")
-    end
-    response.set_cookie("human_vs_ai_winner",winner_of_human_vs_ai_game)    
+    first_player_move = params[:player_move]
+    second_player_move = NextPlayer.move(cookies,first_player_move)
+    winner = winner_on_board(first_player_move,second_player_move,cookies)
+    response.set_cookie(first_player_move,"x")
+    response.set_cookie(second_player_move, "o")
+    response.set_cookie("winner", winner)    
     redirect '/'
   end
 
-  def return_service_response(latest_move)
-    game_state = {"board" => cookies.select{ |key,_| key=~/^[0-9]+$/ }}
+  def winner_on_board(move_one,move_two,current_board)
+    service_response = return_service_response(move_one,move_two,current_board)
+    winner = service_response["winner_on_board"]
+  end
+
+  def return_service_response(latest_move,other_move,game_info)
+    game_state = {"board" => game_info.select{ |key,_| key=~/^[0-9]+$/ }}
     game_state["board"][latest_move] = "x"
-    game_state["depth"] = cookies[:depth]
-    return AI.new.next_move(game_state)
+    game_state["depth"] = game_info[:depth]
+    AI.new.next_move(game_state)
   end
 
   def configuration_setting?(setting_name)
@@ -69,12 +70,8 @@ class TTTDuet < Sinatra::Base
   end
 
   def add_cpu_move
-    ai_move = return_service_response({})
+    ai_move = return_service_response({},"used to stay green",{})
     response.set_cookie(ai_move["ai_move"], "o")
-  end
-
-  def humans_only(player_information)
-    player_information["first_player"] == "human" and player_information["second_player"] == "human"
   end
 
   def game_winner(cookies)
