@@ -23,8 +23,10 @@ Given(/^I visit the configuration page again$/) do
   visit '/config'
 end
 
-When(/^I choose an Easy AI and play dumb moves$/) do
+When(/^I choose an Easy AI as the second player and play dumb moves$/) do
   choose 'Easy'
+  choose 'first_player_human'
+  choose 'second_player_computer'
   click_button 'submit'
   click_button '1'
   click_button '2'
@@ -34,11 +36,12 @@ end
 Then(/^I should win$/) do
   page.should have_content("x wins")
   teardown
-  end
+end
 
 def teardown
   visit '/config'
   choose 'Hard'
-  choose 'Human'
+  choose 'first_player_human'
+  choose 'first_player_computer'
   click_button 'submit'
 end

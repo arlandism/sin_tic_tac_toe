@@ -4,7 +4,8 @@ end
 
 When(/^I select the Computer as the first player and refresh the page$/) do
   choose 'hard'
-  choose 'computer'
+  choose 'first_player_computer'
+  choose 'second_player_human'
   click_button 'submit'
   visit '/'
 end
