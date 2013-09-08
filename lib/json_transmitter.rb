@@ -14,22 +14,8 @@ class JsonTransmitter
   end
 
   def receive
-    data = @socket.gets
-    data = try_substitution(data)
+    data = @socket.gets.to_s.strip
     JSON.load(data)
-  end
-
-  private
-  def try_substitution(data)
-    if data.class.eql?(nil)
-      data = ""
-    end
-    begin 
-      data = data.tr("\n","")
-    rescue
-      data = ""
-    end
-    data
   end
 
 end
