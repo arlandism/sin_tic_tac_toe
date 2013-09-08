@@ -46,5 +46,11 @@ describe GameInformation do
 
       GameInformation.new(game_state).winner_on_board.should == "x"
     end
+    
+    it "calls AI if received winner blank or nil" do
+      game_state = {"winner" => nil}
+      @ai.should_receive(:next_move).and_return("winner_on_board" => "x")
+      GameInformation.new(game_state).winner_on_board 
+    end
   end
 end

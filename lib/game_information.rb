@@ -1,4 +1,5 @@
 require_relative 'ai'
+require_relative 'default_strategy'
 
 class GameInformation
 
@@ -7,7 +8,7 @@ class GameInformation
   end
 
   def winner_on_board
-    winner = @current_game_information["winner"]||service_response["winner_on_board"]
+    winner  
   end
 
   def service_response
@@ -19,12 +20,12 @@ class GameInformation
 
   private
 
+  def winner
+    DefaultStrategy.new("winner",service_response["winner_on_board"],@current_game_information).attribute
+  end
+
   def depth
-    extracted_depth = @current_game_information["depth"]
-    if extracted_depth == nil or extracted_depth == ""
-      extracted_depth = 20
-    end
-    extracted_depth
+    DefaultStrategy.new("depth",20,@current_game_information).attribute
   end
 
   def moves_on_board
