@@ -18,4 +18,4 @@
       %br
       %form{:method => "get", :action => "/clear"}
         %input{:value => "Reset", :type => "submit"}
-    %p=Winner.render_if_winner(game_winner(cookies))
+    %p=Winner.render_if_winner(cookies)

@@ -14,9 +14,16 @@
         Easy
       %p Please select the first player:
       %label
-        %input{:type => "radio", :name => "first_player", :value => "human", :id => "human"}
+        %input{:type => "radio", :name => "first_player", :value => "human", :id => "first_player_human"}
         Human
       %label
-        %input{:type => "radio", :name => "first_player", :value => "computer", :id => "computer"}
+        %input{:type => "radio", :name => "first_player", :value => "computer", :id => "first_player_computer"}
+        Computer
+      %p Please select the second player:
+      %label
+        %input{:type => "radio", :name => "second_player", :value => "human", :id => "second_player_human"}
+        Human
+      %label
+        %input{:type => "radio", :name => "second_player", :value => "computer", :id => "second_player_computer"}
         Computer
       %input{:value => "submit", :type => "submit"}
