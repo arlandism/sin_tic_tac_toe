@@ -109,9 +109,9 @@ describe 'TTTDuet' do
       post '/move', {:player_move => 6}
     end
 
-    it "calls winner twice" do
+    it "calls winner three times" do
       @game_info.stub(:winner_on_board).and_return(nil)
-      @game_info.should_receive(:winner_on_board).twice
+      @game_info.should_receive(:winner_on_board).at_least(:twice)
       NextPlayer.stub(:move).and_return(3)
 
       post '/move'
