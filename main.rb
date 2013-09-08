@@ -41,7 +41,8 @@ class TTTDuet < Sinatra::Base
   post '/move' do
     response.set_cookie(first_player_move,"x")
     winner = GameInformation.new(cookies).winner_on_board
-    response.set_cookie(second_player_move(winner), "o")
+    response.set_cookie(second_player_move, "o")
+    winner = GameInformation.new(cookies).winner_on_board
     response.set_cookie("winner", winner)    
     redirect '/'
   end
@@ -50,9 +51,8 @@ class TTTDuet < Sinatra::Base
     params[:player_move]
   end
 
-  def second_player_move(winner)
-    second_player_move = NextPlayer.move(cookies) if winner == nil
-    return second_player_move
+  def second_player_move
+    NextPlayer.move(cookies) if GameInformation.new(cookies).winner_on_board == nil
   end
 
   def configuration_setting?(setting_name)
