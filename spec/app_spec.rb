@@ -108,15 +108,6 @@ describe 'TTTDuet' do
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
     end
-
-    it "calls winner three times" do
-      @game_info.stub(:winner_on_board).and_return(nil)
-      @game_info.should_receive(:winner_on_board).at_least(:twice)
-      NextPlayer.stub(:move).and_return(3)
-
-      post '/move'
-    end
-
   end
 
   describe "GET '/clear' " do
