@@ -26,22 +26,31 @@ describe NextPlayer do
     it "calls AI when is_human? returns false" do
       NextPlayer.stub(:is_human?).and_return(false) 
 
-      @ai.should_receive(:next_move).with({"board" => {2 => "x"}}).and_return({})
+      @ai.should_receive(:next_move).and_return({})
 
-      old_board = {"board" => {}}
-      to_add = 2
-      NextPlayer.move(old_board,to_add)
+      board = {"board" => {}}
+      NextPlayer.move(board)
     end
 
     it "returns what AI gives it" do
       NextPlayer.stub(:is_human?).and_return(false)
+
       @ai.should_receive(:next_move).and_return({"ai_move" => 17})
-      NextPlayer.move({},"whatever").should == 17
+
+      NextPlayer.move({}).should == 17
    end
 
-    it "returns null for a human move" do
+    it "returns nil for a human move" do
       NextPlayer.stub(:is_human?).and_return(true)
-      NextPlayer.move({},"whatever").should == nil
+      NextPlayer.move({}).should == nil
+    end
+
+    it "does some processing before calling AI" do
+      pre_processed = {"depth" => 20}
+      post_processed = {"depth" => 20, "board" => {}}
+
+      @ai.should_receive(:next_move).with(post_processed).and_return({})
+      NextPlayer.move(pre_processed)
     end
   end
 
