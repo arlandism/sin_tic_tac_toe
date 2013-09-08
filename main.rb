@@ -56,7 +56,8 @@ class TTTDuet < Sinatra::Base
   end
 
   def configuration_setting?(setting_name)
-    setting_name == "first_player" or setting_name == "depth"
+    configurations = ["first_player", "second_player", "depth"]
+    configurations.include?(setting_name)
   end
   
   def delete_non_configuration_cookies!
