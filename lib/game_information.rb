@@ -29,7 +29,10 @@ class GameInformation
   end
 
   def moves_on_board
-    @current_game_information.select{ |key,_| key=~/^[0-9]+$/ }
+    moves = @current_game_information.select{ |key,_| key=~/^[0-9]+$/ }
+    sanitized_moves = Hash.new 
+    moves.each_pair { |key, value| sanitized_moves[key.strip] = value.strip }
+    sanitized_moves
   end
 
 end
