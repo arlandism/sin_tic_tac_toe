@@ -32,11 +32,11 @@ describe 'TTTDuet' do
 
     it "calls service and stores move cookie if first_player is computer" do
       CpuMove.stub(:should_place).and_return(true)
-      NextPlayer.should_receive(:move).and_return({"ai_move" => "fake_cookie"})
+      NextPlayer.should_receive(:move).and_return("fake_move")
 
       get '/'
 
-      verify_cookie_value("fake_cookie","o")
+      verify_cookie_value("fake_move","o")
     end
 
      it "does not place a move if cpumove says not to" do
@@ -68,10 +68,14 @@ describe 'TTTDuet' do
 
   describe "POST '/move'" do
 
-    before(:each) do ClientSocket.any_instance.stub(:connect!) end
+    before(:each) do 
+      ClientSocket.any_instance.stub(:connect!) 
+      @game_info = double(:fake_info)
+      GameInformation.stub(:new).and_return(@game_info)
+    end
 
     it "eventually redirects to index" do
-      GameInformation.any_instance.stub(:winner_on_board)
+      @game_info.stub(:winner_on_board)
       NextPlayer.stub(:move)
 
       post '/move'
@@ -80,61 +84,37 @@ describe 'TTTDuet' do
       should_arrive_at_expected_path("/")
     end
 
-    it "sets the moves that the players give it" do
-      GameInformation.any_instance.stub(:winner_on_board)
+    it "sets the information it gets from players and service" do
+      @game_info.stub(:winner_on_board).and_return(nil)
       NextPlayer.stub(:move).and_return(3)
 
       post '/move', {:player_move => 5}
       verify_cookie_value(5,"x")
       verify_cookie_value(3,"o")
+      verify_cookie_value("winner","")
     end
     
-    it "it stores what GameInformation gives it" do
-      NextPlayer.stub(:move)
-      GameInformation.any_instance.stub(:winner_on_board).and_return("Bugz")
-      
-      post '/move'
-
-      verify_cookie_value("winner","Bugz")
-    end
-
-    xit "queries GameInformation with latest moves and game state" do
-      NextPlayer.stub(:move).and_return(3)
-      GameInformation.should_receive(:new).with(2,3,rack_mock_session.cookie_jar)
-
-      post '/move',{:player_move => 2}
+    it "shouldn't call NextPlayer if there's a winner" do
+      @game_info.stub(:winner_on_board).and_return("x")
+      NextPlayer.should_not_receive(:move)
+      post '/move',{:player_move => 3}
     end
 
     it "hands the game state and configurations to AI" do
       post '/config', {:depth => 10}
       current_board_state = {"board" => {"6" => "x"},
                              "depth" => "10"}
-      NextPlayer.stub(:move)
+      @game_info.stub(:winner_on_board)
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
     end
 
-    it "sets the move that NextPlayer tells it to" do
-      AI.any_instance.stub(:next_move).and_return({"winner_after_ai_move" => nil})
+    it "calls winner twice" do
+      @game_info.stub(:winner_on_board).and_return(nil)
+      @game_info.should_receive(:winner_on_board).twice
+      NextPlayer.stub(:move).and_return(3)
 
-      cpu_token = "o"
-      human_token = "x"
-
-      NextPlayer.should_receive(:move).and_return(3)
-
-      post '/move',{:player_move => 2}
-
-      verify_cookie_value(3,cpu_token)
-      verify_cookie_value(2,human_token)
-    end
-
-    it "doesn't set the ai move if both players are human" do
-      rack_mock_session.cookie_jar["first_player"] = "human"
-      rack_mock_session.cookie_jar["second_player"] = "human"
-      ai_data = {"ai_move" => "ai"}
-      AI.any_instance.stub(:next_move).and_return(ai_data)
       post '/move'
-      rack_mock_session.cookie_jar["ai"].should be nil
     end
 
   end
@@ -149,9 +129,10 @@ describe 'TTTDuet' do
 
     it "clears state cookies but not config" do
       cookies_to_be_deleted = ["1","2","3","winner"]
-      persistent_cookies = ["first_player", "depth"]
+      persistent_cookies = ["first_player", "second_player", "depth"]
       set_all_the_cookies(persistent_cookies,cookies_to_be_deleted)
       get '/clear'
+
       assert_config_cookies_live(persistent_cookies)
       assert_non_config_cookies_dead(cookies_to_be_deleted)
     end
