@@ -53,6 +53,4 @@ describe NextPlayer do
       NextPlayer.move(pre_processed)
     end
   end
-
-
 end
