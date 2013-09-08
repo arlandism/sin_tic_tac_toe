@@ -7,7 +7,7 @@ class GameInformation
   end
 
   def winner_on_board
-    winner = service_response["winner_on_board"]
+    winner = @current_game_information["winner"]||service_response["winner_on_board"]
   end
 
   def service_response

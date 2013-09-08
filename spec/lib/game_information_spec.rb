@@ -39,5 +39,12 @@ describe GameInformation do
 
       GameInformation.new({}).winner_on_board.should == "me"
     end
+
+    it "sends back the same winner if there's already one stored" do
+      game_state = {"winner" => "x"}
+      @ai.stub(:next_move).and_return("winner_on_board" => "new winner")
+
+      GameInformation.new(game_state).winner_on_board.should == "x"
+    end
   end
 end
