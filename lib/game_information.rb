@@ -14,14 +14,14 @@ class GameInformation
   def service_response
     game_state = {"board" => moves_on_board}
     game_state["depth"] = depth
-    what_we_got = AI.new.next_move(game_state)
-    return what_we_got
+    AI.new.next_move(game_state)
   end
 
   private
 
   def winner
-    DefaultStrategy.new("winner",service_response["winner_on_board"],@current_game_information).attribute
+    winner_from_service = service_response["winner_on_board"]
+    DefaultStrategy.new("winner",winner_from_service,@current_game_information).attribute
   end
 
   def depth
