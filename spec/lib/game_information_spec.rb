@@ -23,6 +23,13 @@ describe GameInformation do
 
       GameInformation.new(board_state).service_response
     end
+
+    it "defaults the depth if it's an empty string" do
+      game_state = {"depth" => ""}
+      @ai.should_receive(:next_move).with({"board" => {}, "depth" => 20})
+
+      GameInformation.new(game_state).service_response
+    end
   end
 
   describe "#winner_on_board" do
