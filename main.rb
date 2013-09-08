@@ -39,13 +39,20 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/move' do
-    first_player_move = params[:player_move]
-    second_player_move = NextPlayer.move(cookies,first_player_move)
-    winner = GameInformation.new(first_player_move,second_player_move,cookies).winner_on_board
     response.set_cookie(first_player_move,"x")
-    response.set_cookie(second_player_move, "o")
+    winner = GameInformation.new(cookies).winner_on_board
+    response.set_cookie(second_player_move(winner), "o")
     response.set_cookie("winner", winner)    
     redirect '/'
+  end
+
+  def first_player_move 
+    params[:player_move]
+  end
+
+  def second_player_move(winner)
+    second_player_move = NextPlayer.move(cookies) if winner == nil
+    return second_player_move
   end
 
   def configuration_setting?(setting_name)
@@ -59,12 +66,8 @@ class TTTDuet < Sinatra::Base
   end
 
   def add_cpu_move
-    ai_move = NextPlayer.move(cookies,nil) 
-    response.set_cookie(ai_move["ai_move"], "o")
-  end
-
-  def game_winner(cookies)
-    {"winner" => cookies["human_vs_ai_winner"]}
+    ai_move = NextPlayer.move(cookies) 
+    response.set_cookie(ai_move, "o")
   end
 
 end
