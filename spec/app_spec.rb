@@ -36,7 +36,7 @@ describe 'TTTDuet' do
 
       get '/'
 
-      verify_cookie_value("fake_move","o")
+      verify_cookie_value("fake_move","x")
     end
 
      it "does not place a move if cpumove says not to" do
@@ -108,6 +108,20 @@ describe 'TTTDuet' do
       AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
     end
+    
+    it "rotates tokens when computer moves first" do
+      rack_mock_session.cookie_jar["first_player"] = "computer"
+      rack_mock_session.cookie_jar["second_player"] = "human"
+      @game_info.stub(:winner_on_board)
+      NextPlayer.stub(:move).and_return(3,4)
+      get '/'
+
+      post '/move', {:player_move => 6}
+      verify_cookie_value(3,"x")
+      verify_cookie_value(4,"x")
+      verify_cookie_value(6,"o")
+    end
+
   end
 
   describe "GET '/clear' " do

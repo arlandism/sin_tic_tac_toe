@@ -39,10 +39,22 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/move' do
-    place_move_on_board(first_player_move,"x")
-    place_move_on_board(second_player_move,"o")
+    token_one = token(cookies)
+    place_move_on_board(first_player_move,token_one)
+    token_two = token(cookies)
+    place_move_on_board(second_player_move,token_two)
     place_winner_on_board
     redirect '/'
+  end
+
+  def token(game_information)
+    x_count = game_information.values.count("x")
+    o_count = game_information.values.count("o")
+    if x_count > o_count
+      return "o"
+    else
+      return "x"
+    end
   end
 
   def place_move_on_board(move,token)
@@ -74,7 +86,7 @@ class TTTDuet < Sinatra::Base
 
   def add_cpu_move
     ai_move = NextPlayer.move(cookies) 
-    response.set_cookie(ai_move, "o")
+    response.set_cookie(ai_move, token(cookies))
   end
 
 end
