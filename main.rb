@@ -40,8 +40,10 @@ class TTTDuet < Sinatra::Base
   post '/move' do
     token_one = token(cookies)
     place_move_on_board(first_player_move,token_one)
+
     token_two = token(cookies)
     place_move_on_board(second_player_move,token_two)
+
     place_winner_on_board
     redirect '/'
   end
@@ -72,6 +74,11 @@ class TTTDuet < Sinatra::Base
     NextPlayer.move(cookies) 
   end
 
+  def add_cpu_move
+    ai_move = NextPlayer.move(cookies) 
+    response.set_cookie(ai_move, token(cookies))
+  end
+
   def configuration_setting?(setting_name)
     configurations = ["first_player", "second_player", "depth"]
     configurations.include?(setting_name)
@@ -81,11 +88,6 @@ class TTTDuet < Sinatra::Base
     cookies.each_key do |cookie| 
       response.delete_cookie(cookie) unless configuration_setting?(cookie) 
     end
-  end
-
-  def add_cpu_move
-    ai_move = NextPlayer.move(cookies) 
-    response.set_cookie(ai_move, token(cookies))
   end
 
 end
