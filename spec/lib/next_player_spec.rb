@@ -45,20 +45,15 @@ describe NextPlayer do
       NextPlayer.move({}).should == nil
     end
 
-    it "does some processing before calling AI" do
-      pre_processed = {"depth" => 20}
-      post_processed = {"depth" => 20, "board" => {}}
-
-      @ai.should_receive(:next_move).with(post_processed).and_return({})
-      NextPlayer.move(pre_processed)
-    end
-
-    it "defaults the depth if it can't find it" do
-      pre_processed = {"depth" => ""}
-      post_processed = {"depth" => 20, "board" => {}}
-      
-      @ai.should_receive(:next_move).with(post_processed).and_return({})
-      NextPlayer.move(pre_processed)
-    end
   end
 end
+  describe "integration with GameInformation" do
+
+    it "delegates to GameInformation for AI response" do
+      game_state = {"1" => "x", "depth" => 20}
+      mock_game_info = double(:mock_game_info)
+      GameInformation.should_receive(:new).with(game_state).and_return(mock_game_info)
+      mock_game_info.should_receive(:service_response).and_return("ai_move" => 3)
+      NextPlayer.move(game_state).should == 3
+    end
+  end
