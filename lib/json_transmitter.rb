@@ -14,7 +14,7 @@ class JsonTransmitter
   end
 
   def receive
-    data = @stream.gets.to_s.strip
+    data = @stream.gets
     JSON.load(data)
   end
 
