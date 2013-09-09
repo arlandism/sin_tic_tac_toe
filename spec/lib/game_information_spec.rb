@@ -18,10 +18,14 @@ describe GameInformation do
     end 
 
     it "sanitizes information before passing it to AI" do
-      board_state = {"1\n" => "x\n", "depth" => 2}
+      board_state = {
+        "1\n" => "x\n", 
+        "2\n" => "o\n", 
+        "depth" => 2
+      }
       dirty = {"board" =>  {"1\n" => "x\n"}, "depth" => 2}
-      clean = {"board" => {"1" => "x"}, "depth" => 2}
-      @ai.should_receive(:next_move).with({"board" => {"1" => "x"}, "depth" => 2})
+      clean = {"board" => {"1" => "x", "2" => "o"}, "depth" => 2}
+      @ai.should_receive(:next_move).with(clean)
 
       GameInformation.new(board_state).service_response 
     end

@@ -1,5 +1,5 @@
 require_relative 'ai'
-require_relative 'default_strategy'
+require_relative 'data_structures'
 
 class GameInformation
 
@@ -12,27 +12,31 @@ class GameInformation
   end
 
   def service_response
-    game_state = {"board" => moves_on_board}
-    game_state["depth"] = depth
-    AI.new.next_move(game_state)
+    AI.new.next_move({
+      "board" => moves_on_board,
+      "depth" => depth
+    })
   end
 
   private
 
   def winner
-    winner_from_service = service_response["winner_on_board"]
-    DefaultStrategy.new("winner",winner_from_service,@current_game_information).attribute
+    DataStructures.presence_fetch(@current_game_information.to_hash, "winner") do
+      service_response["winner_on_board"]
+    end
   end
 
   def depth
-    DefaultStrategy.new("depth",20,@current_game_information).attribute
+    DataStructures.presence_fetch(@current_game_information.to_hash, "depth") {20}
   end
 
   def moves_on_board
     moves = @current_game_information.select{ |key,_| key=~/^[0-9]+$/ }
-    sanitized_moves = Hash.new 
-    moves.each_pair { |key, value| sanitized_moves[key.strip] = value.strip }
-    sanitized_moves
+    moves.reduce({}) do |bucket, (key, val)|
+      bucket[key.strip] = val.strip
+      bucket
+    end
+    
   end
 
 end
