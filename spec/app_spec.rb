@@ -187,7 +187,6 @@ describe 'TTTDuet' do
                              "depth" => "10"}
       @game_info.stub(:winner_on_board)
       @game_info.stub(:service_response).and_return("ai_move" => 3)
-      #AI.any_instance.should_receive(:next_move).with(current_board_state)
       post '/move', {:player_move => 6}
     end
   end
