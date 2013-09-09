@@ -1,4 +1,5 @@
 Given(/^I go to the configuration page$/) do
+    visit '/clear'
     visit '/config'
 end
 
