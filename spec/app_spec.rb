@@ -99,15 +99,6 @@ describe 'TTTDuet' do
       NextPlayer.should_not_receive(:move)
       post '/move',{:player_move => 3}
     end
-
-    it "hands the game state and configurations to AI" do
-      post '/config', {:depth => 10}
-      current_board_state = {"board" => {"6" => "x"},
-                             "depth" => "10"}
-      @game_info.stub(:winner_on_board)
-      AI.any_instance.should_receive(:next_move).with(current_board_state)
-      post '/move', {:player_move => 6}
-    end
     
     it "rotates tokens when computer moves first" do
       rack_mock_session.cookie_jar["first_player"] = "computer"
@@ -181,4 +172,23 @@ describe 'TTTDuet' do
       should_arrive_at_expected_path("/")
     end
   end 
+
+  describe "integration" do
+
+    before(:each) do
+      ClientSocket.any_instance.stub(:connect!) 
+      @game_info = double(:game_info)
+      GameInformation.stub(:new).and_return(@game_info)
+    end
+
+    it "hands the game state and configurations to AI" do
+      post '/config', {:depth => 10}
+      current_board_state = {"board" => {"6" => "x"},
+                             "depth" => "10"}
+      @game_info.stub(:winner_on_board)
+      @game_info.stub(:service_response).and_return("ai_move" => 3)
+      #AI.any_instance.should_receive(:next_move).with(current_board_state)
+      post '/move', {:player_move => 6}
+    end
+  end
 end
