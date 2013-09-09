@@ -6,7 +6,7 @@ class AI
   def initialize
     socket = ClientSocket.new 
     socket.connect!
-    @transmitter = JsonTransmitter.new socket
+    @transmitter = JsonTransmitter.new(socket)
   end
 
   def next_move(board_state)
