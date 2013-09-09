@@ -52,5 +52,13 @@ describe NextPlayer do
       @ai.should_receive(:next_move).with(post_processed).and_return({})
       NextPlayer.move(pre_processed)
     end
+
+    it "defaults the depth if it can't find it" do
+      pre_processed = {"depth" => ""}
+      post_processed = {"depth" => 20, "board" => {}}
+      
+      @ai.should_receive(:next_move).with(post_processed).and_return({})
+      NextPlayer.move(pre_processed)
+    end
   end
 end
