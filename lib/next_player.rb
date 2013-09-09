@@ -5,12 +5,16 @@ require_relative 'game_information'
 class NextPlayer
 
   def self.move(game_information)
+
     if NextPlayer.is_human?(game_information)
       return nil
     else
-      ai_move = GameInformation.new(game_information).service_response["ai_move"]
+      info = GameInformation.new(game_information)
+      response = info.service_response
+      ai_move = response["ai_move"]
       return ai_move
     end
+
   end
 
   def self.is_human?(player_information)
