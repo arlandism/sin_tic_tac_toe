@@ -4,7 +4,6 @@ require 'haml'
 
 require_relative 'lib/presenters/winner_presenter'
 require_relative 'lib/presenters/button_presenter'
-require_relative 'lib/ai'
 require_relative 'lib/cpu_move'
 require_relative 'lib/next_player'
 require_relative 'lib/game_information'
