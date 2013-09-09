@@ -1,5 +1,5 @@
 require 'rack/test'
-require_relative '../main'
+require_relative '../app'
 
 describe 'TTTDuet' do
   include Rack::Test::Methods
