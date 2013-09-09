@@ -2,19 +2,19 @@ require 'json'
 
 class JsonTransmitter
 
-  attr_reader :socket
+  attr_reader :stream
 
-  def initialize(socket)
-    @socket = socket
+  def initialize(stream)
+    @stream = stream
   end
 
   def send(data)
     data = JSON.dump(data)
-    @socket.puts(data) 
+    @stream.puts(data) 
   end
 
   def receive
-    data = @socket.gets.to_s.strip
+    data = @stream.gets.to_s.strip
     JSON.load(data)
   end
 

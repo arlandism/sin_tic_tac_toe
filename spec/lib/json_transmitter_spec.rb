@@ -6,31 +6,31 @@ describe 'JsonTransmitter' do
   describe "send and receive" do
 
     before(:each) do
-      @socket = double()
-      @transmitter = JsonTransmitter.new @socket
+      @stream = double()
+      @transmitter = JsonTransmitter.new @stream
     end
 
-    it "calls its socket for sending" do
-      @socket.should_receive(:puts)
+    it "calls its stream for sending" do
+      @stream.should_receive(:puts)
       @transmitter.send("")
     end
 
-    it "accesses its socket's gets method" do
-      @socket.should_receive(:gets)
+    it "accesses its stream's gets method" do
+      @stream.should_receive(:gets)
       @transmitter.receive
     end
 
     it "transforms info to json before sending" do
       greeting = "Hello"
       jsonified_greeting = JSON.dump(greeting)
-      @socket.should_receive(:puts).with(jsonified_greeting)
+      @stream.should_receive(:puts).with(jsonified_greeting)
       @transmitter.send(greeting)
     end
 
     it "decodes info from json upon receipt" do
       message = "Decode me!"
       jsonified_message = JSON.dump(message)
-      @socket.stub(:gets) {jsonified_message}
+      @stream.stub(:gets) {jsonified_message}
       @transmitter.receive.should == message
     end
 
@@ -38,7 +38,7 @@ describe 'JsonTransmitter' do
     it "knows how to deal with junk" do
       junk = JSON.dump("blah") + "\n"
       non_junk = "blah"
-      @socket.stub(:gets).and_return(junk)
+      @stream.stub(:gets).and_return(junk)
       @transmitter.receive.should == non_junk
     end
 
@@ -46,7 +46,7 @@ describe 'JsonTransmitter' do
     it "knows how to deal with junk" do
       junk = JSON.dump("ha") + " "
       non_junk = "ha"
-      @socket.stub(:gets).and_return(junk)
+      @stream.stub(:gets).and_return(junk)
       @transmitter.receive.should == non_junk
     end
   end
