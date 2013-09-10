@@ -5,8 +5,8 @@ describe HistoryStore do
   describe ".new_game" do
     
     it "creates a new game" do
-      HistoryStore.new_game.id.should == 1
-      HistoryStore.new_game.id.should == 2
+      game = HistoryStore.new_game
+      game.should_not == nil
     end
 
   end
