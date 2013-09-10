@@ -7,13 +7,14 @@ require_relative 'lib/presenters/button_presenter'
 require_relative 'lib/cpu_move'
 require_relative 'lib/next_player'
 require_relative 'lib/game_information'
+require_relative 'lib/game_recorder'
 
 class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
 
   get '/' do
     if CpuMove.should_place(cookies.to_hash) 
-      add_cpu_move
+      place_move_on_board(next_player_move, token(cookies))
     end
     haml :index 
   end
@@ -42,7 +43,7 @@ class TTTDuet < Sinatra::Base
     place_move_on_board(first_player_move,token_one)
 
     token_two = token(cookies)
-    place_move_on_board(second_player_move,token_two)
+    place_move_on_board(next_player_move,token_two)
 
     place_winner_on_board
     redirect '/'
@@ -60,23 +61,21 @@ class TTTDuet < Sinatra::Base
 
   def place_move_on_board(move,token)
     response.set_cookie(move,token)
+    GameRecorder.write_to_history({move => token})
   end
 
   def place_winner_on_board
-    response.set_cookie("winner",GameInformation.new(cookies).winner_on_board)
+    winner = GameInformation.new(cookies).winner_on_board
+    response.set_cookie("winner",winner)
+    GameRecorder.write_to_history({"winner" => winner})
   end
 
   def first_player_move 
     params[:player_move]
   end
 
-  def second_player_move
+  def next_player_move
     NextPlayer.move(cookies) 
-  end
-
-  def add_cpu_move
-    ai_move = NextPlayer.move(cookies) 
-    response.set_cookie(ai_move, token(cookies))
   end
 
   def configuration_setting?(setting_name)
