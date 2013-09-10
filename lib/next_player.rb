@@ -1,5 +1,4 @@
 require_relative 'ai'
-require_relative 'default_strategy'
 require_relative 'game_information'
 
 class NextPlayer
