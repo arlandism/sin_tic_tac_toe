@@ -1,8 +1,13 @@
 require 'rack/test'
+
 require_relative '../app'
 
 describe 'TTTDuet' do
   include Rack::Test::Methods
+
+  before(:each) do 
+    GameRecorder.stub(:write_to_history)
+  end
 
   def app
     TTTDuet.new
@@ -100,7 +105,7 @@ describe 'TTTDuet' do
       post '/move',{:player_move => 3}
     end
     
-    it "rotates tokens when computer moves first" do
+    it "rotates tokens" do
       rack_mock_session.cookie_jar["first_player"] = "computer"
       rack_mock_session.cookie_jar["second_player"] = "human"
       @game_info.stub(:winner_on_board)
@@ -109,10 +114,9 @@ describe 'TTTDuet' do
 
       post '/move', {:player_move => 6}
       verify_cookie_value(3,"x")
-      verify_cookie_value(4,"x")
       verify_cookie_value(6,"o")
+      verify_cookie_value(4,"x")
     end
-
   end
 
   describe "GET '/clear' " do
@@ -188,6 +192,16 @@ describe 'TTTDuet' do
       @game_info.stub(:winner_on_board)
       @game_info.stub(:service_response).and_return("ai_move" => 3)
       post '/move', {:player_move => 6}
+    end
+    
+    xit "delegates all information to GameRecorder" do
+      NextPlayer.stub(:move).and_return(4)
+      @game_info.stub(:winner_on_board).and_return("x")
+      GameRecorder.should_receive(:write_to_history).once.with({4 => "o"})
+      GameRecorder.should_receive(:write_to_history).once.with({34 => "x"})
+      GameRecorder.should_receive(:write_to_history).once.with({"winner" => "x"})
+
+      post '/move', {:player_move => 34}
     end
   end
 end
