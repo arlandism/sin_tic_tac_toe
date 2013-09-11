@@ -6,7 +6,8 @@ describe 'TTTDuet' do
   include Rack::Test::Methods
 
   before(:each) do 
-    GameRecorder.stub(:write_to_history)
+    GameRecorder.stub(:write_move)
+    GameRecorder.stub(:write_winner)
   end
 
   def app
@@ -176,37 +177,4 @@ describe 'TTTDuet' do
       should_arrive_at_expected_path("/")
     end
   end 
-
-  describe "integration" do
-
-    before(:each) do
-      ClientSocket.any_instance.stub(:connect!) 
-      @game_info = double(:game_info)
-      GameInformation.stub(:new).and_return(@game_info)
-    end
-
-    it "hands the game state and configurations to AI" do
-      post '/config', {:depth => 10}
-      current_board_state = {"board" => {"6" => "x"},
-                             "depth" => "10"}
-      @game_info.stub(:winner_on_board)
-      @game_info.stub(:service_response).and_return("ai_move" => 3)
-      post '/move', {:player_move => 6}
-    end
-
-    it "delegates moves to GameRecorder" do
-      NextPlayer.stub(:move).and_return(4)
-      @game_info.stub(:winner_on_board).and_return("x")
-      GameRecorder.should_receive(:write_to_history).once.with({4 => "o"})
-      GameRecorder.should_receive(:write_to_history).once.with({34 => "x"})
-      post '/move', {:player_move => 34}
-    end
-
-    it "delegates winners to GameRecorder" do
-      NextPlayer.stub(:move)
-      @game_info.stub(:winner_on_board).and_return("x")
-      GameRecorder.should_receive(:write_winner).once.with("x")
-      post '/move'
-    end
-  end
 end
