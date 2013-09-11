@@ -49,8 +49,8 @@ describe "integration tests" do
       NextPlayer.stub(:move).and_return(4)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
 
-      GameRecorder.should_receive(:write_move).once.with(id,{4 => "o"})
-      GameRecorder.should_receive(:write_move).once.with(id,{34 => "x"})
+      GameRecorder.should_receive(:write_move).once.with(id,4,"o")
+      GameRecorder.should_receive(:write_move).once.with(id,34,"x")
 
       post '/move', {:player_move => 34}
     end
