@@ -194,13 +194,19 @@ describe 'TTTDuet' do
       post '/move', {:player_move => 6}
     end
 
-    it "delegates all information to GameRecorder" do
+    it "delegates moves to GameRecorder" do
       NextPlayer.stub(:move).and_return(4)
       @game_info.stub(:winner_on_board).and_return("x")
       GameRecorder.should_receive(:write_to_history).once.with({4 => "o"})
       GameRecorder.should_receive(:write_to_history).once.with({34 => "x"})
-      GameRecorder.should_receive(:write_to_history).once.with({"winner" => "x"})
       post '/move', {:player_move => 34}
+    end
+
+    it "delegates winners to GameRecorder" do
+      NextPlayer.stub(:move)
+      @game_info.stub(:winner_on_board).and_return("x")
+      GameRecorder.should_receive(:write_winner).once.with("x")
+      post '/move'
     end
   end
 end

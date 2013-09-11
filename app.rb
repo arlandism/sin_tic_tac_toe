@@ -67,7 +67,7 @@ class TTTDuet < Sinatra::Base
   def place_winner_on_board
     winner = GameInformation.new(cookies).winner_on_board
     response.set_cookie("winner",winner)
-    GameRecorder.write_to_history({"winner" => winner})
+    GameRecorder.write_winner(winner)
   end
 
   def first_player_move 
