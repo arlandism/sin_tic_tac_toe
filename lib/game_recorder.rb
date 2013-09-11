@@ -6,10 +6,6 @@ class GameRecorder
     record = Record.new(to_write)
     if record.is_a_move? 
       file.write(JSON.dump("moves" => [to_write]) + "\n")
-      File.open(file) do |file|
-        state = JSON.load(file.read)
-        state["moves"][to_write.keys[0]] = to_write.values[0]
-      end
     elsif  record.is_non_nil_winner?
       file.write(JSON.dump(to_write) + "\n")
     end
