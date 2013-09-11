@@ -10,6 +10,9 @@ class GameRecorder
     file.close
   end
 
+  def self.write_winner(winner)
+  end
+
   
 end
 
