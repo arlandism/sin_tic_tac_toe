@@ -4,27 +4,62 @@ require_relative 'mocks'
 
 describe GameRecorder do
 
-  describe ".write_to_history" do
+  describe ".write_move" do
+
     let(:file) { Mock::MockStream.new }
 
-    it "writes to a specified stream in json and closes it" do
-      greeting = {"greeting" => "hello"}
-      GameRecorder.write_to_history(greeting,file)
-      file.should have_content(JSON.dump(greeting))
+    after(:each) do
+      file.clear
+    end
+
+    it "writes moves to files in json" do
+      id = 1
+      move = 3
+      token = "x"
+      expected = {
+        1 => {
+          "moves" =>
+            [
+            "token" => token,
+            "position" => move
+            ]
+        }
+      }
+      GameRecorder.write_move(id,move,token,file)
+      file.should have_content(JSON.dump(expected))
       file.close_called.should == true
     end
+    
+    it "polls the contents of the file and overwrites existing structure" do
+      id = 1
+      first_move = {"token" => "x", "position" => 3}
+      next_move = {"token" => "o", "position" => 5}
+      old_structure = {
+        id =>
+        {
+          "moves" => [ first_move ],
+        }}
 
-    it "doesn't write hashes with nil values in winner key" do
-      winner = {"winner" => nil}
-      GameRecorder.write_to_history(winner,file)
-      file.should_not have_content(JSON.dump(winner))
+        new_structure = {
+          id =>
+        {
+          "moves" => [ first_move, next_move]
+        }}
+
+      file.write(JSON.dump(old_structure))
+      GameRecorder.write_move(id, 5, "o", file)
+      file.read_called.should == true
+      file.should have_content(JSON.dump(new_structure))
     end
+  end
 
-    it "writes hashes with non-nil values in winner key" do
-      winner = {"winner" => "x"}
-      GameRecorder.write_to_history(winner,file)
-      file.should have_content(JSON.dump(winner))
-    end 
+  describe ".write_winner" do
+    
+    it "takes a id and an winner" do
+      id = 2
+      winner = "x"
+      GameRecorder.write_winner(id, winner).should_not == nil
+    end
   end
 end
 
