@@ -1,4 +1,4 @@
-require_relative '../lib/cpu_move'
+require_relative '../../lib/cpu_move'
 
 describe CpuMove do
 
