@@ -61,7 +61,7 @@ class TTTDuet < Sinatra::Base
 
   def place_move_on_board(move,token)
     response.set_cookie(move,token)
-    GameRecorder.write_to_history({move => token})
+    GameRecorder.write_to_history({move.to_i => token})
   end
 
   def place_winner_on_board
