@@ -28,6 +28,7 @@ describe GameRecorder do
         }
       }
       GameRecorder.write_move(id,move,token,file)
+      p file.history
       file.should have_content(JSON.dump(expected))
       file.close_called.should == true
     end
@@ -56,6 +57,26 @@ describe GameRecorder do
       GameRecorder.write_move(id, 5, "o", file)
       file.read_called.should == true
       file.should have_content(JSON.dump(new_structure))
+    end
+    
+    it "doesn't destroy old data" do
+      old_structure = {
+        "games" =>
+        {
+          "2" =>
+          {
+            "moves" => [{"token" => "x", "position" => 3}]
+          },
+
+          "3" =>
+          {
+            "moves" => [{"token" => "o", "position" => 5}]
+          }
+      }}
+      file.write(JSON.dump(old_structure))
+      GameRecorder.write_move(3, 4, "o", file)
+      old_structure["games"]["3"]["moves"] << {"token" => "o", "position" => 4}
+      file.should have_content(JSON.dump(old_structure))
     end
   end
 

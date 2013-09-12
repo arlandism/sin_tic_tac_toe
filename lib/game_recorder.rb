@@ -10,18 +10,16 @@ class GameRecorder
       "position" => move
     }
     contents = file_contents || Hash.new
-    games = contents["games"] || {"games" => {}}
-    move_structure = games[id.to_s] || Hash.new
-    move_list = move_structure["moves"] || Array.new
-    new_contents = {
-      id.to_s =>
+    all_games = contents["games"] || Hash.new
+    the_game = all_games[id.to_s] || {id.to_s => {}}
+    move_list = the_game["moves"] || Array.new
+    new_contents = 
         {
         "moves" => 
           move_list.concat([to_add])
         }
-      }
-    contents["games"] = new_contents
-    file.write(JSON.dump(contents))
+    new_contents = {"games" => all_games}
+    file.write(JSON.dump(new_contents))
     file.close
   end
 
