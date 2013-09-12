@@ -59,7 +59,6 @@ describe "integration tests" do
 
     it "delegates winners to GameRecorder" do
       NextPlayer.stub(:move)
-      GameRecorder.stub(:write_move)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
 
       GameRecorder.should_receive(:write_winner).once.with(id,"x")
