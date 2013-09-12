@@ -4,9 +4,9 @@ require_relative 'mocks'
 
 describe GameRecorder do
 
-  describe ".write_move" do
+  let(:file) { Mock::MockStream.new }
 
-    let(:file) { Mock::MockStream.new }
+  describe ".write_move" do
 
     after(:each) do
       file.clear
@@ -81,38 +81,38 @@ describe GameRecorder do
 
   describe ".write_winner" do
     
-    it "takes an id and an winner" do
+    it "takes an id, winner, and file" do
       id = 2
       winner = "x"
-      GameRecorder.write_winner(id, winner).should_not == nil
+      GameRecorder.write_winner(id, winner, file).should_not == nil
     end
 
-    xit "writes winner to exisitng structure" do
+    it "writes winner to exisitng structure" do
       id = 8
-      expected = {
-        id =>
-        {
-          "winner" => [ first_move ],
-        }}
+      move = {"token" => "x", "position" => 3}
+      old_structure = {"games" =>
+          {
+            id =>
+          {
+            "moves" => [ move ]
+          }
+        }
+      }
 
-        new_structure = {
+      expected = {"games" =>
+          {
           id =>
-        {
-          "moves" => [ first_move, next_move]
-        }}
+          {
+            "moves" => [ move ],
+            "winner" => "x"
+          }
+        }
+      }
 
       file.write(JSON.dump(old_structure))
-      GameRecorder.write_move(id, 5, "o", file)
+      GameRecorder.write_winner(id, "x", file)
       file.read_called.should == true
-      file.should have_content(JSON.dump(new_structure))
+      file.should have_content(JSON.dump(expected))
     end
   end
 end
-
-# {"game_id - 123" =>
-#  "moves" => {
-#    "x" => [1,2,3],
-#    "o" => [4,5,6]
-#  }
-#  "winner" => "x"
-# }
