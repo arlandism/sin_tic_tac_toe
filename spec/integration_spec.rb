@@ -18,22 +18,25 @@ describe "integration tests" do
     let(:game_info) { double(:game_info) }
 
     before(:each) do
+      GameRecorder.stub(:write_move)
+      GameRecorder.stub(:write_winner)
       GameInformation.stub(:new).and_return(game_info)
     end
 
-    xit "hands the game state and configurations to AI" do
+    it "hands the game state and configurations to AI" do
       rack_mock_session.cookie_jar["depth"] = 10
+      rack_mock_session.cookie_jar["winner"] = nil
       move = 6
       token = "x"
+      current_board_state = {move.to_s => token,
+                             "depth" => "10",
+                             "winner" => ""}
 
-      current_board_state = {"board" => {move => token},
-                             "depth" => "10"}
+      game_info.stub(:winner_on_board).and_return("x")
+      game_info.stub(:service_response)#.and_return("ai_move" => 3)
+      NextPlayer.should_receive(:move).once.with(current_board_state)#.with(rack_mock_session.cookie_jar)
 
-      game_info.stub(:winner_on_board)
-      game_info.stub(:service_response).and_return("ai_move" => 3)
-      NextPlayer.should_receive(:next_move).once.with(anything)
-
-      post '/move', {:player_move => 6}
+      post '/move', {:player_move => move}
     end
   end
 
