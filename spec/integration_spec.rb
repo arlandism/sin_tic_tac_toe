@@ -33,8 +33,7 @@ describe "integration tests" do
                              "winner" => ""}
 
       game_info.stub(:winner_on_board).and_return("x")
-      game_info.stub(:service_response)#.and_return("ai_move" => 3)
-      NextPlayer.should_receive(:move).once.with(current_board_state)#.with(rack_mock_session.cookie_jar)
+      NextPlayer.should_receive(:move).once.with(current_board_state)
 
       post '/move', {:player_move => move}
     end
