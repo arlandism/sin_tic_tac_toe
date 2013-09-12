@@ -115,4 +115,36 @@ describe GameRecorder do
       file.should have_content(JSON.dump(expected))
     end
   end
+
+  describe "integration of .write_move and .write_winner" do
+
+    it "loads everything from the file and updates it" do
+      id = 8
+      move = {"token" => "x", "position" => 3}
+      move_two = {"token" => "o", "position" => 5}
+      old_structure = {"games" =>
+          {
+            id =>
+          {
+            "moves" => [ move ],
+            "winner" => nil
+          }
+        }
+      }
+
+      expected = {"games" =>
+          {
+            id =>
+          {
+            "moves" => [ move, move_two ],
+            "winner" => "x"
+          }
+        }
+      }
+      file.write(JSON.dump(old_structure))
+      GameRecorder.write_move(id,5,"o",file) 
+      GameRecorder.write_winner(id,"x",file) 
+      file.history[-1].should == JSON.dump(expected)
+    end
+  end
 end
