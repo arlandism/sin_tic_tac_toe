@@ -16,13 +16,15 @@ describe GameRecorder do
       id = 1
       move = 3
       token = "x"
-      expected = {
-        1 => {
+      expected = {"games" =>
+        {
+          1 => {
           "moves" =>
             [
             "token" => token,
             "position" => move
             ]
+          }
         }
       }
       GameRecorder.write_move(id,move,token,file)
@@ -35,9 +37,42 @@ describe GameRecorder do
       first_move = {"token" => "x", "position" => 3}
       next_move = {"token" => "o", "position" => 5}
       old_structure = {
+        "games" => 
+          {
+          id =>
+          {
+            "moves" => [ first_move ],
+          }}}
+
+          new_structure = {
+            "games" => {
+              id =>
+            {
+              "moves" => [ first_move, next_move]
+            }
+          }}
+
+      file.write(JSON.dump(old_structure))
+      GameRecorder.write_move(id, 5, "o", file)
+      file.read_called.should == true
+      file.should have_content(JSON.dump(new_structure))
+    end
+  end
+
+  describe ".write_winner" do
+    
+    it "takes an id and an winner" do
+      id = 2
+      winner = "x"
+      GameRecorder.write_winner(id, winner).should_not == nil
+    end
+
+    xit "writes winner to exisitng structure" do
+      id = 8
+      expected = {
         id =>
         {
-          "moves" => [ first_move ],
+          "winner" => [ first_move ],
         }}
 
         new_structure = {
@@ -50,15 +85,6 @@ describe GameRecorder do
       GameRecorder.write_move(id, 5, "o", file)
       file.read_called.should == true
       file.should have_content(JSON.dump(new_structure))
-    end
-  end
-
-  describe ".write_winner" do
-    
-    it "takes a id and an winner" do
-      id = 2
-      winner = "x"
-      GameRecorder.write_winner(id, winner).should_not == nil
     end
   end
 end
