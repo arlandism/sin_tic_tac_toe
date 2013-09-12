@@ -12,23 +12,22 @@ describe GameRecorder do
       file.clear
     end
 
-    it "writes moves to files in json" do
+    it "creates a 'games' data structure" do
       id = 1
       move = 3
       token = "x"
       expected = {"games" =>
         {
-          1 => {
-          "moves" =>
-            [
-            "token" => token,
-            "position" => move
-            ]
+          id => {
+            "moves" =>
+              [
+                "token" => token,
+                "position" => move
+              ]
           }
         }
       }
       GameRecorder.write_move(id,move,token,file)
-      p file.history
       file.should have_content(JSON.dump(expected))
       file.close_called.should == true
     end
