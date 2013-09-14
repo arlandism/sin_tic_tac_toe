@@ -121,7 +121,7 @@ describe GameRecorder do
 
       path = "??"
       File.stub(:read).with(path).and_return(old_structure.to_json)
-      File.should_receive(:write).with(JSON.pretty_generate(expected))
+      File.should_receive(:write).with(path,JSON.pretty_generate(expected))
       GameRecorder.write_winner(id, "x", path)
     end
   end

@@ -12,22 +12,37 @@ class GameRecorder
     end
   end
 
-  def self.find_game(games, id)
-    if games[id.to_s]
-      the_game = games[id.to_s]
-    else
-      the_game = Hash.new
-      games[id.to_s] = the_game
+  def self.write_move(id, move, token, path="game_history.json")
+    self.contents_of_file_at(path) do |contents|
+      GameState.after_new_move(contents, token, move, id)
     end
   end
 
-  def self.state_update(file_contents, token, move, id)
+  def self.write_winner(id,winner,path="game_history.json")
+    self.contents_of_file_at(path) do |contents|
+      GameState.after_new_winner(contents,winner,id)
+    end
+  end
+
+  def self.contents_of_file_at(path)
+    file_contents = self.compute_file_contents(path)
+
+    new_contents = yield file_contents
+
+    File.write(path,JSON.pretty_generate(new_contents))
+  end
+  
+end
+
+class GameState
+
+  def self.after_new_move(games, token, move, id)
     to_add = {
       "token" => token,
       "position" => move
     }
 
-    all_games = file_contents["games"]
+    all_games = games["games"]
 
     the_game = self.find_game(all_games, id)
 
@@ -40,24 +55,25 @@ class GameRecorder
 
     new_move_list = move_list.concat([to_add])
 
-    new_contents = {"games" => all_games}
+    games_after_update = {"games" => all_games}
   end
 
-  def self.write_move(id, move, token, path="game_history.json")
-    file_contents = self.compute_file_contents(path)
-
-    new_contents = self.state_update(file_contents, token, move, id)
-
-    File.write(path, JSON.pretty_generate(new_contents))
+  def self.find_game(games, id)
+    if games[id.to_s]
+      the_game = games[id.to_s]
+    else
+      the_game = Hash.new
+      games[id.to_s] = the_game
+    end
   end
 
-  def self.winner_update(file_contents, winner, id)
+  def self.after_new_winner(games, winner, id)
 
      to_add = {
         "winner" => winner
       }
 
-     all_games = file_contents["games"]
+     all_games = games["games"]
 
      the_game = self.find_game(all_games, id)
 
@@ -66,18 +82,4 @@ class GameRecorder
      {"games" => all_games}
   end
 
-  def self.write_winner(id,winner,file=File.open("game_history.json","r"))
-    self.contents_of(file,nil) do |contents|
-      self.winner_update(contents,winner,id)
-    end
-  end
-
-  def self.contents_of(path, id)
-    file_contents = self.compute_file_contents(path)
-
-    new_contents = yield file_contents
-
-    File.write(JSON.pretty_generate(new_contents))
-  end
-  
 end
