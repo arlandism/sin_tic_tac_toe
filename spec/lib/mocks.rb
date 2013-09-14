@@ -7,18 +7,18 @@ module Mock
     attr_reader :history
 
     def initialize
-      @history = Array.new
+      @history = String.new
       @close_called = false
       @read_called = false
     end
 
     def read
       @read_called = true
-      @history.pop || ""
+      @history
     end
 
     def write(to_write)
-      @history << to_write
+      @history = to_write
     end
 
     def close
@@ -30,7 +30,7 @@ module Mock
     end
 
     def has_content?(content)
-      @history.include?(content)
+      @history == content
     end
 
   end
