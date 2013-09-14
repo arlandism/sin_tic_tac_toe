@@ -118,6 +118,13 @@ describe 'TTTDuet' do
       verify_cookie_value(6,"o")
       verify_cookie_value(4,"x")
     end
+
+    it "generates an id if it doesn't have one already" do
+      @game_info.stub(:winner_on_board)
+      NextPlayer.stub(:move)
+      post '/move', {:player_move => 3}
+      rack_mock_session.cookie_jar["id"].should_not == nil
+    end
   end
 
   describe "GET '/clear' " do

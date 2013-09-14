@@ -10,6 +10,7 @@ require_relative 'lib/game_information'
 require_relative 'lib/game_recorder'
 
 class TTTDuet < Sinatra::Base
+
   helpers Sinatra::Cookies
 
   get '/' do
@@ -39,6 +40,8 @@ class TTTDuet < Sinatra::Base
   end
 
   post '/move' do
+    id = cookies["id"] || Random.rand(1000)
+    response.set_cookie("id",id)
     token_one = token(cookies)
     place_move_on_board(first_player_move,token_one)
 
