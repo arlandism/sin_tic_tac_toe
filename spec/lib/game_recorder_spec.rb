@@ -6,30 +6,17 @@ describe GameRecorder do
 
   let(:file) { Mock::MockStream.new }
 
-  describe ".write_move" do
+  describe ".compute_file_contents" do
 
     after(:each) do
       file.clear
     end
 
-    it "creates a 'games' data structure if it doesn't exist" do
-      id = 1
-      move = 3
-      token = "x"
-      expected = {"games" =>
-        {
-          id => {
-            "moves" =>
-              [
-                "token" => token,
-                "position" => move
-              ]
-          }}}
-      path = "path"
+    it "creates a 'games' data structure if it doesn't exist at path" do
+      expected = {"games" => {}}
+      path = "bar" 
       File.stub(:read).with(path).and_return("")
-      GameRecorder.stub(:state_update).and_return(expected)
-      File.should_receive(:write).with(path, JSON.pretty_generate(expected))
-      GameRecorder.write_move(id, move, token, path)
+      GameRecorder.compute_file_contents(path).should == expected
     end
     
     it "polls the contents of the file and overwrites existing structure" do
@@ -95,12 +82,6 @@ describe GameRecorder do
 
   describe ".write_winner" do
     
-    xit "takes an id, winner, and file" do
-      id = 2
-      winner = "x"
-      GameRecorder.write_winner(id, winner, file).should_not == nil
-    end
-
     it "writes winner to exisitng structure" do
       id = 8
       move = {"token" => "x", "position" => 3}
@@ -154,12 +135,10 @@ describe GameRecorder do
           }}}
       path = "/me"
       File.stub(:read).with(path).and_return(old_structure.to_json)
-      File.should_receive(:write).with(path,expected)
-      #file.write(JSON.pretty_generate(old_structure))
-      GameRecorder.write_move(game_one,5,"o",file) 
-      GameRecorder.write_winner(game_one,"x",file) 
-      GameRecorder.write_move(game_two,3,"x",file)
-      file.should have_content(JSON.pretty_generate(expected))
+      File.should_receive(:write).once.with(path,JSON.pretty_generate(expected))
+      GameRecorder.write_move(game_one,5,"o",path) 
+      GameRecorder.write_winner(game_one,"x",path) 
+      GameRecorder.write_move(game_two,3,"x",path)
     end
   end
 end
