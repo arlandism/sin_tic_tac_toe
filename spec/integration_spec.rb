@@ -13,7 +13,7 @@ describe "integration" do
     ClientSocket.any_instance.stub(:connect!) 
   end
 
-  describe "with service" do
+  context "with service" do
 
     let(:game_info) { double(:game_info) }
 
@@ -23,7 +23,7 @@ describe "integration" do
       GameInformation.stub(:new).and_return(game_info)
     end
 
-    it "hands the game state and configurations to AI" do
+    xit "hands the game state and configurations to AI" do
       rack_mock_session.cookie_jar["depth"] = 10
       rack_mock_session.cookie_jar["winner"] = nil
       move = 6
@@ -39,7 +39,7 @@ describe "integration" do
     end
   end
 
-  describe "with GameRecorder" do
+  context "with GameRecorder" do
 
     let(:id) { 24 }
 
@@ -65,5 +65,19 @@ describe "integration" do
 
       post '/move'
     end
+
+    
   end
+
+  context "with Random" do
+    it "calls Random generator for id generation" do
+        NextPlayer.stub(:move)
+        GameInformation.any_instance.stub(:winner_on_board)
+        Random.should_receive(:rand).with(1000).and_return(50)
+
+        post '/move'
+        rack_mock_session.cookie_jar["id"].should == "50"
+    end
+  end
+
 end

@@ -12,6 +12,7 @@
     %p
       You're X!
       When you're ready to play, click a move
+    %p="Your game i.d. is #{cookies["id"]}"
     #buttons
       %form{:method => "post", :action => "/move"}
         %div=ButtonPresenter.render(cookies,9)
