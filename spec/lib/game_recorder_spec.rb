@@ -36,9 +36,9 @@ describe GameRecorder do
     end
   end
 
-  describe "integration of .write_move and .write_winner" do
+  describe "integration of GameRecorder and GameState" do
 
-    xit "parses everything from the file and updates it" do
+    it "parses all games from the file and updates moves accordingly" do
       game_one = 8
       game_two = 9
       move = {"token" => "x", "position" => 3}
@@ -55,19 +55,39 @@ describe GameRecorder do
           {
             game_one =>
           {
-            "moves" => [ move, move_two ],
-            "winner" => "x"
+            "moves" => [ move ],
+            "winner" => nil
           },
             game_two =>
           {
-            "moves" => [move]
+            "moves" => [ move_two ]
           }}}
       path = "/me"
       File.stub(:read).with(path).and_return(old_structure.to_json)
-      File.should_receive(:write).once.with(path,JSON.pretty_generate(expected))
-      GameRecorder.write_move(game_one,5,"o",path) 
-      GameRecorder.write_winner(game_one,"x",path) 
-      GameRecorder.write_move(game_two,3,"x",path)
+      File.should_receive(:write).with(path,JSON.pretty_generate(expected))
+      GameRecorder.write_move(game_two,5,"o",path) 
+    end
+    
+    it "parses all games from the file and updates winners accordingly" do
+      game = 8
+      old_structure = {"games" =>
+          {
+            game =>
+          {
+            "winner" => nil
+          }}}
+
+      expected = {"games" =>
+          {
+            game =>
+          {
+            "winner" => "new winner"
+          }}}
+
+      path = "/me"
+      File.stub(:read).with(path).and_return(old_structure.to_json)
+      File.should_receive(:write).with(path,JSON.pretty_generate(expected))
+      GameRecorder.write_winner(game,"new winner",path)
     end
   end
 end
