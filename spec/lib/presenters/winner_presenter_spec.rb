@@ -1,4 +1,4 @@
-require_relative '../../lib/presenters/winner_presenter'
+require_relative '../../../lib/presenters/winner_presenter'
 
 describe "#Winner" do
 

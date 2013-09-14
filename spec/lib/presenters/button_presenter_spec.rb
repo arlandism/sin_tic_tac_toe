@@ -1,4 +1,4 @@
-require_relative "../../lib/presenters/button_presenter"
+require_relative "../../../lib/presenters/button_presenter"
 
 describe ButtonPresenter do
 

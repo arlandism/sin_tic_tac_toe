@@ -1,4 +1,4 @@
-require_relative '../../lib/presenters/id_presenter'
+require_relative '../../../lib/presenters/id_presenter'
 
 describe IdPresenter do
 

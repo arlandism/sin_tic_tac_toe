@@ -64,7 +64,7 @@ class TTTDuet < Sinatra::Base
 
   def place_move_on_board(move,token)
     response.set_cookie(move,token)
-    id = cookies["id"].to_i || 0
+    id = cookies["id"].to_i
     GameRecorder.write_move(id, move.to_i, token)
   end
 

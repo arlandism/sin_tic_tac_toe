@@ -26,11 +26,13 @@ describe "integration" do
     xit "hands the game state and configurations to AI" do
       rack_mock_session.cookie_jar["depth"] = 10
       rack_mock_session.cookie_jar["winner"] = nil
+      rack_mock_session.cookie_jar["id"] = 75
       move = 6
       token = "x"
       current_board_state = {move.to_s => token,
                              "depth" => "10",
-                             "winner" => ""}
+                             "winner" => "",
+                             "id" => "75"}
 
       game_info.stub(:winner_on_board).and_return("x")
       NextPlayer.should_receive(:move).once.with(current_board_state)
