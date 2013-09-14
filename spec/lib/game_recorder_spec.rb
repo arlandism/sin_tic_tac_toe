@@ -1,16 +1,9 @@
 require 'json'
 require_relative '../../lib/game_recorder'
-require_relative 'mocks'
 
 describe GameRecorder do
 
-  let(:file) { Mock::MockStream.new }
-
   describe ".compute_file_contents" do
-
-    after(:each) do
-      file.clear
-    end
 
     it "creates a 'games' data structure if it doesn't exist at path" do
       expected = {"games" => {}}
