@@ -1,7 +1,7 @@
 require 'rack/test'
 require_relative '../app'
 
-describe "integration tests" do
+describe "integration" do
 
   include Rack::Test::Methods
 
@@ -13,7 +13,7 @@ describe "integration tests" do
     ClientSocket.any_instance.stub(:connect!) 
   end
 
-  describe "integration with service" do
+  describe "with service" do
 
     let(:game_info) { double(:game_info) }
 
@@ -39,7 +39,7 @@ describe "integration tests" do
     end
   end
 
-  describe "integration with GameRecorder" do
+  describe "with GameRecorder" do
 
     let(:id) { 24 }
 
