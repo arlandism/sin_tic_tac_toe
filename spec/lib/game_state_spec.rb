@@ -41,6 +41,13 @@ describe GameState do
           }}}
       GameState.new_move(old_structure, "o", 5, id).should == new_structure
     end
+
+    it "doesn't add moves with positions of 0" do
+      id = "2"
+      position = 0
+      expected_structure = {"games" => {id => {"moves" => []}}}
+      GameState.new_move({"games" => {}},"x",position,id).should == expected_structure
+    end
   end
 
   describe ".write_winner" do

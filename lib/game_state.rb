@@ -17,7 +17,7 @@ class GameState
        the_game["moves"] = move_list
      end
 
-    new_move_list = move_list.concat([to_add])
+    new_move_list = move_list.concat([to_add]) if to_add["position"] != 0
 
     games_after_update = {"games" => all_games}
   end
