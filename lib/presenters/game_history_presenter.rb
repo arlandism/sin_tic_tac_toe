@@ -4,14 +4,13 @@ class GameHistoryPresenter
 
   def self.show_games
     games = GameRecorder.compute_file_contents("game_history.json")["games"]
-    game_string = ""
-    games.keys.each do |id|
-      game_string += self.game_header(id)
-      if games[id]["moves"]
-        game_string += self.move_string(games[id]["moves"])
-      end
+    games_presentation = ""
+    game_ids = games.keys
+    game_ids.each do |id|
+      games_presentation += self.game_header(id)
+      games_presentation += self.game_body(games[id]) 
     end
-    game_string
+    games_presentation
   end
 
   private
@@ -20,13 +19,27 @@ class GameHistoryPresenter
     "<div>Game #{id}</div>"
   end
 
-  def self.move_string(move_list)
-    move_string = "<ol>"
+  def self.game_body(game)
+    body = ""
+    if game["moves"]
+        body += self.move_list(game["moves"])
+    elsif game["winner"]
+        body += self.winner(game["winner"]) 
+    end
+    body
+  end
+
+  def self.winner(winner)
+    "#{winner} won"
+  end
+
+  def self.move_list(move_list)
+    move_list_string = "<ol>"
     move_list.each do |move|
-      move_string += "<li>#{move["token"]} moved to #{move["position"]}</li>"   
+      move_list_string += "<li>#{move["token"]} moved to #{move["position"]}</li>"   
       end
-    move_string += "</ol>"
-    move_string
+    move_list_string += "</ol>"
+    move_list_string
   end
 end
 
