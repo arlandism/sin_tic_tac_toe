@@ -17,7 +17,7 @@ class GameHistoryPresenter
   private
 
   def self.game_header(id)
-    "<div class='game'>Game #{id}"
+    "<div class='game' id='#{id}'>Game #{id}"
   end
 
   def self.game_footer
