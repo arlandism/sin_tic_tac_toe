@@ -9,6 +9,7 @@ class GameHistoryPresenter
     game_ids.each do |id|
       games_presentation += self.game_header(id)
       games_presentation += self.game_body(games[id]) 
+      games_presentation += self.game_footer
     end
     games_presentation
   end
@@ -16,7 +17,11 @@ class GameHistoryPresenter
   private
 
   def self.game_header(id)
-    "<div>Game #{id}</div>"
+    "<div class='game'>Game #{id}"
+  end
+
+  def self.game_footer
+    "</div>"
   end
 
   def self.game_body(game)
