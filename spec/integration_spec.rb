@@ -72,6 +72,7 @@ describe "integration" do
   end
 
   context "with Random" do
+
     it "calls Random generator for id generation" do
         NextPlayer.stub(:move)
         GameInformation.any_instance.stub(:winner_on_board)
