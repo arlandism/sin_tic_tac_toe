@@ -14,7 +14,7 @@ describe GameHistoryPresenter do
   it "lists the moves for each game in order" do
     pre_conversion = {"games" => {id => {"moves" => [{"position" => 3, "token" => "x"}]}}}
     GameRecorder.stub(:compute_file_contents).and_return(pre_conversion)
-    GameHistoryPresenter.show_games.should == game_header % [id]+  "<ol><li>x moved to 3</li></ol>"
+    GameHistoryPresenter.show_games.should == game_header % [id] +  "<ol><li>x moved to 3</li></ol>"
   end
 
 end
