@@ -4,6 +4,7 @@ require 'haml'
 
 require_relative 'lib/presenters/winner_presenter'
 require_relative 'lib/presenters/button_presenter'
+require_relative 'lib/presenters/game_history_presenter'
 require_relative 'lib/presenters/id_presenter'
 require_relative 'lib/cpu_move'
 require_relative 'lib/next_player'
@@ -28,6 +29,10 @@ class TTTDuet < Sinatra::Base
 
   get '/config' do
     haml :config
+  end
+
+  get '/games' do
+    haml :games
   end
 
   post '/config' do
@@ -96,6 +101,8 @@ class TTTDuet < Sinatra::Base
   end
 
 end
+
+
 
 if __FILE__ == $0 
   TTTDuet.run!
