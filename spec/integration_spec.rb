@@ -23,20 +23,19 @@ describe "integration" do
       GameInformation.stub(:new).and_return(game_info)
     end
 
-    xit "hands the game state and configurations to AI" do
+    it "hands the game state and configurations to AI" do
       rack_mock_session.cookie_jar["depth"] = 10
       rack_mock_session.cookie_jar["winner"] = nil
       rack_mock_session.cookie_jar["id"] = 75
       move = 6
       token = "x"
+      id_in_response = "75\n"
       current_board_state = {move.to_s => token,
                              "depth" => "10",
                              "winner" => "",
-                             "id" => "75"}
+                             "id" => id_in_response}
 
-      game_info.stub(:winner_on_board).and_return("x")
       NextPlayer.should_receive(:move).once.with(current_board_state)
-
       post '/move', {:player_move => move}
     end
   end
@@ -51,10 +50,9 @@ describe "integration" do
 
     it "delegates moves to GameRecorder" do
       NextPlayer.stub(:move).and_return(4)
-      GameInformation.any_instance.stub(:winner_on_board).and_return("x")
 
-      GameRecorder.should_receive(:write_move).once.with(id,4,"o")
-      GameRecorder.should_receive(:write_move).once.with(id,34,"x")
+      GameRecorder.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
+      GameRecorder.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
 
       post '/move', {:player_move => 34}
     end
@@ -63,7 +61,7 @@ describe "integration" do
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
 
-      GameRecorder.should_receive(:write_winner).once.with(id,"x")
+      GameRecorder.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
 
       post '/move'
     end
