@@ -21,7 +21,8 @@ class GameHistoryPresenter
   end
 
   def self.game_footer
-    "</div>"
+    dashes = "-" * 20
+    dashes + "</div>"
   end
 
   def self.game_body(game)
