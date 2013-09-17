@@ -1,0 +1,4 @@
+development:
+  history_path: game_history.json
+test:
+  history_path: tmp/test_history.json
