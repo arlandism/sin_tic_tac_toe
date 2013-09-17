@@ -1,10 +1,11 @@
+ENV['RACK_ENV'] = 'test'
+
 require 'cucumber/rspec/doubles'
 require 'capybara'
 require 'capybara/cucumber'
 require 'rspec'
 require File.join(File.dirname(__FILE__), '..', '..', 'app.rb')
 
-ENV['RACK_ENV'] = 'test'
 
 Capybara.app = TTTDuet
 

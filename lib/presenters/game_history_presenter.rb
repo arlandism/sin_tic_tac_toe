@@ -2,8 +2,8 @@ require_relative '../game_recorder'
 
 class GameHistoryPresenter
 
-  def self.show_games
-    games = GameRecorder.compute_file_contents("game_history.json")["games"]
+  def self.show_games(path)
+    games = GameRecorder.compute_file_contents(path)["games"]
     games_presentation = ""
     game_ids = games.keys
     game_ids.each do |id|
