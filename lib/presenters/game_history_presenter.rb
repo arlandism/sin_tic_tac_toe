@@ -25,15 +25,15 @@ class GameHistoryPresenter
       body += self.move_list(game["moves"])
     end
     body += self.winner(game["winner"]) 
-    body
   end
 
   def self.winner(winner)
+    winner_string = ""
     if winner
-      "#{winner.capitalize} won"
-    else
-      ""
+      winner_string += "#{winner.capitalize} won"
+      winner_string += "<br /><br />"
     end
+    winner_string
   end
 
   def self.move_list(move_list)
