@@ -20,7 +20,7 @@ describe GameHistoryPresenter do
   it "lists the winner for each game" do
     pre_conversion = {"games" => {id => {"winner" => "x"}}}
     GameRecorder.stub(:compute_file_contents).and_return(pre_conversion)
-    GameHistoryPresenter.show_games.should == game_header % [id] + "x won"
+    GameHistoryPresenter.show_games.should == game_header % [id] + "X won"
   end
 
 end

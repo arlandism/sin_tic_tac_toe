@@ -22,15 +22,18 @@ class GameHistoryPresenter
   def self.game_body(game)
     body = ""
     if game["moves"]
-        body += self.move_list(game["moves"])
-    elsif game["winner"]
-        body += self.winner(game["winner"]) 
+      body += self.move_list(game["moves"])
     end
+    body += self.winner(game["winner"]) 
     body
   end
 
   def self.winner(winner)
-    "#{winner} won"
+    if winner
+      "#{winner.capitalize} won"
+    else
+      ""
+    end
   end
 
   def self.move_list(move_list)
@@ -39,7 +42,6 @@ class GameHistoryPresenter
       move_list_string += "<li>#{move["token"]} moved to #{move["position"]}</li>"   
       end
     move_list_string += "</ol>"
-    move_list_string
   end
 end
 
