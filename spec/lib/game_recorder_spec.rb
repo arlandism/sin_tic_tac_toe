@@ -26,8 +26,7 @@ describe GameRecorder do
   describe ".write_winner" do
     
     it "delegates to GameState" do
-      
-      path = "??"
+      path = "spec/tmp/fake_history.json"
       winner = "x"
       id = "3"
       File.stub(:read).with(path).and_return("")
