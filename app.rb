@@ -17,7 +17,6 @@ class TTTDuet < Sinatra::Base
   helpers Sinatra::Cookies
 
   config_file 'config.yml'
-  set :environment, :test if ENV['RACK_ENV'] == "test"
   
   get '/' do
     if CpuMove.should_place(cookies.to_hash) 
