@@ -5,4 +5,15 @@
     %title 
       History of Games
   %body
-    %p=GameHistoryPresenter.show_games(settings.history_path)
+    -History.retrieve_or_create(settings.history_path)["games"].keys.each do |id|
+      .game{:id => "#{id}"}
+        %h4
+          = "Game #{id}"
+          %ol
+            -if History.retrieve_or_create(settings.history_path)["games"][id]["moves"] 
+              -History.retrieve_or_create(settings.history_path)["games"][id]["moves"].each do |move|
+                %li="#{move["token"]} moved to #{move["position"]}"
+          -if History.retrieve_or_create(settings.history_path)["games"][id]["winner"]
+            %p= "#{History.retrieve_or_create(settings.history_path)["games"][id]["winner"].capitalize} won!"
+        %p= "-" * 20
+            
