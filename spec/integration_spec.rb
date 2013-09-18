@@ -1,4 +1,4 @@
-ENV['RACK_ENV'] = "test"
+ENV["RACK_ENV"] = "test"
 
 require 'rack/test'
 require_relative '../app'
@@ -12,7 +12,7 @@ describe "integration" do
   end
 
   before(:each) do
-    ClientSocket.any_instance.stub(:connect!) 
+    ClientSocket.any_instance.stub(:connect!)
   end
 
   context "with service" do
@@ -52,6 +52,7 @@ describe "integration" do
 
     it "delegates moves to History" do
       NextPlayer.stub(:move).and_return(4)
+      GameInformation.any_instance.stub(:winner_on_board)
 
       History.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
       History.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
@@ -62,7 +63,6 @@ describe "integration" do
     it "delegates winners to History" do
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
-
       History.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
 
       post '/move'
