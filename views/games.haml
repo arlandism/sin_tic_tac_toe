@@ -5,15 +5,17 @@
     %title 
       History of Games
   %body
-    -History.retrieve_or_create(settings.history_path)["games"].keys.each do |id|
+    / Declare Variable
+    - games = History.retrieve_or_create(settings.history_path)["games"]
+    - games.keys.each do |id|
       .game{:id => "#{id}"}
         %h4
           = "Game #{id}"
           %ol
-            -if History.retrieve_or_create(settings.history_path)["games"][id]["moves"] 
-              -History.retrieve_or_create(settings.history_path)["games"][id]["moves"].each do |move|
+            -if games[id]["moves"] 
+              -games[id]["moves"].each do |move|
                 %li="#{move["token"]} moved to #{move["position"]}"
-          -if History.retrieve_or_create(settings.history_path)["games"][id]["winner"]
-            %p= "#{History.retrieve_or_create(settings.history_path)["games"][id]["winner"].capitalize} won!"
+          -if games[id]["winner"]
+            %p= "#{games[id]["winner"].capitalize} won!"
         %p= "-" * 20
             
