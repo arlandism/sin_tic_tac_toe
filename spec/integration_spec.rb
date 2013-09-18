@@ -1,9 +1,15 @@
+ENV['RACK_ENV'] = "test"
+
 require 'rack/test'
 require_relative '../app'
 
 describe "integration" do
 
   include Rack::Test::Methods
+
+  puts TTTDuet.settings.history_path
+  pp ENV
+  puts TTTDuet.settings.environment
 
   def app
     TTTDuet.new
@@ -18,8 +24,8 @@ describe "integration" do
     let(:game_info) { double(:game_info) }
 
     before(:each) do
-      GameRecorder.stub(:write_move)
-      GameRecorder.stub(:write_winner)
+      History.stub(:write_move)
+      History.stub(:write_winner)
       GameInformation.stub(:new).and_return(game_info)
     end
 
@@ -40,7 +46,7 @@ describe "integration" do
     end
   end
 
-  context "with GameRecorder" do
+  context "with History" do
 
     let(:id) { 24 }
 
@@ -48,20 +54,20 @@ describe "integration" do
       rack_mock_session.cookie_jar["id"] = id
     end
 
-    it "delegates moves to GameRecorder" do
+    it "delegates moves to History" do
       NextPlayer.stub(:move).and_return(4)
 
-      GameRecorder.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
-      GameRecorder.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
+      History.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
+      History.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
 
       post '/move', {:player_move => 34}
     end
 
-    it "delegates winners to GameRecorder" do
+    it "delegates winners to History" do
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
 
-      GameRecorder.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
+      History.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
 
       post '/move'
     end

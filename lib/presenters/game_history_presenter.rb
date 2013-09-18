@@ -1,9 +1,9 @@
-require_relative '../game_recorder'
+require_relative '../history'
 
 class GameHistoryPresenter
 
   def self.show_games(path)
-    games = GameRecorder.compute_file_contents(path)["games"]
+    games = History.compute_file_contents(path)["games"]
     games_presentation = ""
     game_ids = games.keys
     game_ids.each do |id|

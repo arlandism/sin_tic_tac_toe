@@ -6,8 +6,8 @@ describe 'TTTDuet' do
   include Rack::Test::Methods
 
   before(:each) do 
-    GameRecorder.stub(:write_move)
-    GameRecorder.stub(:write_winner)
+    History.stub(:write_move)
+    History.stub(:write_winner)
   end
 
   def app

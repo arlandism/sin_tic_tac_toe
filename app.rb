@@ -10,13 +10,14 @@ require_relative 'lib/presenters/id_presenter'
 require_relative 'lib/cpu_move'
 require_relative 'lib/next_player'
 require_relative 'lib/game_information'
-require_relative 'lib/game_recorder'
+require_relative 'lib/history'
 
 class TTTDuet < Sinatra::Base
   register Sinatra::ConfigFile
   helpers Sinatra::Cookies
 
   config_file 'config.yml'
+  set :environment, :test if ENV['RACK_ENV'] == "test"
   
   get '/' do
     if CpuMove.should_place(cookies.to_hash) 
@@ -74,14 +75,14 @@ class TTTDuet < Sinatra::Base
   def place_move_on_board(move,token)
     response.set_cookie(move,token)
     id = cookies["id"].to_i
-    GameRecorder.write_move(id, move.to_i, token, settings.history_path)
+    History.write_move(id, move.to_i, token, settings.history_path)
   end
 
   def place_winner_on_board
     winner = GameInformation.new(cookies).winner_on_board
     response.set_cookie("winner",winner)
     id = cookies["id"].to_i
-    GameRecorder.write_winner(id,winner, settings.history_path)
+    History.write_winner(id,winner, settings.history_path)
   end
 
   def first_player_move 
