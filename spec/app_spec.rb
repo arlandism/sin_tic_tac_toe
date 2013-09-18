@@ -184,13 +184,4 @@ describe 'TTTDuet' do
       should_arrive_at_expected_path("/")
     end
   end 
-
-  describe "GET '/games' " do
-    
-    it "shows a history of games" do
-      GameHistoryPresenter.should_receive(:show_games)
-      get '/games'
-    end
-
-  end
 end
