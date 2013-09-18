@@ -1,0 +1,5 @@
+require_relative 'clear'
+require_relative 'config'
+require_relative 'games'
+require_relative 'index'
+require_relative 'move'
