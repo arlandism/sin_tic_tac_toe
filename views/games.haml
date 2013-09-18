@@ -13,9 +13,12 @@
           = "Game #{id}"
           %ol
             -if games[id]["moves"] 
-              -games[id]["moves"].each do |move|
-                %li="#{move["token"]} moved to #{move["position"]}"
+              - games[id]["moves"].each do |move|
+                %li
+                  = "#{move["token"]} moved to #{move["position"]}"
           -if games[id]["winner"]
-            %p= "#{games[id]["winner"].capitalize} won!"
-        %p= "-" * 20
+            %p
+              = "#{games[id]["winner"].capitalize} won!"
+        %p
+          = "-" * 20
             
