@@ -3,7 +3,7 @@ require_relative '../history'
 class GameHistoryPresenter
 
   def self.show_games(path)
-    games = History.compute_file_contents(path)["games"]
+    games = History.retrieve_or_create(path)["games"]
     games_presentation = ""
     game_ids = games.keys
     game_ids.each do |id|

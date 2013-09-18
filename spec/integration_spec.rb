@@ -7,10 +7,6 @@ describe "integration" do
 
   include Rack::Test::Methods
 
-  puts TTTDuet.settings.history_path
-  pp ENV
-  puts TTTDuet.settings.environment
-
   def app
     TTTDuet.new
   end
