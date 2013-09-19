@@ -22,15 +22,6 @@ class GameState
     {"games" => all_games}
   end
 
-  def self.find_game(games, id)
-    if games[id.to_s]
-      the_game = games[id.to_s]
-    else
-      the_game = Hash.new
-      games[id.to_s] = the_game
-    end
-  end
-
   def self.new_winner(games, winner, id)
 
      to_add = {
@@ -44,6 +35,17 @@ class GameState
      the_game["winner"] = winner
      
      {"games" => all_games}
+  end
+  
+  private
+
+  def self.find_game(games, id)
+    if games[id.to_s]
+      the_game = games[id.to_s]
+    else
+      the_game = Hash.new
+      games[id.to_s] = the_game
+    end
   end
 
 end
