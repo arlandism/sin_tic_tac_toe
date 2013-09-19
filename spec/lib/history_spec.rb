@@ -19,9 +19,8 @@ describe History do
     it "overwrites what used to exist at path" do
       id = "1"
       path = "foo"
-      GameState.stub(:new_move).and_return(["new"])
       File.stub(:read).with(path).and_return("")
-      File.stub(:write).with(path, JSON.pretty_generate(["new"]))
+      File.should_receive(:write).with(path, anything)
       History.write_move(id, 5, "o", path)
     end
     
@@ -29,17 +28,17 @@ describe History do
 
   describe ".write_winner" do
     
-    it "delegates to GameState" do
+    it "delegates to GameRepository" do
       path = "bar"
       winner = "x"
       id = "3"
       File.should_receive(:read).with(path).and_return("")
-      GameState.should_receive(:new_winner).with({"games"=>{}},winner,id).and_return({})
+      GameRepository.should_receive(:add_winner).with({"games"=>{}},winner,id).and_return({})
       History.write_winner(id, "x", path)
     end
   end
 
-  describe "integration of History and GameState" do
+  describe "integration of History and GameRepository" do
 
     it "parses all games from the file and updates moves accordingly" do
       game_one = 8

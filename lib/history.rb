@@ -1,5 +1,5 @@
 require 'json'
-require_relative 'game_state'
+require_relative 'game_repository'
 
 class History
 
@@ -13,13 +13,13 @@ class History
 
   def self.write_move(id, move, token, path)
     self.open_and_write_to(path) do |contents|
-      GameState.new_move(contents, token, move, id)
+      GameRepository.add_move(contents, token, move, id)
     end
   end
 
   def self.write_winner(id,winner,path)
     self.open_and_write_to(path) do |contents|
-      GameState.new_winner(contents,winner,id)
+      GameRepository.add_winner(contents,winner,id)
     end
   end
 
