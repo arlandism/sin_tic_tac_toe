@@ -3,6 +3,10 @@ require_relative '../../lib/history'
 
 describe History do
 
+  before(:each) do
+    File.stub(:write)
+  end
+
   describe ".retrieve_or_create" do
 
     it "creates a 'games' data structure if it doesn't exist at path" do
@@ -61,7 +65,7 @@ describe History do
           {
             "moves" => [ move_two ]
           }}}
-      path = "/me"
+      path = "baz"
       File.stub(:read).with(path).and_return(old_structure.to_json)
       File.should_receive(:write).with(path,JSON.pretty_generate(expected))
       History.write_move(game_two,5,"o",path) 
@@ -69,12 +73,7 @@ describe History do
     
     it "parses all games from the file and updates winners accordingly" do
       game = 8
-      old_structure = {"games" =>
-          {
-            game =>
-          {
-            "winner" => nil
-          }}}
+      old_structure = {"games" => {}}
 
       expected = {"games" =>
           {
@@ -83,7 +82,7 @@ describe History do
             "winner" => "new winner"
           }}}
 
-      path = "/me"
+      path = "baz"
       File.stub(:read).with(path).and_return(old_structure.to_json)
       File.should_receive(:write).with(path,JSON.pretty_generate(expected))
       History.write_winner(game,"new winner",path)
