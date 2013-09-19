@@ -1,6 +1,6 @@
-require_relative '../../lib/game_state'
+require_relative '../../lib/game_repository'
 
-describe GameState do
+describe GameRepository do
 
   describe ".new_move" do
     
@@ -17,7 +17,7 @@ describe GameState do
                 "position" => move
               ]
           }}}
-      GameState.new_move({"games" => {}}, token, move, id).should == expected
+      GameRepository.add_move({"games" => {}}, token, move, id).should == expected
     end
 
     it "polls the data structure it gets and returns it with updated moves" do
@@ -39,14 +39,14 @@ describe GameState do
           {
             "moves" => [ first_move, next_move ],
           }}}
-      GameState.new_move(old_structure, "o", 5, id).should == new_structure
+      GameRepository.add_move(old_structure, "o", 5, id).should == new_structure
     end
 
     it "doesn't add moves with positions of 0" do
       id = "2"
       position = 0
       expected_structure = {"games" => {id => {"moves" => []}}}
-      GameState.new_move({"games" => {}},"x",position,id).should == expected_structure
+      GameRepository.add_move({"games" => {}},"x",position,id).should == expected_structure
     end
   end
 
@@ -68,7 +68,7 @@ describe GameState do
             "moves" => [ move ],
             "winner" => "x"
           }}}
-      GameState.new_winner(old_structure, "x", id)
+      GameRepository.add_winner(old_structure, "x", id)
     end
     
     it "overwrites the previous winner" do
@@ -87,7 +87,7 @@ describe GameState do
           {
             "winner" => "Not anymore!"
           }}}
-      GameState.new_winner(old_structure, "Not anymore!", id).should == expected
+      GameRepository.add_winner(old_structure, "Not anymore!", id).should == expected
     end
   end
 end

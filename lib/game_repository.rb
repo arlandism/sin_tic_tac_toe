@@ -1,6 +1,6 @@
-class GameState
+class GameRepository
 
-  def self.new_move(games, token, move, id)
+  def self.add_move(games, token, move, id)
     to_add = {
       "token" => token,
       "position" => move
@@ -22,7 +22,7 @@ class GameState
     {"games" => all_games}
   end
 
-  def self.new_winner(games, winner, id)
+  def self.add_winner(games, winner, id)
 
      to_add = {
         "winner" => winner
