@@ -6,38 +6,34 @@ class GameRepository
       "position" => move
     }
 
-    all_games = games["games"]
-
-    the_game = self.find_game(all_games, id)
-
-     if the_game["moves"]
-       move_list = the_game["moves"]
-     else
-       move_list = []
-       the_game["moves"] = move_list
+     self.add_to_game(games, id) do |game|
+       if game["moves"]
+         move_list = game["moves"]
+       else
+         move_list = []
+         game["moves"] = move_list
+       end
+       move_list.concat([to_add]) if to_add["position"] != 0
      end
 
-    new_move_list = move_list.concat([to_add]) if to_add["position"] != 0
-
-    {"games" => all_games}
   end
 
   def self.add_winner(games, winner, id)
 
-     to_add = {
-        "winner" => winner
-      }
+     self.add_to_game(games, id) do |game|
+       game["winner"] = winner
+     end
 
-     all_games = games["games"]
-
-     the_game = self.find_game(all_games, id)
-
-     the_game["winner"] = winner
-     
-     {"games" => all_games}
   end
   
   private
+
+  def self.add_to_game(games, id)
+    all_games = games["games"]
+    the_game = self.find_game(all_games, id)
+    yield the_game
+    return {"games" => all_games}
+  end
 
   def self.find_game(games, id)
     if games[id.to_s]
