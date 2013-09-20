@@ -8,4 +8,8 @@ class TTTDuet < Sinatra::Base
       haml :games
   end
 
+  get %r{/games/[0-9]+} do
+  
+  end
+
 end
