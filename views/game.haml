@@ -1,0 +1,19 @@
+!!!5
+%html
+  %head
+    %link(rel="stylesheet" type="text/css" href="game_styles.css")
+    %title
+      = "Game #{@game}"
+    %body
+      .game{:id => "#{@game}"}
+        %h4
+          = "Game #{@game}"
+          %ol
+            -if @game["moves"] 
+              - @game["moves"].each do |move|
+                %li
+                  = "#{move["token"]} moved to #{move["position"]}"
+          -if @game["winner"]
+            %p
+              = "#{games[id]["winner"].capitalize} won!"
+      
