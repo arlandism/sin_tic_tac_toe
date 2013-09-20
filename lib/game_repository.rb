@@ -13,7 +13,7 @@ class GameRepository
          move_list = []
          game["moves"] = move_list
        end
-       move_list.concat([to_add]) if to_add["position"] != 0
+       move_list << to_add if to_add["position"] != 0
      end
 
   end
