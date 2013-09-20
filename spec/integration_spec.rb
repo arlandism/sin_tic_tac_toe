@@ -13,6 +13,7 @@ describe "integration" do
 
   before(:each) do
     ClientSocket.any_instance.stub(:connect!)
+    File.stub(:write)
   end
 
   context "with service" do
