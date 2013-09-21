@@ -23,6 +23,9 @@ class History
     end
   end
 
+  def self.next_id
+  end
+
   private
 
   def self.open_and_write_to(path)

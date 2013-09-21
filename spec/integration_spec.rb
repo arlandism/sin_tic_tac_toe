@@ -68,19 +68,19 @@ describe "integration" do
 
       post '/move'
     end
-
     
   end
 
   context "with Random" do
 
-    it "calls Random generator for id generation" do
-        NextPlayer.stub(:move)
-        GameInformation.any_instance.stub(:winner_on_board)
-        Random.should_receive(:rand).with(1000).and_return(50)
+    it "calls History for next i.d" do
+      NextPlayer.stub(:move)
+      GameInformation.any_instance.stub(:winner_on_board)
+      History.should_receive(:next_id).
+        and_return(50)
 
-        post '/move'
-        rack_mock_session.cookie_jar["id"].should == "50"
+      post '/move'
+      rack_mock_session.cookie_jar["id"].should == "50"
     end
   end
 
