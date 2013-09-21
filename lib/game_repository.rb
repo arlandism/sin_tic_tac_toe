@@ -25,6 +25,10 @@ class GameRepository
      end
 
   end
+
+  def self.game_by_id(games, id)
+    games["games"][id] || {"moves" => []}
+  end
   
   private
 

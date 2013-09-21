@@ -90,4 +90,21 @@ describe GameRepository do
       GameRepository.add_winner(old_structure, "Not anymore!", id).should == expected
     end
   end
+
+  describe ".game_by_id" do
+    
+    it "returns the game with given id" do
+      id = "8"
+      games = {"games" => {id => {}}}
+
+      GameRepository.game_by_id(games, id).should == {}
+    end
+
+    it "adds a skeleton structure if it can't find the game" do
+      id = "not a real id"
+      games = {"games" => {}}
+
+      GameRepository.game_by_id(games, id).should == {"moves" => []}
+    end
+  end
 end
