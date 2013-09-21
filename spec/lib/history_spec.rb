@@ -38,6 +38,15 @@ describe History do
     end
   end
 
+  describe ".next_id" do
+
+    it "increments the latest id from history" do
+      path = "spec/tmp/test_history.json"
+      History.stub(:retrieve_or_create).and_return({"games" => {"34" => {}}})
+      History.next_id(path).should == "35"
+    end
+  end
+
   describe "integration of History and GameRepository" do
 
     it "parses all games from the file and updates moves accordingly" do
