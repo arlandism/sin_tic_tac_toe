@@ -17,6 +17,15 @@ describe TTTDuet do
       last_request.url.should == "http://example.org/games/22" 
     end 
 
+    it "sets the id of the game I requested" do
+      id = "22"
+
+      GameRepository.stub(:game_by_id).and_return({"moves" => [], "winner" => nil})
+      get '/games/22'
+
+      rack_mock_session.cookie_jar["id"].should == "22"
+    end
+
     it "polls History for the list of games" do
       History.should_receive(:retrieve_or_create).
         with(TTTDuet.settings.history_path)
