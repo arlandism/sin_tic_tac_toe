@@ -5,7 +5,7 @@ require_relative '../lib/history'
 class TTTDuet < Sinatra::Base
 
   post '/move' do
-      id = cookies["id"] || History.next_id
+      id = cookies["id"] || History.next_id(settings.history_path)
       response.set_cookie("id",id)
       token_one = token(cookies)
       place_move_on_board(first_player_move,token_one)
