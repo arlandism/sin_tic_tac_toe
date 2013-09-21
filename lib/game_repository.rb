@@ -30,12 +30,12 @@ class GameRepository
 
   def self.add_to_game(games, id)
     all_games = games["games"]
-    the_game = self.find_game(all_games, id)
+    the_game = self.find_or_add_game(all_games, id)
     yield the_game
     return {"games" => all_games}
   end
 
-  def self.find_game(games, id)
+  def self.find_or_add_game(games, id)
     if games[id.to_s]
       the_game = games[id.to_s]
     else
