@@ -3,17 +3,19 @@
   %head
     %link(rel="stylesheet" type="text/css" href="game_styles.css")
     %title
-      = "Game #{@game}"
+      = "Game #{cookies["id"]}"
     %body
-      .game{:id => "#{@game}"}
+      .game{:id => "#{cookies["id"]}"}
         %h4
-          = "Game #{@game}"
+          = "Game #{cookies["id"]}"
+          / Declare Variable
+          - moves = @game["moves"]
+          - winner = @game["winner"]
           %ol
-            -if @game["moves"] 
-              - @game["moves"].each do |move|
-                %li
-                  = "#{move["token"]} moved to #{move["position"]}"
-          -if @game["winner"]
+            - moves.each do |move|
+              %li
+                = "#{move["token"]} moved to #{move["position"]}"
+          -if winner
             %p
-              = "#{games[id]["winner"].capitalize} won!"
+              = "#{winner.capitalize} won!"
       
