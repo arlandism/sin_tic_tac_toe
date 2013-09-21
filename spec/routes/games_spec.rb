@@ -17,23 +17,22 @@ describe TTTDuet do
       last_request.url.should == "http://example.org/games/22" 
     end 
 
-    it "polls History for the queried game" do
+    it "polls History for the list of games" do
+      History.should_receive(:retrieve_or_create).
+        with(TTTDuet.settings.history_path)
 
-      game = {
-        "moves" => [{"position" => 2, "token" => "x"}],
-        "winner" => "me!"
-        }
-      game_id = "22"
+      get '/games/22' 
+    end
+
+    it "calls the presenter with the game it got back" do
+      id = "22"
+      games = {"games" => {}}
 
       History.should_receive(:retrieve_or_create).
         with(TTTDuet.settings.history_path).
-        and_return({"games" => {game_id => game}})
+        and_return(games)
 
-      get '/games/22' 
-
-      rack_mock_session.cookie_jar["id"].should == "22"
-      rack_mock_session.cookie_jar["moves"].should == JSON.dump(game["moves"])
-      rack_mock_session.cookie_jar["winner"].should == "me!"
+      get '/games/22'
     end
   end
 
