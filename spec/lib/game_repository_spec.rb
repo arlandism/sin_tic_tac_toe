@@ -104,7 +104,7 @@ describe GameRepository do
       id = "not a real id"
       games = {"games" => {}}
 
-      GameRepository.game_by_id(games, id).should == {"moves" => []}
+      GameRepository.game_by_id(games, id).should == {"moves" => [], "winner" => nil}
     end
   end
 end

@@ -27,7 +27,7 @@ class GameRepository
   end
 
   def self.game_by_id(games, id)
-    games["games"][id] || {"moves" => []}
+    games["games"][id] || {"moves" => [], "winner" => nil}
   end
   
   private
