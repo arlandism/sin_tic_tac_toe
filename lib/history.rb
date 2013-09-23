@@ -1,11 +1,10 @@
 require 'json'
 require_relative 'game_repository'
-require_relative 'file_history_reader'
-require_relative 'file_history_writer'
+require_relative 'file_history_reader_writer'
 
 class History
 
-  def self.retrieve_or_create(path, reader=FileHistoryReader,
+  def self.retrieve_or_create(path, reader=FileIO,
                               exception=JSON::ParserError)
     begin
       game_history = reader.read(path) 
@@ -15,14 +14,14 @@ class History
   end
 
   def self.write_move(id, move, token, path,
-                      writer=FileHistoryWriter)
+                      writer=FileIO)
     self.open_and_write_to(path, writer) do |contents|
       GameRepository.add_move(contents, token, move, id)
     end
   end
 
   def self.write_winner(id,winner,path,
-                        writer=FileHistoryWriter)
+                        writer=FileIO)
     self.open_and_write_to(path, writer) do |contents|
       GameRepository.add_winner(contents,winner,id)
     end
