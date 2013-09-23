@@ -42,8 +42,10 @@ describe History do
 
     it "increments the latest id from history" do
       path = "spec/tmp/test_history.json"
-      History.stub(:retrieve_or_create).and_return({"games" => {"34" => {}}})
-      History.next_id(path).should == "35"
+      FileHistoryReader.stub(:read).and_return({"games" => 
+                                               {"34" => {},
+                                                "35" => {}}})
+      History.next_id(path).should == 36
     end
   end
 

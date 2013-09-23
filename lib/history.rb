@@ -30,11 +30,7 @@ class History
 
   def self.next_id(path)
     games = self.retrieve_or_create(path)
-    ids = games["games"].keys
-    ids.sort
-    highest_id = ids[-1].to_i
-    next_id = highest_id + 1
-    next_id.to_s
+    games["games"].keys.max.to_i + 1
   end
 
   private
