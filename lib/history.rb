@@ -1,11 +1,13 @@
 require 'json'
 require_relative 'game_repository'
+require_relative 'file_history_reader'
+require_relative 'file_history_writer'
 
 class History
 
-  def self.retrieve_or_create(path)
+  def self.retrieve_or_create(path, reader=FileHistoryReader)
     begin
-      game_history = JSON.parse(File.read(path)) 
+      game_history = reader.read(path) 
     rescue JSON::ParserError
       game_history = {"games" => {}}
     end
@@ -34,12 +36,12 @@ class History
 
   private
 
-  def self.open_and_write_to(path)
+  def self.open_and_write_to(path,writer=FileHistoryWriter)
     file_contents = self.retrieve_or_create(path)
 
     new_contents = yield file_contents
 
-    File.write(path,JSON.pretty_generate(new_contents))
+    writer.write(path, new_contents)
   end
   
 end
