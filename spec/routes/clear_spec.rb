@@ -1,19 +1,14 @@
 require_relative 'route_spec_helper'
 
-describe 'TTTDuet' do
+describe TTTDuet do
   include Rack::Test::Methods
-
-  def should_arrive_at_expected_path(expected_path)
-    default_url = "http://example.org"
-    last_request.url.should == default_url + expected_path
-  end
 
   describe "GET '/clear' " do
 
     it "redirects to index" do
       get '/clear'
       follow_redirect!
-      should_arrive_at_expected_path("/")
+      SpecUtils::should_arrive_at_expected_path(last_request, "/")
     end
 
     it "clears state cookies but not config" do
