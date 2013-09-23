@@ -6,10 +6,9 @@
     %h4
       = "Game #{id}"
       %ol
-        -if games[id]["moves"] 
-          - games[id]["moves"].each do |move|
-            %li
-              = "#{move["token"]} moved to #{move["position"]}"
+        - games[id]["moves"].each do |move|
+          %li
+            = "#{move["token"]} moved to #{move["position"]}"
       -if games[id]["winner"]
         %p
           = "#{games[id]["winner"].capitalize} won!"
