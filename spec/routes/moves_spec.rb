@@ -3,16 +3,6 @@ require_relative 'route_spec_helper'
 describe TTTDuet do
   include Rack::Test::Methods
 
-  def verify_cookie_value(key,val)
-    cookie_key = key.to_s
-    rack_mock_session.cookie_jar[cookie_key].should == val
-  end
-
-  def should_arrive_at_expected_path(expected_path)
-    default_url = "http://example.org"
-    last_request.url.should == default_url + expected_path
-  end
-
   before(:each) do
     File.stub(:write)
   end
@@ -32,7 +22,7 @@ describe TTTDuet do
       post '/move'
      
       follow_redirect! 
-      should_arrive_at_expected_path("/")
+      SpecUtils::should_arrive_at_expected_path(last_request, "/")
     end
 
     it "sets the information it gets from players and service" do
@@ -40,9 +30,9 @@ describe TTTDuet do
       NextPlayer.stub(:move).and_return(3)
 
       post '/move', {:player_move => 5}
-      verify_cookie_value(5,"x")
-      verify_cookie_value(3,"o")
-      verify_cookie_value("winner","")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, 5,"x")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, 3,"o")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, "winner","")
     end
     
     it "shouldn't call NextPlayer if there's a winner" do
@@ -59,9 +49,9 @@ describe TTTDuet do
       get '/'
 
       post '/move', {:player_move => 6}
-      verify_cookie_value(3,"x")
-      verify_cookie_value(6,"o")
-      verify_cookie_value(4,"x")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, 3,"x")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, 6,"o")
+      SpecUtils::verify_cookie_value(rack_mock_session.cookie_jar, 4,"x")
     end
 
     it "generates an id if it doesn't have one already" do
