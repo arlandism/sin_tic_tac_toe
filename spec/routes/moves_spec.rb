@@ -13,6 +13,10 @@ describe TTTDuet do
     last_request.url.should == default_url + expected_path
   end
 
+  before(:each) do
+    File.stub(:write)
+  end
+
   describe "POST '/move'" do
 
     before(:each) do 

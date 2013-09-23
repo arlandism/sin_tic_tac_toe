@@ -13,6 +13,7 @@ describe TTTDuet do
     before(:each) do
       @ai = double(:ai)
       AI.stub(:new).and_return(@ai)
+      History.stub(:write_move)
     end
 
     it 'renders index' do
