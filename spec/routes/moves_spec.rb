@@ -1,18 +1,7 @@
-require 'rack/test'
+require_relative 'route_spec_helper'
 
-require_relative '../../app'
-
-describe 'TTTDuet' do
+describe TTTDuet do
   include Rack::Test::Methods
-
-  before(:each) do 
-    History.stub(:write_move)
-    History.stub(:write_winner)
-  end
-
-  def app
-    TTTDuet.new
-  end
 
   def verify_cookie_value(key,val)
     cookie_key = key.to_s
