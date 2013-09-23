@@ -22,16 +22,22 @@ describe TTTDuet do
     end
 
     def assert_config_cookies_live(config_cookies) 
-      config_cookies.each {|val| rack_mock_session.cookie_jar[val].should_not == "" }
+      config_cookies.each do |val| 
+        rack_mock_session.cookie_jar[val].should_not == ""
+      end 
     end
 
     def assert_non_config_cookies_dead(cookies_that_should_be_dead)
-      cookies_that_should_be_dead.each {|val| rack_mock_session.cookie_jar[val].should == "" }
+      cookies_that_should_be_dead.each do |val| 
+        rack_mock_session.cookie_jar[val].should == "" 
+      end
     end
 
     def set_all_the_cookies(cookie_group_one, cookie_group_two)
       all_cookies =  cookie_group_one + cookie_group_two
-      all_cookies.each {|val| rack_mock_session.cookie_jar[val] = "x"}
+      all_cookies.each do |val| 
+        rack_mock_session.cookie_jar[val] = "x"
+      end
     end
   end
 end
