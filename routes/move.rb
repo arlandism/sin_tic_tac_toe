@@ -5,16 +5,16 @@ require_relative '../lib/history'
 class TTTDuet < Sinatra::Base
 
   post '/move' do
-      id = cookies["id"] || History.next_id(settings.history_path)
-      response.set_cookie("id",id)
-      token_one = token(cookies)
-      place_move_on_board(first_player_move,token_one)
+    id = cookies["id"] || History.next_id(settings.history_path)
+    response.set_cookie("id",id)
+    token_one = token(cookies)
+    place_move_on_board(first_player_move,token_one)
 
-      token_two = token(cookies)
-      place_move_on_board(next_player_move,token_two)
+    token_two = token(cookies)
+    place_move_on_board(next_player_move,token_two)
 
-      place_winner_on_board
-      redirect '/'
+    place_winner_on_board
+    redirect '/'
   end
 
   def place_move_on_board(move,token)
@@ -39,13 +39,13 @@ class TTTDuet < Sinatra::Base
   end
 
   def token(game_information)
-      x_count = game_information.values.count("x")
-      o_count = game_information.values.count("o")
-      if x_count > o_count
-        return "o"
-      else
-        return "x"
-      end
+    x_count = game_information.values.count("x")
+    o_count = game_information.values.count("o")
+    if x_count > o_count
+      return "o"
+    else
+      return "x"
+    end
   end
 
 end
