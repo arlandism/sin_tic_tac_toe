@@ -5,10 +5,11 @@ require_relative 'file_history_writer'
 
 class History
 
-  def self.retrieve_or_create(path, reader=FileHistoryReader)
+  def self.retrieve_or_create(path, reader=FileHistoryReader,
+                              exception=JSON::ParserError)
     begin
       game_history = reader.read(path) 
-    rescue JSON::ParserError
+    rescue exception
       game_history = {"games" => {}}
     end
   end
