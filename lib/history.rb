@@ -13,14 +13,16 @@ class History
     end
   end
 
-  def self.write_move(id, move, token, path)
-    self.open_and_write_to(path) do |contents|
+  def self.write_move(id, move, token, path,
+                      writer=FileHistoryWriter)
+    self.open_and_write_to(path, writer) do |contents|
       GameRepository.add_move(contents, token, move, id)
     end
   end
 
-  def self.write_winner(id,winner,path)
-    self.open_and_write_to(path) do |contents|
+  def self.write_winner(id,winner,path,
+                        writer=FileHistoryWriter)
+    self.open_and_write_to(path, writer) do |contents|
       GameRepository.add_winner(contents,winner,id)
     end
   end
@@ -36,7 +38,7 @@ class History
 
   private
 
-  def self.open_and_write_to(path,writer=FileHistoryWriter)
+  def self.open_and_write_to(path,writer)
     file_contents = self.retrieve_or_create(path)
 
     new_contents = yield file_contents
