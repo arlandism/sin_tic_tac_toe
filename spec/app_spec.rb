@@ -62,7 +62,9 @@ describe 'TTTDuet' do
      end
 
      it "asks right question of cpumove" do
-       game_description = {"the" => "stuff"}
+       History.stub(:next_id).and_return(3)
+       game_description = {"the" => "stuff",
+                           "id" => "3"}
 
        rack_mock_session.cookie_jar["the"] = "stuff"
 
@@ -70,6 +72,12 @@ describe 'TTTDuet' do
 
        get '/'
       end
+
+     it "assigns the i.d. before AI moves" do
+       get '/'
+       rack_mock_session.cookie_jar["id"].should_not be nil
+     end
+
     end
 
   describe "POST '/move'" do
