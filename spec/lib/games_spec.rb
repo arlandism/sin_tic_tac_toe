@@ -18,7 +18,7 @@ describe Games do
 
   describe ".write_move" do
 
-    it "writes moves to the database" do
+    it "writes moves to its IO" do
       id = 2
       path = "yo"
       move = 4
@@ -30,7 +30,7 @@ describe Games do
 
   describe ".write_winner" do
 
-    it "writes winners to the database" do
+    it "writes winners to its IO" do
       id = 2
       path = "yo"
       winner = "me!"
