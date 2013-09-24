@@ -87,7 +87,7 @@ describe "integration" do
 
   context "with database" do
 
-    it "writes moves to the database" do
+    xit "writes moves to the database" do
       id = 5
       rack_mock_session.cookie_jar["id"] = id
       NextPlayer.stub(:move)
