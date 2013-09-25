@@ -33,7 +33,7 @@ describe History do
       winner = "x"
       id = "3"
       File.should_receive(:read).with(path).and_return("")
-      GameRepository.should_receive(:add_winner).with({"games"=>{}},winner,id).and_return({})
+      GameTransformer.should_receive(:add_winner).with({"games"=>{}},winner,id).and_return({})
       History.write_winner(id, "x", path)
     end
   end

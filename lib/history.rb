@@ -1,5 +1,5 @@
 require 'json'
-require_relative 'game_repository'
+require_relative 'game_transformer'
 require_relative 'file_history_reader_writer'
 
 class History
@@ -16,14 +16,14 @@ class History
   def self.write_move(id, move, token, path,
                       writer=FileIO)
     self.open_and_write_to(path, writer) do |contents|
-      GameRepository.add_move(contents, token, move, id)
+      GameTransformer.add_move(contents, token, move, id)
     end
   end
 
   def self.write_winner(id,winner,path,
                         writer=FileIO)
     self.open_and_write_to(path, writer) do |contents|
-      GameRepository.add_winner(contents,winner,id)
+      GameTransformer.add_winner(contents,winner,id)
     end
   end
 

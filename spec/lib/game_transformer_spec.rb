@@ -1,6 +1,6 @@
-require_relative '../../lib/game_repository'
+require_relative '../../lib/game_transformer'
 
-describe GameRepository do
+describe GameTransformer do
 
   describe ".new_move" do
     
@@ -17,7 +17,7 @@ describe GameRepository do
                 "position" => move
               ]
           }}}
-      GameRepository.add_move({"games" => {}}, token, move, id).should == expected
+      GameTransformer.add_move({"games" => {}}, token, move, id).should == expected
     end
 
     it "polls the data structure it gets and returns it with updated moves" do
@@ -39,14 +39,14 @@ describe GameRepository do
           {
             "moves" => [ first_move, next_move ],
           }}}
-      GameRepository.add_move(old_structure, "o", 5, id).should == new_structure
+      GameTransformer.add_move(old_structure, "o", 5, id).should == new_structure
     end
 
     it "doesn't add moves with positions of 0" do
       id = "2"
       position = 0
       expected_structure = {"games" => {id => {"moves" => []}}}
-      GameRepository.add_move({"games" => {}},"x",position,id).should == expected_structure
+      GameTransformer.add_move({"games" => {}},"x",position,id).should == expected_structure
     end
   end
 
@@ -68,7 +68,7 @@ describe GameRepository do
             "moves" => [ move ],
             "winner" => "x"
           }}}
-      GameRepository.add_winner(old_structure, "x", id).should == expected
+      GameTransformer.add_winner(old_structure, "x", id).should == expected
     end
     
     it "overwrites the previous winner" do
@@ -87,7 +87,7 @@ describe GameRepository do
           {
             "winner" => "Not anymore!"
           }}}
-      GameRepository.add_winner(old_structure, "Not anymore!", id).should == expected
+      GameTransformer.add_winner(old_structure, "Not anymore!", id).should == expected
     end
   end
 
@@ -97,14 +97,14 @@ describe GameRepository do
       id = "8"
       games = {"games" => {id => {}}}
 
-      GameRepository.game_by_id(games, id).should == {}
+      GameTransformer.game_by_id(games, id).should == {}
     end
 
     it "adds a skeleton structure if it can't find the game" do
       id = "not a real id"
       games = {"games" => {}}
 
-      GameRepository.game_by_id(games, id).should == {"moves" => [], "winner" => nil}
+      GameTransformer.game_by_id(games, id).should == {"moves" => [], "winner" => nil}
     end
   end
 end

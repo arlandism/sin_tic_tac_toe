@@ -1,4 +1,4 @@
-class GameRepository
+class GameTransformer
 
   def self.add_move(games, token, move, id)
     to_add = {

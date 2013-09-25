@@ -13,7 +13,7 @@ class TTTDuet < Sinatra::Base
     game_id = params[:captures].first
     response.set_cookie("id", game_id)
     games = History.retrieve_or_create(settings.history_path)
-    @game = GameRepository.game_by_id(games, game_id)
+    @game = GameTransformer.game_by_id(games, game_id)
     haml :game
   end
 
