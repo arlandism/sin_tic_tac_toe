@@ -1,4 +1,5 @@
 require 'models/game'
+require 'models/move'
 
 class DatabaseIO
 
@@ -6,6 +7,16 @@ class DatabaseIO
     DataMapper.setup(:default, path)
     games = Game.all
     games unless empty?(games)
+  end
+
+  def self.write_move(path, id, position, token)
+    Move.create(
+      :id => id,
+      :position => position,
+      :token => token
+    )
+
+    Game.get(id)
   end
 
   private

@@ -1,16 +1,33 @@
 require 'data_mapper'
+require 'yaml'
 
 require_relative '../../lib/database_io'
 
+config = YAML.load_file("database.yaml")["test"]
+db_type = config["adapter"]
+user = config["user"] 
+pass = config["password"]
+host = config["host"]
+db = config["database"]
+
 describe DatabaseIO do
+
+  let (:path) { "/baz" }
+  let (:game_model) { Game }
+
+  before(:each) do
+    test_db_path ="#{db_type}://#{user}:#{pass}@#{host}/#{db}"
+    DataMapper.setup(:default, test_db_path)
+    DataMapper.finalize
+    DataMapper.auto_migrate!
+  end
 
   describe ".read" do
     
-    let (:path) { "/baz" }
-    let (:game_model) { Game }
 
     before(:each) do
       DataMapper.should_receive(:setup).with(:default, path)
+      Game.stub(:get)
     end
 
     it "delegates to Game.all" do
@@ -31,10 +48,20 @@ describe DatabaseIO do
 
   describe ".write_move" do
   
-    it "delegates to Game.create" do
-      game_data = {
-        
-      }
+    it "creates a move record" do
+      id = 3
+      position = 4
+      token = "x"
+
+      DatabaseIO.write_move(path, id, position, token) 
+      Move.get(id).position.should == position
+      Move.get(id).token.should == token
+    end
+
+    it "retrieves game with given i.d." do
+      id = 3
+      game_model.should_receive(:get).with(3)
+      DatabaseIO.write_move(path, id, 3, "x")
     end
   end
 
