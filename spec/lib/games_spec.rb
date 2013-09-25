@@ -6,6 +6,7 @@ describe Games do
 
     it "creates a 'games' data structure if it doesn't exist" do
       path = "/baz"
+      DatabaseIO.stub(:read).with(path).and_return(nil)
       Games.retrieve_or_create(path).should == {"games" => {}}
     end
 

@@ -1,7 +1,7 @@
 require 'json'
 require_relative '../../lib/history'
 
-describe History do
+describe FileHistory do
 
   before(:each) do
     File.stub(:write)
@@ -13,7 +13,7 @@ describe History do
       expected = {"games" => {}}
       path = "bar" 
       File.stub(:read).with("bar").and_return("")
-      History.retrieve_or_create(path).should == expected
+      FileHistory.retrieve_or_create(path).should == expected
     end
     
     it "overwrites what used to exist at path" do
@@ -21,7 +21,7 @@ describe History do
       path = "foo"
       File.stub(:read).with(path).and_return("")
       File.should_receive(:write).with(path, anything)
-      History.write_move(id, 5, "o", path)
+      FileHistory.write_move(id, 5, "o", path)
     end
     
   end
@@ -34,7 +34,7 @@ describe History do
       id = "3"
       File.should_receive(:read).with(path).and_return("")
       GameTransformer.should_receive(:add_winner).with({"games"=>{}},winner,id).and_return({})
-      History.write_winner(id, "x", path)
+      FileHistory.write_winner(id, "x", path)
     end
   end
 
@@ -45,11 +45,11 @@ describe History do
       FileIO.stub(:read).and_return({"games" => 
                                                {"34" => {},
                                                 "35" => {}}})
-      History.next_id(path).should == 36
+      FileHistory.next_id(path).should == 36
     end
   end
 
-  describe "integration of History and GameRepository" do
+  describe "integration of FileHistory and GameRepository" do
 
     it "parses all games from the file and updates moves accordingly" do
       game_one = 8
@@ -78,7 +78,7 @@ describe History do
       path = "baz"
       File.stub(:read).with(path).and_return(old_structure.to_json)
       File.should_receive(:write).with(path,JSON.pretty_generate(expected))
-      History.write_move(game_two,5,"o",path) 
+      FileHistory.write_move(game_two,5,"o",path) 
     end
     
     it "parses all games from the file and updates winners accordingly" do
@@ -95,7 +95,7 @@ describe History do
       path = "baz"
       File.stub(:read).with(path).and_return(old_structure.to_json)
       File.should_receive(:write).with(path,JSON.pretty_generate(expected))
-      History.write_winner(game,"new winner",path)
+      FileHistory.write_winner(game,"new winner",path)
     end
   end
 end

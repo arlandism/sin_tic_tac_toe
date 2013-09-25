@@ -27,7 +27,7 @@ describe TTTDuet do
     end
 
     it "polls History for the list of games" do
-      History.should_receive(:retrieve_or_create).
+      FileHistory.should_receive(:retrieve_or_create).
         with(TTTDuet.settings.history_path)
 
       get '/games/22' 
@@ -37,7 +37,7 @@ describe TTTDuet do
       id = "22"
       games = {"games" => {}}
 
-      History.should_receive(:retrieve_or_create).
+      FileHistory.should_receive(:retrieve_or_create).
         with(TTTDuet.settings.history_path).
         and_return(games)
 

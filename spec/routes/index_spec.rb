@@ -13,7 +13,7 @@ describe TTTDuet do
     before(:each) do
       @ai = double(:ai)
       AI.stub(:new).and_return(@ai)
-      History.stub(:write_move)
+      FileHistory.stub(:write_move)
     end
 
     it 'renders index' do
@@ -47,7 +47,7 @@ describe TTTDuet do
     end
 
     it "asks right question of cpumove" do
-      History.stub(:next_id).and_return(3)
+      FileHistory.stub(:next_id).and_return(3)
       game_description = {"the" => "stuff",
                           "id" => "3"}
 

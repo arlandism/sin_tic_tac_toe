@@ -22,8 +22,8 @@ describe "integration" do
     let(:game_info) { double(:game_info) }
 
     before(:each) do
-      History.stub(:write_move)
-      History.stub(:write_winner)
+      FileHistory.stub(:write_move)
+      FileHistory.stub(:write_winner)
       GameInformation.stub(:new).and_return(game_info)
     end
 
@@ -44,7 +44,7 @@ describe "integration" do
     end
   end
 
-  context "with History" do
+  context "with FileHistory" do
 
     let(:id) { 24 }
 
@@ -52,20 +52,20 @@ describe "integration" do
       rack_mock_session.cookie_jar["id"] = id
     end
 
-    it "delegates moves to History" do
+    it "delegates moves to FileHistory" do
       NextPlayer.stub(:move).and_return(4)
       GameInformation.any_instance.stub(:winner_on_board)
 
-      History.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
-      History.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
+      FileHistory.should_receive(:write_move).once.with(id,34,"x", app.settings.history_path)
+      FileHistory.should_receive(:write_move).once.with(id,4,"o", app.settings.history_path)
 
       post '/move', {:player_move => 34}
     end
 
-    it "delegates winners to History" do
+    it "delegates winners to FileHistory" do
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board).and_return("x")
-      History.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
+      FileHistory.should_receive(:write_winner).once.with(id,"x", app.settings.history_path)
 
       post '/move'
     end
@@ -74,10 +74,10 @@ describe "integration" do
 
   context "with Random" do
 
-    it "calls History for next i.d" do
+    it "calls FileHistory for next i.d" do
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board)
-      History.should_receive(:next_id).
+      FileHistory.should_receive(:next_id).
         and_return(50)
 
       post '/move'
