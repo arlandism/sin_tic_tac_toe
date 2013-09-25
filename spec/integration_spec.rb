@@ -1,7 +1,7 @@
 ENV["RACK_ENV"] = "test"
 
 require 'rack/test'
-require_relative '../lib/games'
+require_relative '../lib/db_history'
 require_relative '../app'
 
 describe "integration" do
