@@ -6,5 +6,7 @@ class Move
   property :id, Integer, :key => true
   property :position, Integer
   property :token, String
-  
+
+  belongs_to :game
+
 end

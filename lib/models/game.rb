@@ -5,4 +5,6 @@ class Game
 
   property :id, Serial
 
+  has n, :moves
+
 end

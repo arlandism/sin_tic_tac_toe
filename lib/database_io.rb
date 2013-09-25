@@ -13,7 +13,8 @@ class DatabaseIO
     Move.create(
       :id => id,
       :position => position,
-      :token => token
+      :token => token,
+      :game_id => id
     )
 
     Game.get(id)

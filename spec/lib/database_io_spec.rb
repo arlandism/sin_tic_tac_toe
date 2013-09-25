@@ -1,5 +1,4 @@
 require 'data_mapper'
-require 'yaml'
 
 require_relative '../../lib/database_io'
 
@@ -48,22 +47,16 @@ describe DatabaseIO do
 
   describe ".write_move" do
   
-    it "creates a move record" do
-      id = 3
-      position = 4
-      token = "x"
-
+    let (:id)       { 3 }
+    let (:position) { 4 }
+    let (:token)    { "x" }
+    
+    it "creates a move record in the game with same id" do
+      game = Game.create(:id => id)
       DatabaseIO.write_move(path, id, position, token) 
-      Move.get(id).position.should == position
-      Move.get(id).token.should == token
-    end
-
-    it "retrieves game with given i.d." do
-      id = 3
-      game_model.should_receive(:get).with(3)
-      DatabaseIO.write_move(path, id, 3, "x")
+      game.moves.first.position.should == 4
+      game.moves.first.token.should == "x"
     end
   end
-
   
 end
