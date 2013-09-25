@@ -68,7 +68,7 @@ describe GameRepository do
             "moves" => [ move ],
             "winner" => "x"
           }}}
-      GameRepository.add_winner(old_structure, "x", id)
+      GameRepository.add_winner(old_structure, "x", id).should == expected
     end
     
     it "overwrites the previous winner" do
