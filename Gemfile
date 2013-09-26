@@ -4,6 +4,8 @@ gem 'rake', "~> 10.1.0"
 gem 'sinatra', "~> 1.4.3"
 gem 'haml', "~> 4.0.3"
 gem 'sequel'
+gem 'data_mapper'
+gem 'dm-postgres-adapter'
 
 group :test do
   gem 'rspec', "~> 2.11.0" 
