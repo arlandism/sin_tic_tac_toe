@@ -1,5 +1,5 @@
 require 'json'
-require_relative '../../lib/history'
+require 'file_history'
 
 describe FileHistory do
 
