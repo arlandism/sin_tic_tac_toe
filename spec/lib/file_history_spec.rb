@@ -49,7 +49,7 @@ describe FileHistory do
     end
   end
 
-  describe "integration of FileHistory and GameRepository" do
+  describe "integration of FileHistory and GameTransformer" do
 
     it "parses all games from the file and updates moves accordingly" do
       game_one = 8
