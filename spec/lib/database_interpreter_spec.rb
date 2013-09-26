@@ -16,25 +16,27 @@ describe DBInterpreter do
       :position => 3,
       :token => "o"
     )
-    #Move.create(
-    #  :game_id => 3,
-    #  :position => 4,
-    #  :token => "o"
-    #)
+    Move.create(
+      :game_id => 3,
+      :position => 4,
+      :token => "x"
+    )
     game
   end
 
   let(:move)     { {"position" => 3, 
                     "token" => "o",
-                    "game_id" => 3} }
+                    "game_id" => 3,
+                    "id" => 1} }
 
   let(:move_two) { {"position" => 4, 
                     "token" => "x",
-                    "game_id" => 3} }
+                    "game_id" => 3,
+                    "id" => 2} }
 
-  describe ".game_by_id" do
+  describe ".translate_game" do
 
-    xit "takes a database format of the game and reformats it" do
+    it "takes a database format of the game and reformats it" do
       game = create_test_game_and_moves
       expected = {
         "moves" => [move, move_two],
@@ -44,4 +46,32 @@ describe DBInterpreter do
     end
   end
 
+  describe ".translate_games" do
+    
+    it "takes a database format of all the games and reformats it" do
+      create_test_game_and_moves
+      new_move = {
+        "position" => 4,
+        "token" => "x",
+        "game_id" => 4,
+        "id" => 3
+      }
+      Game.create(:id => 4, :winner => nil)
+      Move.create(
+        :game_id => 4,
+        :position => 4,
+        :token => "x"
+      )
+      expected = {
+        "games" => {
+          3 => {
+          "moves" => [move, move_two],
+          "winner" => nil
+          },
+         4 => {
+           "moves" => [new_move],
+           "winner" => nil}}}
+      DBInterpreter.translate_games(Game.all).should == expected
+    end
+  end
 end
