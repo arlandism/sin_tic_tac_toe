@@ -1,13 +1,13 @@
 require 'json'
 require_relative 'game_transformer'
-require_relative 'file_history_reader_writer'
+require_relative 'file_io'
 
 class FileHistory
 
-  def self.retrieve_or_create(path, exception=JSON::ParserError)
+  def self.retrieve_or_create(path)
     begin
       game_history = FileIO.read(path) 
-    rescue exception
+    rescue JSON::ParserError
       game_history = {"games" => {}}
     end
   end
