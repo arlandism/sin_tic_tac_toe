@@ -12,8 +12,7 @@ class TTTDuet < Sinatra::Base
   get %r{/games/([0-9]+)} do
     game_id = params[:captures].first
     response.set_cookie("id", game_id)
-    games = FileHistory.retrieve_or_create(settings.history_path)
-    @game = GameTransformer.game_by_id(games, game_id)
+    @game = FileHistory.game_by_id(settings.history_path, game_id)
     haml :game
   end
 
