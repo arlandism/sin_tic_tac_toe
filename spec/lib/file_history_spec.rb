@@ -98,4 +98,13 @@ describe FileHistory do
       FileHistory.write_winner(game,"new winner",path)
     end
   end
+
+  describe ".game_by_id" do
+    it "returns game with given id" do
+      path = "me"
+      id = 3
+      FileIO.stub(:read).and_return({"games" => {3 => {}}})
+      FileHistory.game_by_id(path,id).should == {}
+    end
+  end
 end

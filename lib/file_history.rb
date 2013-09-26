@@ -29,6 +29,10 @@ class FileHistory
     games["games"].keys.max.to_i + 1
   end
 
+  def self.game_by_id(path, id)
+    GameTransformer.game_by_id(FileIO.read(path), id)
+  end
+
   private
 
   def self.open_and_write_to(path)
