@@ -39,6 +39,7 @@ class DatabaseIO
 
   def self.create_move(id, position, token)
     Move.create(
+      :id => id,
       :position => position,
       :token => token,
       :game_id => id
