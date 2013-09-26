@@ -13,16 +13,14 @@ class FileHistory
     end
   end
 
-  def self.write_move(id, move, token, path,
-                      writer=FileIO)
-    self.open_and_write_to(path, writer) do |contents|
+  def self.write_move(id, move, token, path)
+    self.open_and_write_to(path) do |contents|
       GameTransformer.add_move(contents, token, move, id)
     end
   end
 
-  def self.write_winner(id,winner,path,
-                        writer=FileIO)
-    self.open_and_write_to(path, writer) do |contents|
+  def self.write_winner(id,winner,path)
+    self.open_and_write_to(path) do |contents|
       GameTransformer.add_winner(contents,winner,id)
     end
   end
@@ -34,12 +32,12 @@ class FileHistory
 
   private
 
-  def self.open_and_write_to(path,writer)
+  def self.open_and_write_to(path)
     file_contents = self.retrieve_or_create(path)
 
     new_contents = yield file_contents
 
-    writer.write(path, new_contents)
+    FileIO.write(path, new_contents)
   end
   
 end
