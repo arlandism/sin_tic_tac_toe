@@ -1,29 +1,17 @@
-require 'data_mapper'
-
-require_relative '../../lib/database_io'
-
-config = YAML.load_file("database.yaml")["test"]
-db_type = config["adapter"]
-user = config["user"] 
-pass = config["password"]
-host = config["host"]
-db = config["database"]
+require 'db_helper'
+require 'database_io'
 
 describe DatabaseIO do
 
-  let (:path) { "/baz" }
+  let (:path)       { "/baz" }
   let (:game_model) { Game }
 
   before(:each) do
-    test_db_path ="#{db_type}://#{user}:#{pass}@#{host}/#{db}"
-    DataMapper.setup(:default, test_db_path)
-    DataMapper.finalize
-    DataMapper.auto_migrate!
+    TestDBMethods.login_to_test_db
   end
 
   describe ".read" do
     
-
     before(:each) do
       DataMapper.should_receive(:setup).with(:default, path)
       Game.stub(:get)
@@ -58,5 +46,4 @@ describe DatabaseIO do
       game.moves.first.token.should == "x"
     end
   end
-  
 end
