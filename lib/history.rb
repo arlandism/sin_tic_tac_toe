@@ -7,7 +7,7 @@ class FileHistory
   def self.retrieve_or_create(path)
     begin
       game_history = FileIO.read(path) 
-    rescue JSON::ParserError
+    rescue NoContentError
       game_history = {"games" => {}}
     end
   end
