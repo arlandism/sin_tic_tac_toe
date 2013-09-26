@@ -1,7 +1,7 @@
 ENV["RACK_ENV"] = "test"
 
 require 'rack/test'
-require_relative '../lib/db_history'
+require 'db_history'
 require_relative '../app'
 
 describe "integration" do
@@ -92,11 +92,11 @@ describe "integration" do
       rack_mock_session.cookie_jar["id"] = id
       NextPlayer.stub(:move)
       GameInformation.any_instance.stub(:winner_on_board)
-      path = "postgres://arlandislawrence: @localhost/game_history_test"
+      TestDBMethods.login_to_test_db
 
       post '/move', {:player_move => 3}
 
-      move = Games.retrieve_or_create(path)["games"][id]["moves"][0]
+      move = DBHistory.retrieve_or_create(path)["games"][id]["moves"][0]
       move["position"].should == 3 
       move["token"].should == "x" 
     end
