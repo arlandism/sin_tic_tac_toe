@@ -54,9 +54,10 @@ describe DatabaseIO do
   end
 
   describe ".write_winner" do
+
+    let (:id) { 4 }
   
     it "creates a winner column in the game with the same id" do
-      id = 4
       Game.create(:id => id)
       DatabaseIO.write_winner(id, "x", path)
       game = Game.get(id)
@@ -64,7 +65,6 @@ describe DatabaseIO do
     end
 
     it "creates the game if it doesn't exist" do
-      id = 4
       DatabaseIO.write_winner(4, "o", path)
       Game.get(id).winner.should == "o"
     end
