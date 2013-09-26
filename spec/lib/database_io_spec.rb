@@ -69,4 +69,13 @@ describe DatabaseIO do
       Game.get(id).winner.should == "o"
     end
   end
+
+  describe ".game_by_id" do
+
+    it "retrieves the game with the given id" do
+      id = 3
+      game = Game.create(:id => id)
+      DatabaseIO.game_by_id(id).should == game
+    end
+  end
 end

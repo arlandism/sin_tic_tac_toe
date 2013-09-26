@@ -27,6 +27,10 @@ class DatabaseIO
     end
   end
 
+  def self.game_by_id(id)
+    Game.get(id)
+  end
+
   private
 
   def self.create_game(id)
