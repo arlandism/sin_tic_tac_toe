@@ -41,7 +41,7 @@ describe DBInterpreter do
   end
 
   let(:move)     { translated_move(1, 3, 3, "o") }
-  let(:move_two) { translated_move(2,3,4,"x") } 
+  let(:move_two) { translated_move(2, 3, 4, "x") } 
 
   describe ".translate_game" do
 
