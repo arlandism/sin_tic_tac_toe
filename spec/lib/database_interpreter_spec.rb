@@ -9,40 +9,46 @@ describe DBInterpreter do
     TestDBMethods.login_to_test_db
   end
 
+  def make_move(id, pos, token)
+    Move.create(
+      :game_id => id,
+      :position => pos,
+      :token => token
+    )
+  end
+
+  def translated_move(id,game_id, pos, token)
+    {
+     "position" => pos,
+     "token" => token,
+     "game_id" => game_id,
+     "id" => id
+    }
+  end
+
   def create_test_game_and_moves
     game = Game.create(:id => 3, :winner => nil)
-    Move.create(
-      :game_id => 3,
-      :position => 3,
-      :token => "o"
-    )
-    Move.create(
-      :game_id => 3,
-      :position => 4,
-      :token => "x"
-    )
+    make_move(3,3,"o")
+    make_move(3,4,"x")
     game
   end
 
-  let(:move)     { {"position" => 3, 
-                    "token" => "o",
-                    "game_id" => 3,
-                    "id" => 1} }
+  def translated_game(winner, *moves)
+    {
+      "moves" => moves,
+      "winner" => winner
+    }
+  end
 
-  let(:move_two) { {"position" => 4, 
-                    "token" => "x",
-                    "game_id" => 3,
-                    "id" => 2} }
+  let(:move)     { translated_move(1, 3, 3, "o") }
+  let(:move_two) { translated_move(2,3,4,"x") } 
 
   describe ".translate_game" do
 
     it "takes a database format of the game and reformats it" do
       game = create_test_game_and_moves
-      expected = {
-        "moves" => [move, move_two],
-        "winner" => nil
-      }
-      DBInterpreter.translate_game(game).should == expected
+      DBInterpreter.translate_game(game).should == 
+        translated_game(nil, move, move_two)
     end
   end
 
@@ -50,27 +56,14 @@ describe DBInterpreter do
     
     it "takes a database format of all the games and reformats it" do
       create_test_game_and_moves
-      new_move = {
-        "position" => 4,
-        "token" => "x",
-        "game_id" => 4,
-        "id" => 3
-      }
+      new_move = translated_move(3,4,4,"x")
       Game.create(:id => 4, :winner => nil)
-      Move.create(
-        :game_id => 4,
-        :position => 4,
-        :token => "x"
-      )
+      make_move(4,4,"x")
       expected = {
         "games" => {
-          3 => {
-          "moves" => [move, move_two],
-          "winner" => nil
-          },
-         4 => {
-           "moves" => [new_move],
-           "winner" => nil}}}
+          3 => translated_game(nil, move, move_two),
+          4 => translated_game(nil, new_move)
+      }}
       DBInterpreter.translate_games(Game.all).should == expected
     end
   end
