@@ -12,7 +12,7 @@ class DBHistory
   end
 
   def self.write_winner(id, winner, path)
-    DatabaseIO.write_winner(path, id, winner)
+    DatabaseIO.write_winner(id, winner, path)
   end
 
   def self.next_id(path)

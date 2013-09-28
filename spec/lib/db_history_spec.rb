@@ -33,7 +33,7 @@ describe DBHistory do
 
     it "writes winners to its IO" do
       winner = "me!"
-      DatabaseIO.should_receive(:write_winner).with(path, id, winner)
+      DatabaseIO.should_receive(:write_winner).with(id, winner, path)
       DBHistory.write_winner(id, winner, path)
     end
   end
