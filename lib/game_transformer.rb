@@ -41,11 +41,11 @@ class GameTransformer
   end
 
   def self.find_or_add_game(games, id)
-    if games[id.to_s]
-      the_game = games[id.to_s]
+    if games[id]
+      the_game = games[id]
     else
       the_game = Hash.new
-      games[id.to_s] = the_game
+      games[id] = the_game
     end
   end
 
