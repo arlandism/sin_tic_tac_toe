@@ -12,9 +12,10 @@ describe DBHistory do
       DBHistory.retrieve_or_create(path).should == {"games" => {}}
     end
 
-    it "retrieves what lives at path" do
+    it "retrieves what lives at path and hands it off to interpreter" do
       DatabaseIO.stub(:read).with(path).and_return(3)
-      DBHistory.retrieve_or_create(path).should == 3
+      DBInterpreter.should_receive(:translate_games).with(3).and_return(7)
+      DBHistory.retrieve_or_create(path).should == 7
     end
   end
 

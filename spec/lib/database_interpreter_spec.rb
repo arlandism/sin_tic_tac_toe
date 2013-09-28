@@ -66,5 +66,9 @@ describe DBInterpreter do
       }}
       DBInterpreter.translate_games(Game.all).should == expected
     end
+
+    it "returns nil in the case of a nil game" do
+      DBInterpreter.translate_games(nil).should == nil
+    end
   end
 end

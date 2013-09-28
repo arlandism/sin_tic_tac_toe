@@ -4,7 +4,7 @@ class DBInterpreter
     games.inject({"games" => {}}) do |acc, game|
       acc["games"][game.id] = translate_game(game)
       acc
-    end
+    end if games != nil
   end
 
   def self.translate_game(game)

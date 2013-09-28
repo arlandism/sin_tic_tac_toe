@@ -4,7 +4,7 @@ require_relative  'database_interpreter'
 class DBHistory
 
   def self.retrieve_or_create(path)
-    DatabaseIO.read(path) || {"games" => {}}
+    DBInterpreter.translate_games(DatabaseIO.read(path)) || {"games" => {}}
   end
 
   def self.write_move(id, move, token, path)
