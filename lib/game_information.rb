@@ -8,7 +8,9 @@ class GameInformation
   end
 
   def winner_on_board
-    winner  
+    DataStructures.presence_fetch(@current_game_information.to_hash, "winner") do
+      service_response["winner_on_board"]
+    end
   end
 
   def service_response
@@ -19,12 +21,6 @@ class GameInformation
   end
 
   private
-
-  def winner
-    DataStructures.presence_fetch(@current_game_information.to_hash, "winner") do
-      service_response["winner_on_board"]
-    end
-  end
 
   def depth
     DataStructures.presence_fetch(@current_game_information.to_hash, "depth") {20}
