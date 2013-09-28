@@ -1,4 +1,6 @@
 development:
   history_path: game_history.json
+  history_accessor: FileHistory
 test:
   history_path: spec/tmp/test_history.json
+  history_accessor: FileHistory

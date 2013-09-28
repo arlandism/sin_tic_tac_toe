@@ -3,6 +3,7 @@ ENV["RACK_ENV"] = "test"
 require 'rack/test'
 require 'db_history'
 require_relative '../app'
+require_relative '../lib/history_accessor'
 
 describe "integration" do
 
@@ -87,7 +88,8 @@ describe "integration" do
 
   context "with database" do
 
-    xit "writes moves to the database" do
+    xit "reads the accessor from the config.yml file and writes moves to the database" do
+      File.write("spec/tmp/fake_config.yaml", "history_accessor: DBHistory")
       id = 5
       rack_mock_session.cookie_jar["id"] = id
       NextPlayer.stub(:move)
@@ -96,7 +98,7 @@ describe "integration" do
 
       post '/move', {:player_move => 3}
 
-      move = DBHistory.retrieve_or_create(path)["games"][id]["moves"][0]
+      move = HistoryAccessor.retrieve_or_create("bar")["games"][id]["moves"][0]
       move["position"].should == 3 
       move["token"].should == "x" 
     end
