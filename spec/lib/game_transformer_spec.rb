@@ -2,10 +2,10 @@ require_relative '../../lib/game_transformer'
 
 describe GameTransformer do
 
+  let(:id) { "8" }
   describe ".new_move" do
     
     it "creates a new game if it doesn't exist" do
-      id = "1"
       move = 3
       token = "x"
       expected = {"games" =>
@@ -21,7 +21,6 @@ describe GameTransformer do
     end
 
     it "polls the data structure it gets and returns it with updated moves" do
-      id = "1"
       first_move = {"token" => "x", "position" => 3}
       next_move = {"token" => "o", "position" => 5}
       old_structure = {
@@ -43,7 +42,6 @@ describe GameTransformer do
     end
 
     it "doesn't add moves with positions of 0" do
-      id = "2"
       position = 0
       expected_structure = {"games" => {id => {"moves" => []}}}
       GameTransformer.add_move({"games" => {}},"x",position,id).should == expected_structure
@@ -52,7 +50,6 @@ describe GameTransformer do
 
   describe ".write_winner" do
     it "creates a new winner if it doesn't exist" do
-      id = "8"
       move = {"token" => "x", "position" => 3}
       old_structure = {"games" =>
           {
@@ -72,7 +69,6 @@ describe GameTransformer do
     end
     
     it "overwrites the previous winner" do
-      id = "8"
       move = {"token" => "x", "position" => 3}
       old_structure = {"games" =>
           {
@@ -94,14 +90,12 @@ describe GameTransformer do
   describe ".game_by_id" do
     
     it "returns the game with given id" do
-      id = "8"
       games = {"games" => {id => {}}}
 
       GameTransformer.game_by_id(games, id).should == {}
     end
 
     it "adds a skeleton structure if it can't find the game" do
-      id = "not a real id"
       games = {"games" => {}}
 
       GameTransformer.game_by_id(games, id).should == {"moves" => [], "winner" => nil}
