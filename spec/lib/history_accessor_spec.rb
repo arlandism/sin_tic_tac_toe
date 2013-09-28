@@ -2,6 +2,9 @@ require_relative '../../lib/history_accessor'
 
 describe HistoryAccessor do
 
+  let(:id)   { 2 }
+  let(:path) { "bar" }
+
   context "with FileHistory" do
 
     before(:each) do
@@ -9,14 +12,30 @@ describe HistoryAccessor do
       File.write("fake_config.yml", "history_accessor: FileHistory")
     end
 
-    it "delegates to the history accessor in the given config file" do
+
+    it "delegates to FileHistory.retrieve_or_create" do
       FileHistory.should_receive(:retrieve_or_create).with("bar")
-      HistoryAccessor.retrieve_or_create("bar", "fake_config.yml")
+      HistoryAccessor.retrieve_or_create(path, "fake_config.yml")
     end
 
-    it "delegates to the history accessor in the given config file" do
-      FileHistory.should_receive(:write_move).with(2, 3, "x", "bar")
-      HistoryAccessor.write_move(2, 3, "x", "bar", "fake_config.yml")
+    it "delegates to FileHistory.write_move" do
+      FileHistory.should_receive(:write_move).with(2, 3, "x", path)
+      HistoryAccessor.write_move(2, 3, "x", path, "fake_config.yml")
+    end
+
+    it "delegates to FileHistory.write_winner" do
+      FileHistory.should_receive(:write_winner).with(2,"x",path)
+      HistoryAccessor.write_winner(2, "x", path, "fake_config.yml")
+    end
+
+    it "delegates to FileHistory.next_id" do
+      FileHistory.should_receive(:next_id)
+      HistoryAccessor.next_id(path, "fake_config.yml")
+    end
+
+    it "delegates to FileHistory.game_by_id" do
+      FileHistory.should_receive(:game_by_id).with(path, 2)
+      HistoryAccessor.game_by_id(path, 2, "fake_config.yml")
     end
   end
 
@@ -28,13 +47,28 @@ describe HistoryAccessor do
     end
 
     it "delegates to the history accessor in the given config file" do
-      DBHistory.should_receive(:retrieve_or_create).with("bar")
-      HistoryAccessor.retrieve_or_create("bar", "fake_config.yml")
+      DBHistory.should_receive(:retrieve_or_create).with(path)
+      HistoryAccessor.retrieve_or_create(path, "fake_config.yml")
     end
 
     it "delegates to the history accessor in the given config file" do
-      DBHistory.should_receive(:write_move).with(2, 3, "x", "bar")
-      HistoryAccessor.write_move(2, 3, "x", "bar", "fake_config.yml")
+      DBHistory.should_receive(:write_move).with(2, 3, "x", path)
+      HistoryAccessor.write_move(2, 3, "x", path, "fake_config.yml")
+    end
+
+    it "delegates to DBHistory.write_winner" do
+      DBHistory.should_receive(:write_winner).with(2, "x", path)
+      HistoryAccessor.write_winner(2, "x", path, "fake_config.yml")
+    end
+    
+    it "delegates to DBHistory.next_id" do
+      DBHistory.should_receive(:next_id).with(path)
+      HistoryAccessor.next_id(path, "fake_config.yml")
+    end
+    
+    it "delegates to DBHistory.game_by_id" do
+      DBHistory.should_receive(:game_by_id).with(path, 2)
+      HistoryAccessor.game_by_id(path, 2, "fake_config.yml")
     end
   end
 
