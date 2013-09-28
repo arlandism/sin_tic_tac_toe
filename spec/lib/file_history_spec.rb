@@ -7,20 +7,21 @@ describe FileHistory do
     File.stub(:write)
   end
 
+  let(:path) { "bar" }
+
   describe ".retrieve_or_create" do
 
     it "creates a 'games' data structure if it doesn't exist at path" do
       expected = {"games" => {}}
-      path = "bar" 
-      File.stub(:read).with("bar").and_return("")
+      FileIO.stub(:read).with(path).and_raise(NoContentError)
       FileHistory.retrieve_or_create(path).should == expected
     end
     
     it "overwrites what used to exist at path" do
       id = "1"
-      path = "foo"
-      File.stub(:read).with(path).and_return("")
-      File.should_receive(:write).with(path, anything)
+      FileIO.stub(:read).with(path).and_return("")
+      GameTransformer.stub(:add_move).and_return({})
+      FileIO.should_receive(:write).with(path, anything)
       FileHistory.write_move(id, 5, "o", path)
     end
     
@@ -28,12 +29,12 @@ describe FileHistory do
 
   describe ".write_winner" do
     
-    it "delegates to GameRepository" do
-      path = "bar"
+    it "delegates responsibility to GameTransformer" do
       winner = "x"
       id = "3"
-      File.should_receive(:read).with(path).and_return("")
-      GameTransformer.should_receive(:add_winner).with({"games"=>{}},winner,id).and_return({})
+      FileIO.stub(:read).and_return("")
+      FileIO.stub(:write)
+      GameTransformer.should_receive(:add_winner).with("",winner,id)
       FileHistory.write_winner(id, "x", path)
     end
   end
@@ -51,9 +52,10 @@ describe FileHistory do
 
   describe "integration of FileHistory and GameTransformer" do
 
+    let(:game_one) { 8 }
+    let(:game_two) { 9 }
+
     it "parses all games from the file and updates moves accordingly" do
-      game_one = 8
-      game_two = 9
       move = {"token" => "x", "position" => 3}
       move_two = {"token" => "o", "position" => 5}
       old_structure = {"games" =>
@@ -75,33 +77,29 @@ describe FileHistory do
           {
             "moves" => [ move_two ]
           }}}
-      path = "baz"
-      File.stub(:read).with(path).and_return(old_structure.to_json)
-      File.should_receive(:write).with(path,JSON.pretty_generate(expected))
+      FileIO.stub(:read).with(path).and_return(old_structure)
+      FileIO.should_receive(:write).with(path,expected)
       FileHistory.write_move(game_two,5,"o",path) 
     end
     
     it "parses all games from the file and updates winners accordingly" do
-      game = 8
       old_structure = {"games" => {}}
 
       expected = {"games" =>
           {
-            game =>
+            game_one =>
           {
             "winner" => "new winner"
           }}}
 
-      path = "baz"
       File.stub(:read).with(path).and_return(old_structure.to_json)
       File.should_receive(:write).with(path,JSON.pretty_generate(expected))
-      FileHistory.write_winner(game,"new winner",path)
+      FileHistory.write_winner(game_one,"new winner",path)
     end
   end
 
   describe ".game_by_id" do
     it "returns game with given id" do
-      path = "me"
       id = 3
       FileIO.stub(:read).and_return({"games" => {3 => {}}})
       FileHistory.game_by_id(path,id).should == {}
