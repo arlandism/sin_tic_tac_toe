@@ -1,5 +1,5 @@
-require 'database_io'
-require 'database_interpreter'
+require_relative 'database_io'
+require_relative  'database_interpreter'
 
 class DBHistory
 
