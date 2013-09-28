@@ -48,7 +48,7 @@ describe DatabaseIO do
 
     it "creates the game if it doesn't exist" do
       DatabaseIO.write_move(path, id, position, token) 
-      move = Move.get(id)
+      move = Move.first(:game_id => id)
       move.game.id.should == id
     end
 
