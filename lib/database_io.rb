@@ -27,6 +27,10 @@ class DatabaseIO
     end
   end
 
+  def self.next_id
+    Game.last.id + 1
+  end
+
   def self.game_by_id(id)
     Game.get(id)
   end

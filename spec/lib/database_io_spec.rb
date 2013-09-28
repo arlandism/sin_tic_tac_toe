@@ -83,4 +83,13 @@ describe DatabaseIO do
       DatabaseIO.game_by_id(id).should == game
     end
   end
+
+  describe ".next_id" do
+    
+    it "returns the next available id (highest current id + 1) from the database" do
+      Game.create(:id => 12)
+      Game.create(:id => 2)
+      DatabaseIO.next_id.should == 13 
+    end
+  end
 end
