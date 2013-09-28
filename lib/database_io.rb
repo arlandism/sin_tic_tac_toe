@@ -33,6 +33,10 @@ class DatabaseIO
 
   private
 
+  def self.not_nil(position)
+     position != 0 
+  end
+
   def self.create_game(id)
     Game.create(:id => id)
   end
@@ -43,7 +47,7 @@ class DatabaseIO
       :position => position,
       :token => token,
       :game_id => id
-    )
+    ) if not_nil(position)
   end
 
   def self.update_winner(id, winner)

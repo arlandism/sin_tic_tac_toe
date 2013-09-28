@@ -51,6 +51,11 @@ describe DatabaseIO do
       move = Move.get(id)
       move.game.id.should == id
     end
+
+    it "discards null moves" do
+      DatabaseIO.write_move(path, id, 0, token)
+      Move.get(id).should == nil
+    end
   end
 
   describe ".write_winner" do
