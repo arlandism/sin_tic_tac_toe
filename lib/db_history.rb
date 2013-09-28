@@ -15,6 +15,10 @@ class DBHistory
     DatabaseIO.write_winner(path, id, winner)
   end
 
+  def self.next_id(path)
+    DatabaseIO.next_id
+  end
+
   def self.game_by_id(path, id)
     game = DatabaseIO.game_by_id(id)
     DBInterpreter.translate_game(game)
