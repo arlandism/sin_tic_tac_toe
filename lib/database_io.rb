@@ -1,5 +1,5 @@
-require 'models/game'
-require 'models/move'
+require_relative 'models/game'
+require_relative 'models/move'
 
 class DatabaseIO
 
