@@ -4,7 +4,7 @@ class FileIO
     begin
       JSON.parse(File.read(path))
     rescue JSON::ParserError
-      raise NoContentError
+      return nil
     end
   end
 
@@ -19,7 +19,4 @@ class FileIO
 
     writer.write(path, new_contents)
   end
-end
-
-class NoContentError < Exception
 end

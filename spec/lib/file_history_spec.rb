@@ -13,7 +13,7 @@ describe FileHistory do
 
     it "creates a 'games' data structure if it doesn't exist at path" do
       expected = {"games" => {}}
-      FileIO.stub(:read).with(path).and_raise(NoContentError)
+      FileIO.stub(:read).with(path).and_return(nil)
       FileHistory.retrieve_or_create(path).should == expected
     end
     

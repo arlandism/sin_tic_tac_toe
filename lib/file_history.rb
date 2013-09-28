@@ -5,11 +5,7 @@ require_relative 'file_io'
 class FileHistory
 
   def self.retrieve_or_create(path)
-    begin
-      game_history = FileIO.read(path) 
-    rescue NoContentError
-      game_history = {"games" => {}}
-    end
+    FileIO.read(path) || {"games" => {}}
   end
 
   def self.write_move(id, move, token, path)
