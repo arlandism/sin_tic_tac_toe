@@ -1,6 +1,6 @@
 require 'haml'
-require 'cpu_move'
 
+require_relative '../lib/cpu_move'
 require_relative '../lib/presenters/button_presenter'
 require_relative '../lib/presenters/winner_presenter'
 

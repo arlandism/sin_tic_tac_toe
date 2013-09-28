@@ -52,8 +52,8 @@ describe FileHistory do
 
   describe "integration of FileHistory and GameTransformer" do
 
-    let(:game_one) { 8 }
-    let(:game_two) { 9 }
+    let(:game_one) { "8" }
+    let(:game_two) { "9" }
 
     it "parses all games from the file and updates moves accordingly" do
       move = {"token" => "x", "position" => 3}

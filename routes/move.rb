@@ -1,6 +1,6 @@
-require 'file_history'
-require 'game_information'
-require 'next_player'
+require_relative '../lib/file_history'
+require_relative '../lib/game_information'
+require_relative '../lib/next_player'
 
 class TTTDuet < Sinatra::Base
 
