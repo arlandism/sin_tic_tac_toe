@@ -1,5 +1,5 @@
 require 'rack/test'
-require 'db_helper'
+require_relative '../lib/db_helpers'
 require_relative '../app'
 require_relative '../lib/db_history'
 require_relative '../lib/history_accessor'

@@ -1,5 +1,4 @@
-require 'db_helper'
-
+require_relative '../../lib/db_helpers'
 require_relative '../../lib/models/game'
 require_relative '../../lib/database_interpreter'
 

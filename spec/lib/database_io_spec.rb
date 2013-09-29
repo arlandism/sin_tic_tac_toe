@@ -1,4 +1,4 @@
-require 'db_helper'
+require 'db_helpers'
 require 'database_io'
 
 describe DatabaseIO do
