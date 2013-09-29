@@ -91,5 +91,10 @@ describe DatabaseIO do
       Game.create(:id => 2)
       DatabaseIO.next_id.should == 13 
     end
+
+    it "returns 1 if nothing is stored" do
+      Game.stub(:last).and_return(nil)
+      DatabaseIO.next_id.should == 1
+    end
   end
 end

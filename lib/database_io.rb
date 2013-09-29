@@ -28,7 +28,11 @@ class DatabaseIO
   end
 
   def self.next_id
-    Game.last.id + 1
+    if Game.last
+      Game.last.id + 1
+    else
+      1
+    end
   end
 
   def self.game_by_id(id)
