@@ -7,7 +7,7 @@ describe DatabaseIO do
   let (:game_model) { Game }
 
   before(:each) do
-    TestDBMethods.login_to_test_db
+    DBHelpers.setup_and_login("test", auto_migrate=true)
   end
 
   describe ".read" do

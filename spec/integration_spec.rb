@@ -15,7 +15,7 @@ describe "integration" do
   before(:each) do
     ClientSocket.any_instance.stub(:connect!)
     File.stub(:write)
-    TestDBMethods.login_to_test_db
+    DBHelpers.setup_and_login("test",auto_migrate=true)
   end
 
   context "with service" do

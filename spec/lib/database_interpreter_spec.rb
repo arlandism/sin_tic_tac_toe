@@ -6,7 +6,7 @@ require_relative '../../lib/database_interpreter'
 describe DBInterpreter do
 
   before(:each) do
-    TestDBMethods.login_to_test_db
+    DBHelpers.setup_and_login("test",auto_migrate=true)
   end
 
   def make_move(id, pos, token)
