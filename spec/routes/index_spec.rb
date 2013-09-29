@@ -47,7 +47,7 @@ describe TTTDuet do
     end
 
     it "asks right question of cpumove" do
-      FileHistory.stub(:next_id).and_return(3)
+      HistoryAccessor.stub(:next_id).and_return(3)
       game_description = {"the" => "stuff",
                           "id" => "3"}
 
