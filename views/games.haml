@@ -1,6 +1,6 @@
 %title
   = "History of Games"
-- games = FileHistory.retrieve_or_create(settings.history_path)["games"]
+- games = HistoryAccessor.retrieve_or_create(settings.history_path)["games"]
 - games.keys.each do |id|
   .game{:id => "#{id}"}
     %h4
