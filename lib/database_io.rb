@@ -4,7 +4,6 @@ require_relative 'models/move'
 class DatabaseIO
 
   def self.read(path)
-    DataMapper.setup(:default, path)
     games = Game.all
     games unless empty?(games)
   end

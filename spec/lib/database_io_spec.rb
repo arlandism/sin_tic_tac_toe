@@ -13,7 +13,6 @@ describe DatabaseIO do
   describe ".read" do
     
     before(:each) do
-      DataMapper.should_receive(:setup).with(:default, path)
       Game.stub(:get)
     end
 
