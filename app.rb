@@ -17,6 +17,6 @@ if __FILE__ == $0
   db_config = YAML.load_file("database.yaml")["development"]
   DataMapper.setup(:default, "#{db_config["adapter"]}://#{db_config["user"]}: #{db_config["password"]} @#{db_config["host"]}/#{db_config["database"]}")
   DataMapper.finalize
-  DataMapper.auto_migrate!
+  DataMapper.auto_upgrade!
   TTTDuet.run!
 end
