@@ -88,9 +88,13 @@ describe "integration" do
 
   context "with database" do
 
-    it "reads the accessor from the config.yml file and writes moves to the database" do
+    def create_history_accessor(accessor_name)
       File.write("spec/tmp/fake_config.yml", 
-                 YAML.dump({"development" => {"history_accessor" =>  "DBHistory"}}))
+                 YAML.dump({"development" => {"history_accessor" =>  accessor_name}}))
+    end
+
+    it "reads the accessor from the config.yml file and writes moves to the database" do
+      create_history_accessor("DBHistory")
       id = 5
       rack_mock_session.cookie_jar["id"] = id
       NextPlayer.stub(:move)
@@ -98,7 +102,8 @@ describe "integration" do
 
       post '/move', {:player_move => 3}
 
-      move = HistoryAccessor.retrieve_or_create("bar", "spec/tmp/fake_config.yml")["games"][id]["moves"][0]
+      all_games = HistoryAccessor.retrieve_or_create("bar", "spec/tmp/fake_config.yml")["games"]
+      move = all_games[id]["moves"][0]
       move["position"].should == 3 
       move["token"].should == "x" 
     end
