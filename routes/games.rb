@@ -6,7 +6,12 @@ require_relative '../lib/presenters/id_presenter'
 class TTTDuet < Sinatra::Base
 
   get '/games' do
-    haml :games
+    @games = HistoryAccessor.retrieve_or_create(settings.history_path)["games"]
+    if @games.keys
+      haml :games
+    else
+      haml :no_history_found
+    end
   end
 
   get %r{/games/([0-9]+)} do

@@ -1,17 +1,16 @@
 %title
   = "History of Games"
-- games = HistoryAccessor.retrieve_or_create(settings.history_path)["games"]
-- games.keys.each do |id|
+- @games.keys.each do |id|
   .game{:id => "#{id}"}
     %h4
       = "Game #{id}"
       %ol
-        - games[id]["moves"].each do |move|
+        - @games[id]["moves"].each do |move|
           %li
             = "#{move["token"]} moved to #{move["position"]}"
-      -if games[id]["winner"]
+      -if @games[id]["winner"]
         %p
-          = "#{games[id]["winner"].capitalize} won!"
+          = "#{@games[id]["winner"].capitalize} won!"
     %p
       = "-" * 20
             
