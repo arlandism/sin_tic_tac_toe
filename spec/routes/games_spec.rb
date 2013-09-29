@@ -20,14 +20,14 @@ describe TTTDuet do
     it "sets the id of the game I requested" do
       id = "22"
 
-      FileHistory.stub(:game_by_id).and_return({"moves" => [], "winner" => nil})
+      HistoryAccessor.stub(:game_by_id).and_return({"moves" => [], "winner" => nil})
       get '/games/22'
 
       rack_mock_session.cookie_jar["id"].should == "22"
     end
 
     it "polls History for the list of games" do
-      FileHistory.should_receive(:game_by_id).
+      HistoryAccessor.should_receive(:game_by_id).
         with(TTTDuet.settings.history_path, "22")
 
       get '/games/22' 
