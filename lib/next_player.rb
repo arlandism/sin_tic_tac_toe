@@ -15,6 +15,8 @@ class NextPlayer
     end
 
   end
+  
+  private
 
   def self.is_human?(player_information)
     player_information["first_player"] == "human" and player_information["second_player"] == "human"
