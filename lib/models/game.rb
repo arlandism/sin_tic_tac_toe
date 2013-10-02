@@ -8,4 +8,15 @@ class Game
 
   has n, :moves
 
+  def self.next_id
+    prev_id = last_id || 0
+    prev_id + 1
+  end
+
+  private
+
+  def self.last_id
+    last.id if last
+  end
+
 end
