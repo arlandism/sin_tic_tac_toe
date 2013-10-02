@@ -85,15 +85,10 @@ describe DatabaseIO do
 
   describe ".next_id" do
     
-    it "returns the next available id (highest current id + 1) from the database" do
-      Game.create(:id => 12)
-      Game.create(:id => 2)
-      DatabaseIO.next_id.should == 13 
+    it "delegates to Game.next_id" do
+      Game.stub(:next_id).and_return(7)
+      DatabaseIO.next_id.should == 7
     end
 
-    it "returns 1 if nothing is stored" do
-      Game.stub(:last).and_return(nil)
-      DatabaseIO.next_id.should == 1
-    end
   end
 end
